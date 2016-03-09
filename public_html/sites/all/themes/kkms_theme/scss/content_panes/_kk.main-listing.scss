@@ -1,0 +1,42 @@
+/**
+ * Styling of main listing panes
+ *
+ * TODO:
+ */
+
+ /* LIST OF FILES PANE */
+.pane-bundle-files-pane {
+	.field-type-file {
+    border: none;
+		box-shadow: none;
+		padding: 0;
+		margin: 0;
+    
+		.field-item {
+			margin-bottom: 0.5em;
+		}
+		.file-icon {
+			float: left;
+			vertical-align: baseline;
+			margin-right: 0.5em;
+			margin-top: 0.2em;
+		}
+	}	
+}
+.pane-menu-block-second-level {
+	.pane-title {
+		line-height: 2.5em;
+		font-size: $text-second;
+		padding: 0.5em;
+		text-transform: uppercase;
+	}
+}
+ /* LIST OF NODEQUEUE PANE */
+.pane-bundle-nodequeue-pane {
+	.item-list {
+		li {
+			font-size: $text-second;
+			margin-bottom: 0.5em;
+		}
+	}
+}

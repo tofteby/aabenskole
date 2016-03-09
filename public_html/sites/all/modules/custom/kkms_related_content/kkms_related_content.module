@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Main functionality of KKMS Related Content module.
+ */
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function kkms_related_content_entity_info_alter(&$entity_info) {
+  return; // @TODO - Remove if entity_view_modes works fine.
+  $entity_info['node']['view modes']['related_content'] = array(
+    'label' => t('Related content'),
+    'custom settings' => FALSE,
+  );
+}

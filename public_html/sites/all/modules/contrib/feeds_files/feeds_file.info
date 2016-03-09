@@ -1,0 +1,16 @@
+name = Feeds Files
+description = Processes feed items into file entities
+package = Feeds
+core = 7.x
+files[] = plugins/FeedsFileProcessor.inc
+dependencies[] = ctools
+dependencies[] = feeds
+dependencies[] = file_entity
+
+
+; Information added by drush on 2014-06-26
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "feeds_files"
+datestamp = "1403780270"
+

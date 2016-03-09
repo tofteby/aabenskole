@@ -1,0 +1,11 @@
+<?php
+
+/**
+ * Implements HOOK_update_N() for kkms_media_alter module.
+ *
+ * Needed to actualy revert the configurations as as the defaults, that are
+ * stored in code.
+ */
+function kkms_media_alter_update_7001() {
+  file_type_revert_all();
+}

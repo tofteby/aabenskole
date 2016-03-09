@@ -1,0 +1,51 @@
+@charset "UTF-8";
+
+// Import libraries
+@import "compass";
+@import "susy";
+
+// Hide regions
+.sec-header,
+.sec-menu,
+.sec-msg,
+.sec-footer,
+.sec-bottom,
+#skip-link,
+// Hide navigational blocks
+[id^="block-menu-menu-footer"],
+.block-follow,
+.bl-icons,
+// Hide feedback link
+.feedback_simple,
+#feedback_simple,
+// The workbence form
+.block-workbench,
+// The comment form
+.pane-node-comment-form,
+// Facebook comments
+.pane-node-facebook-comments,
+// Hide toolbar for better printing for editors, but leave workbench status
+#toolbar {
+  display: none !important;
+}
+
+// Print title in full width
+.bl-title {
+  margin-right: 0 !important;
+}
+
+
+.reg-content,
+.reg-sidebar {
+  @include span-columns(24,24);
+}
+
+body{
+  padding: 0;
+  margin: 0;
+}
+
+// Hide the video field.
+.bl-video{
+  display: none;
+}

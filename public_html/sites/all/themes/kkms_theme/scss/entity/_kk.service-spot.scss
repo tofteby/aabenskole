@@ -1,0 +1,13 @@
+.node-service-spot{
+  @extend .bl-service;
+  .field-name-body{
+  }
+  .field-name-field-link{
+    @extend %text-meta;
+    a{
+      font-weight: bold;
+      
+      @include ie8_font_fix('b');
+    }
+  }
+}

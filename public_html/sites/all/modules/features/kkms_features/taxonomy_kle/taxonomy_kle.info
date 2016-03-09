@@ -1,0 +1,11 @@
+name = Taxonomy KLE
+description = Feature module exports vocabulary and fields for KLE taxonomy.
+core = 7.x
+package = Taxonomies
+dependencies[] = features
+dependencies[] = field_bases
+dependencies[] = taxonomy
+dependencies[] = text
+features[features_api][] = api:2
+features[field_instance][] = taxonomy_term-kle-field_kle_id
+features[taxonomy][] = kle

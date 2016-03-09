@@ -1,0 +1,30 @@
+
+.field-name-field-opening-hours{
+  .field-items{
+    .field-item{
+      margin-bottom: em(9,18);
+    }
+
+    .dates{
+      display: inline-block;
+      width: 40%;
+    }
+    .days{
+      display: inline-block;
+      width: 40%;
+    }
+    .time{
+      display: inline-block;
+      width: auto;
+    }
+    .day{
+      .name{
+        display: inline-block;
+        width: 50%;
+      }
+    }
+    .notes{
+      margin: em(12,18) 0;
+    }
+  }
+}

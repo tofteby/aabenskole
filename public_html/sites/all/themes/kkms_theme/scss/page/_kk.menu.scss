@@ -1,0 +1,217 @@
+/**
+ * Theming of second level menu.
+ *
+ * TODO:
+ *
+ */
+
+.menu-block-second_level{
+  margin-bottom: $space;
+  .menu{
+    border: none;
+    list-style: none;
+    text-align: left;
+
+    li{
+      position: relative;
+      vertical-align: top;
+      a{
+        border-bottom: 1px solid $col-gray-40;
+        display: block;
+        padding: em(10,18);
+        padding-right: 2em;
+        color: $col-text;
+        word-wrap: break-word;
+        font-size: em(16,18);
+        &.active{
+          color: $col-text;
+          background-color: $col-gray-10;
+        }
+        &:hover{
+          color: $col-primary;
+        }
+      }
+      .last{
+        &.collapsed{
+          //border-bottom: none;
+        }
+      }
+
+      &.active{
+        li{
+          a{
+            border-bottom: 0;
+          }
+        }
+      }
+
+      &:hover{
+        &:before{
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          content: ' ';
+          width: 4px;
+          max-width: 4px;
+          background-color: $col-gray-55;
+          z-index: 2;
+        }
+      }
+
+
+
+      &.collapsed{
+        a{
+          &:before{
+            @extend %icon;
+            @extend .ic-arrow-down:before;
+            color: $col-text;
+            vertical-align: top;
+            float: right;
+            margin-top: .2em;
+            margin-right: -1.4em;
+            display: block;
+            font-weight: bold;
+          }
+        }
+      }
+
+      &.expanded{
+        >a{
+          &.active-trail{
+            &:before{
+              @extend %icon;
+              @extend .ic-arrow-down:before;
+              vertical-align: top;
+              color: $col-text;
+              float: right;
+              margin-top: .2em;
+              margin-right: -1.4em;
+              display: block;
+              font-weight: bold;
+            }
+          }
+        }
+
+      }
+
+      &.expanded{
+        ul{
+          background-color: $col-content;
+          li{
+            a{
+              border-bottom: 0;
+            }
+            &.last{
+              a{
+                border-bottom: 1px solid $col-gray-40;
+              }
+            }
+          }
+        }
+        >.active{
+          background-color: $col-gray-10;
+        }
+      }
+
+
+    }
+  }
+}
+
+// border-top on the first item in menu.
+.menu-block-second_level{
+  >ul:first-child{
+    >li:first-child{
+      >a:first-child{
+        border-top: 1px solid $col-gray-40;
+        //padding: 0 0 0 em(5,18);
+      }
+    }
+  }
+}
+
+.pane-menu-block-second-level .pane-title,
+.block-menu-block .title,
+.second-menu-mobile > h2 {
+  font-weight: bold;
+  line-height: 1.2em;
+  font-size: em(16,18);
+  text-transform: uppercase;
+  margin-bottom: 1em;
+  color: $col-text;
+  padding-left: em(10,18);
+
+  @include ie8_font_fix('b');
+}
+
+.second-menu-mobile .menu-block-second_level .menu li.active-trail{
+  &:before{
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    content: ' ';
+    width: 4px;
+    max-width: 4px;
+    background-color: $col-gray-55;
+    z-index: 2;
+  }
+}
+
+.sec-second-menu-mobile {
+  .sec-inner {
+    background-color: $col-content;
+  }
+  
+  .menu-block-second_level {
+    display: none;
+  }
+  
+  .second-menu-active {
+    .menu-block-second_level {
+      display: block;
+      margin-top: 2 - $space;
+    }
+  }
+  
+  .second-menu-mobile > h2 {
+    margin-bottom: $space;
+    padding: 13px 15px;
+    background-color: $col-gray-10;
+    border: 1px solid $col-gray-40;
+    cursor: pointer;
+    
+    &:before {
+      @extend %icon;
+      @extend .ic-arrow-down:before;
+      color: $col-text;
+      float: right;
+      margin-right: -6px;
+      display: block;
+      font-weight: bold;
+    }
+    
+    &:hover {
+      background-color: $col-gray-40;
+    }
+  }
+  
+  .second-menu-active.second-menu-mobile > h2:before {
+    @extend .ic-arrow-up:before;
+  }
+  
+  @include at-breakpoint($mq-bp-desktop) { 
+    display: none;
+  }
+}
+
+.pane-menu-block-second-level,
+.block-menu-block {
+  display: none;
+  
+  @include at-breakpoint($mq-bp-desktop) { 
+    display: block;
+  }
+}

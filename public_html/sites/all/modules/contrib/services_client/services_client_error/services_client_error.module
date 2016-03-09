@@ -1,0 +1,403 @@
+<?php
+
+/**
+ * @file
+ * Services Client error handling, re-try and reporting.
+ */
+
+define('SC_ERROR_UNPROCESSED', 0);
+define('SC_ERROR_FAILED', 1);
+define('SC_ERROR_OVERWRITTEN', 2);
+define('SC_ERROR_COMPLETED', 3);
+
+/**
+ * Implements hook_menu().
+ */
+function services_client_error_menu() {
+  $items = array();
+
+  $items['admin/structure/services_client/errors'] = array(
+    'title' => 'Errors',
+    'page callback' => 'services_client_error_admin_list',
+    'access arguments' => array('administer services client'),
+    'file' => 'services_client_error.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 100
+  );
+
+  $items['admin/structure/services_client/errors/%services_client_error/delete'] = array(
+    'title' => 'Delete error',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('services_client_error_admin_delete_confirm', 4),
+    'access arguments' => array('administer services client'),
+    'file' => 'services_client_error.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['admin/structure/services_client/errors/%services_client_error/log'] = array(
+    'title' => 'Error history',
+    'page callback' => 'services_client_error_admin_log_list',
+    'page arguments' => array(4),
+    'access arguments' => array('administer services client'),
+    'file' => 'services_client_error.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['admin/structure/services_client/errors/%services_client_error/retry'] = array(
+    'title' => 'Error retry',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('services_client_error_admin_repair', 4),
+    'access arguments' => array('administer services client'),
+    'file' => 'services_client_error.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['services_client_error/%services_client_error_token'] = array(
+    'title' => 'Error details',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('services_client_error_admin_repair', 1),
+    'access callback' => TRUE,
+    'file' => 'services_client_error.admin.inc',
+    'type' => MENU_CALLBACK
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function services_client_error_form_services_client_settings_alter(&$form, $form_state) {
+  $form['error_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Error handling'),
+    '#collapsed' => TRUE,
+    '#collapsible' => TRUE,
+    '#tree' => FALSE,
+    '#group' => 'additional_settings',
+    '#weight' => 0,
+  );
+
+  $form['error_settings']['services_client_error_notify'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Send notification on errors'),
+    '#default_value' => variable_get('services_client_error_notify', FALSE),
+    '#description' => t('Send email notifications on services client erros'),
+  );
+
+  $form['error_settings']['services_client_error_notify_recipients'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Notification recipients'),
+    '#default_value' => variable_get('services_client_error_notify_recipients', ''),
+    '#description' => t('Enter one email address per row'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="services_client_error_notify"]' => array('checked' => TRUE),
+      )
+    ),
+  );
+}
+
+/**
+ * Map of available statuses of error.
+ *
+ * @return array
+ *   Array of all statuses
+ */
+function services_client_error_status_map() {
+  static $map = array();
+
+  if (empty($map)) {
+    $map = array(
+      SC_ERROR_UNPROCESSED => t('Unprocessed'),
+      SC_ERROR_FAILED => t('Failed'),
+      SC_ERROR_OVERWRITTEN => t('Overwritten'),
+      SC_ERROR_COMPLETED => t('Completed')
+    );
+  }
+
+  return $map;
+}
+
+/**
+ * Retrieve status title by code.
+ *
+ * @param int $status
+ *   Status ID.
+ *
+ * @return string
+ *   Status title.
+ */
+function services_client_error_status_title($status) {
+  $map = services_client_error_status_map();
+  return isset($map[$status]) ? $map[$status] : 'N/A';
+}
+
+/**
+ * Implements hook_sc_process_errors().
+ */
+function services_client_error_sc_process_errors($errors) {
+  // Store errors for further processing.
+  foreach ($errors as &$error) {
+    $data = services_client_error_save($error);
+    $error += $data;
+    $queue_data = array(
+      'title' => t('Processing services client error !eid', array('!eid' => $data['eid'])),
+      'eid' => $data['eid'],
+    );
+    queue_runner_add($queue_data, 'sce_retry_call', 3);
+  }
+
+  // Send email notification
+  if (variable_get('services_client_error_notify', FALSE)) {
+    $recipients = explode("\n", variable_get('services_client_error_notify_recipients', ''));
+    foreach ($recipients as $mail) {
+      $mail = trim($mail);
+      if (valid_email_address($mail)) {
+        $params = array('errors' => $errors);
+        drupal_mail('services_client_error', 'notify_errors', $mail, language_default(), $params);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_sc_process_data().
+ */
+function services_client_error_sc_process_data($entity_type, $entity, $task) {
+  // Load entity_id
+  list($id) = entity_extract_ids($entity_type, $entity);
+
+  // Get list of unprocessed errors, that are related to entity. Mark them as
+  // overwritten and store new data.
+  $result = db_query("SELECT eid FROM {services_client_error} WHERE entity_type = :type AND entity_id = :id AND status = :status AND hook = :hook AND task = :task", array(
+    ':type' => $entity_type,
+    ':id' => $id,
+    ':status' => SC_ERROR_UNPROCESSED,
+    ':hook' => $task->hook,
+    ':task' => $task->name,
+  ))->fetchAllKeyed(0, 0);
+
+  // No errors are unprocessed.
+  if (empty($result)) {
+    return;
+  }
+
+  // Mar all as overwritten.
+  db_update('services_client_error')
+    ->fields(array(
+      'status' => SC_ERROR_OVERWRITTEN,
+    ))
+    ->condition('eid', $result, 'IN')
+    ->execute();
+  foreach ($result as $eid) {
+    $log = array(
+      'eid' => $eid,
+      'message' => 'Overwritten by data update.',
+      'status_change' => SC_ERROR_OVERWRITTEN,
+      'data' => $entity
+    );
+    services_client_error_log_save($log);
+  }
+}
+
+/**
+ * Implements hook_mail().
+ */
+function services_client_error_mail($key, &$message, $params) {
+  if ($key == 'notify_errors') {
+    $message['subject'] = t('SC: Failed pushing resources: Errors: !errors, Site: @site', array(
+      '!errors' => count($params['errors']),
+      '@site' => variable_get('site_name', 'Drupal'),
+    ));
+    foreach ($params['errors'] as $error) {
+      $task = $error['task'];
+      if ($error['type'] == 'node') {
+        $node = $error['data'];
+        $row = array();
+        $row[] = 'Node: ' . $node->title . ' ' . url('node/' . $node->nid . '/edit', array('absolute' => TRUE));
+        $row[] = 'Task: ' . $task->title . ' conn: ' . $task->conn_name;
+        if (!empty($error['token'])) {
+          $row[] = 'Link: ' . url('services_client_error/' . $error['token'], array('absolute' => TRUE));
+        }
+
+        $message['body'][] = implode("\n", $row);
+      }
+      elseif ($error['type'] == 'user') {
+        $account = $error['data'];
+        $row = array();
+        $row[] = 'User: ' . $account->name . ' ' . url('user/' . $account->uid, array('absolute' => TRUE));
+        $row[] = 'Task: ' . $task->title . ' conn: ' . $task->conn_name;
+        if (!empty($error['token'])) {
+          $row[] = 'Link: ' . url('services_client_error/' . $error['token'], array('absolute' => TRUE));
+        }
+
+        $message['body'][] = implode("\n", $row);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_queue_runner_workers().
+ */
+function services_client_error_queue_runner_workers() {
+  return array(
+    'sce_retry_call' => array(
+      'callback' => 'services_client_error_task_retry_call',
+      'includes' => array(
+        array(
+          'file_extension' => 'inc',
+          'module' => 'services_client_error',
+          'file' => 'services_client_error.tasks',
+        ),
+      ),
+      'finalize' => 'services_client_error_task_finalize',
+    ),
+  );
+}
+
+/**
+ * Load error by token id
+ *
+ * @param string $token
+ *   Token ID
+ *
+ * @return array
+ *   Error record by {services_client_error} data.
+ */
+function services_client_error_token_load($token) {
+  $result = db_query("SELECT * FROM {services_client_error} WHERE token = :token", array(
+    ':token' => $token,
+  ))->fetchAssoc();
+
+  if ($result) {
+    $result['data'] = unserialize($result['data']);
+  }
+
+  return $result;
+}
+
+/**
+ * Load error by id.
+ *
+ * @param int $eid
+ *   ID of error.
+ *
+ * @return array
+ *   Error record by {services_client_error} data.
+ */
+function services_client_error_load($eid) {
+  $result = db_query("SELECT * FROM {services_client_error} WHERE eid = :eid", array(':eid' => $eid))->fetchAssoc();
+
+  if ($result) {
+    $result['data'] = unserialize($result['data']);
+  }
+
+  return $result;
+}
+
+/**
+ * Save information about error to data log
+ *
+ * @param $data
+ *   Error data from @services_client_data_process
+ */
+function services_client_error_save($data) {
+  $row = array(
+    'created' => time(),
+    'entity_type' => $data['entity_type'],
+    'entity_id' => !empty($data['entity_id']) ? $data['entity_id'] : 0,
+    'hook' => $data['hook'],
+    'connection' => $data['task']->conn_name,
+    'task' => $data['task']->name,
+    'token' => services_client_get_error_token(),
+    'data' => $data['data'],
+    'error_code' => $data['code'],
+    'error_message' => $data['message'],
+    'retries' => 0,
+    'result' => 0,
+  );
+  drupal_write_record('services_client_error', $row);
+  return array('eid' => $row['eid'], 'token' => $row['token']);
+}
+
+/**
+ * Save history item for services client error.
+ *
+ * @param array $data
+ *   History data.
+ */
+function services_client_error_log_save($data) {
+  $row = $data + array(
+    'created' => time(),
+  );
+
+  if (empty($row['uid'])) {
+    global $user;
+    $row['uid'] = $user->uid;
+  }
+
+  if (empty($row['eid'])) {
+    throw new Exception("Missing eid when saving error log item.");
+  }
+
+  return drupal_write_record('services_client_error_log', $row);
+}
+
+/**
+ * Remove error from error log
+ *
+ * @param $eid
+ *   ID of error.
+ */
+function services_client_error_delete($eid) {
+  // Delete log history
+  db_delete('services_client_error_log')
+    ->condition('eid', $eid)
+    ->execute();
+
+  // Delete error.
+  return db_delete('services_client_error')
+    ->condition('eid', $eid)
+    ->execute();
+}
+
+/**
+ * Retry and execute error
+ *
+ * @param array $error
+ *   Error record from DB.
+ */
+function services_client_error_retry($error) {
+  // Count error retry
+  $error['retries']++;
+  $result = array(
+    'retries' => $error['retries'],
+  );
+
+  try {
+    $task = services_client_get_existing_hooks($error['task']);
+    services_client_make_call($error['data'], $error['hook'], $task);
+    $result['status'] = $error['status'] = SC_ERROR_COMPLETED;
+  }
+  catch (ServicesClientConnectionResponseException $e) {
+    $e->log();
+    $result['error_code'] = $e->getErrorCode();
+    $result['error_message'] = $e->getErrorMessage();
+  }
+
+  drupal_write_record('services_client_error', $error, array('eid'));
+  return $result;
+}
+
+/**
+ * Create error token that can be used for instant data push.
+ *
+ * @return string
+ *   Random string token.
+ */
+function services_client_get_error_token() {
+  return strtr(base64_encode(drupal_random_bytes(64)), '/+=', '___');
+}
+

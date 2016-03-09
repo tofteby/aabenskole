@@ -1,0 +1,8 @@
+.field-name-field-service-type{
+  display: inline-block;
+  font-size: em(13,18);
+  .field-item{
+    padding-left: em(9,18);
+    border-left: 1px solid  $col-gray-55;
+  }
+}

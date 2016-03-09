@@ -1,0 +1,12 @@
+This is Taxon Web service 2.0.
+
+-------------------------------------------------------------------------------
+Change log
+-------------------------------------------------------------------------------
+
+2.0 - 01/11/2012
+	Taxon now requires the full path and filename for the taxonomy file, so 
+	that's what we provide.
+
+1.0 - 01/08-2012
+	Initial release

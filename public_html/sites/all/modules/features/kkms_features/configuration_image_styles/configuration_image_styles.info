@@ -1,0 +1,12 @@
+name = Configuration image styles
+description = Exports image styles and related functionality.
+core = 7.x
+package = Configuration
+dependencies[] = image
+features[features_api][] = api:2
+features[image][] = banner
+features[image][] = blog_list
+features[image][] = list_content_grid
+features[image][] = node_view_images
+features[image][] = person
+features[image][] = person_list_thumbnail

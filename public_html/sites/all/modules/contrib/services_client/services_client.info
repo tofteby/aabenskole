@@ -1,0 +1,21 @@
+name = Services Client
+description = Client-side module for managing communications with a services REST server.
+package = "Services"
+core = 7.x
+
+files[] = services_client.admin.inc
+files[] = services_client.theme.inc
+files[] = include/exception.inc
+files[] = include/plugin.inc
+
+dependencies[] = services_client_connection
+
+configure = admin/structure/services_client
+
+
+; Information added by drush on 2014-06-26
+version = "7.x-1.0-beta1+27-dev"
+core = "7.x"
+project = "services_client"
+datestamp = "1403780081"
+

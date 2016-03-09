@@ -1,0 +1,462 @@
+// Extendable base styles
+// -------------------------------
+%title-page {
+  font-size: $text-title;
+  line-height: 1em;
+}
+
+%title-local-list-item {
+  font-size: $basesize;
+  line-height: 1em;
+}
+
+%text-local-list-item {
+  font-size: $basesize;
+  line-height: 0.8em;
+}
+
+%title-block {
+  font-size: $text-block;
+  line-height: 1.15em;
+}
+
+%title-heading {
+  font-size: $text-heading;
+  font-weight: bold;
+  margin-bottom: 0.25em;
+}
+
+%title-footer {
+  font-weight: bold;
+  line-height: 1.2em;
+  font-size: $text-second;
+}
+
+%text-tag {
+  font-size: $text-meta;
+  font-weight: bold;
+  font-style: italic;
+
+  @include ie8_font_fix('bi');
+}
+
+%text-meta {
+  font-size: $text-label;
+  text-transform: uppercase;
+  color: $col-gray-70;
+}
+
+%text-label {
+  @extend %text-meta;
+  font-weight: bold;
+}
+
+%main-menu-link {
+  @include menu-text-color;
+  text-transform: uppercase;
+  line-height: 2em;
+
+  &:link,
+  &:visited {
+    @include menu-text-color;
+  }
+}
+
+%link-grey {
+  &:link,
+  &:visited {
+    color: $col-gray-70;
+  }
+
+  &:hover,
+  &:active {
+    color: $col-primary;
+  }
+}
+
+%byline {
+  font-size: $text-meta;
+  color: $col-gray-70;
+  margin-bottom: em(18,13);
+}
+
+%title-heading,
+%title-footer,
+%text-label {
+  @include ie8_font_fix('b');
+}
+
+// Base styling
+// -------------------------------
+
+%basefontfamily{
+  font-family: "Gill Sans W01", "Gill Sans", serif;
+}
+
+body {
+  @extend %basefontfamily;
+  font-family: "Gill Sans W01", "Gill Sans", serif;
+  font-weight: normal;
+  font-weight: 400;
+  font-size: $basefont;
+  line-height: $baseline;
+  color: $col-text;
+}
+
+button, input, textarea, select {
+  font-family: "Gill Sans W01", "Gill Sans", serif;
+}
+
+sub {
+  vertical-align: sub;
+  font-size: $text-sub;
+}
+
+sup {
+  vertical-align: sup;
+  font-size: $text-sub;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+
+a {
+  &:link,
+  &:visited {
+    text-decoration: none;
+    color: $col-primary;
+  }
+
+  &:hover {
+    color: $col-button-hover;
+  }
+}
+
+
+// Titles, labels, headings
+// -------------------------------
+
+.title-page {
+  @extend %title-page;
+} // 'Nyt lys over Koebenhavn'
+
+.title-footer {
+  @extend %title-footer;
+} // 'Genveje'
+
+.title-pane {
+  @extend %title-block;
+  margin-bottom: 0.5em;
+} // 'Andre nyheder'
+
+.title-block {
+  @extend %title-block;
+  text-transform: uppercase;
+} // 'Kontakt'
+
+.title-heading {
+  @extend %title-heading;
+}
+
+.title-list {
+  line-height: 1.2em;
+  font-size: $text-second;
+}
+
+.title-form{
+  @extend %title-block;
+  text-transform: uppercase;
+  font-weight: normal;
+  font-style: normal;
+  margin-bottom: 0.5em;
+
+  @include ie8_font_fix;
+}
+
+// Content copy
+// --------------------------------
+
+.tx-teaser {
+  @extend %title-block;
+  margin-bottom: $space;
+}
+
+.tx-type {
+  @extend %text-label;
+}
+
+.tx-meta {
+  @extend %text-meta;
+}
+
+.tx-caption {
+  @extend %text-tag;
+  @include single-text-shadow(1px, 1px, 1px, false, rgba(0,0,0,0.8));
+  color: $col-gray-40;
+}
+
+.tx-tag {
+  @extend %text-tag;
+}
+
+.byline {
+  @extend %byline;
+}
+
+// WYSIWYG CONTENT
+// ----------------------------------
+.tx-content {
+  @import "_kk.wysiwyg.scss";
+}
+
+.tx-sec {
+  font-size: $text-second;
+}
+
+.tx-block {
+  p, li {
+    font-size: $text-second;
+  }
+
+
+  h2 {
+    @extend %title-footer;
+  }
+}
+
+// File LABELS
+// ----------------------------------
+[class^="filetype-"], [class*=" filetype-"] {
+  font-size: em(11,16);
+  text-transform: uppercase;
+  color: #fff; // Deliberately hardcoded.
+  line-height: em(13,8);
+  //background: #4E35A3;
+  background: #1F156C;
+  display: inline-block;
+  padding: 0 4px;
+  min-width: em(35,8);
+  margin-right: 1em;
+  margin-top: em(3,8);
+  vertical-align: text-top;
+}
+
+.filetype-doc {
+  //background: #3390CF;
+  background: #144DB2;
+}
+
+.filetype-spreadsheet {
+  //background: #41A655;
+  background: #1A7122;  
+}
+
+.filetype-pdf {
+  //background: #D60600;
+  background: #BD0200;  
+}
+
+.filetype-presentation {
+  //background: #D8481C;
+  background: #C11D0B;
+}
+
+
+
+// ICONS
+// ----------------------------------
+[class^="ic-"]:before, [class*=" ic-"]:before {
+  @extend %icon;
+  color: $col-gray-70;
+}
+
+[class^="ic-"]:hover, [class*=" ic-"]:hover {
+  &:before {
+    color: $col-primary;
+  }
+}
+
+
+[class^="ln-"], [class*=" ln-"] {
+  font-size: $space;
+  margin-right: em(8, 28);
+  // Define default icon
+  @extend .ic-link:before;
+}
+
+.tx-ln {
+  &:after,
+  &:before {
+    display: inline-block;
+    width: 1.4em;
+    vertical-align: middle;
+  }
+}
+
+.tx-ic {
+  @extend %element-invisible;
+  width: 1px;
+}
+
+.ic-share:before {
+  content: "\e600";
+}
+
+.ic-print:before {
+  content: "\e618";
+}
+
+.ic-fb:before {
+  content: "\e602";
+}
+
+.ic-twit:before {
+  content: "\e603";
+}
+
+.ic-gplus:before {
+  content: "\e617";
+}
+
+.ic-search:before {
+  content: "\e604";
+}
+
+.ic-search2:before {
+  content: "\e605";
+}
+
+.ic-heart:before {
+  content: "\e606";
+}
+
+.ic-heart2:before {
+  content: "\e607";
+}
+
+.ic-location:before {
+  content: "\e608";
+}
+
+.ic-list:before {
+  content: "\e60c";
+}
+.ic-grid:before {
+  content: "\e60d";
+}
+
+.ic-email:before {
+  content: "\e609";
+  vertical-align: middle;
+}
+
+.ic-phone:before {
+  content: "\e60a";
+  vertical-align: middle;
+}
+
+.ic-link:before {
+  content: "\e60b";
+}
+
+.ic-linkedin:before {
+  content: "\e616";
+}
+
+.ic-list:before {
+  content: "\e60c";
+}
+
+.ic-layout:before {
+  content: "\e60d";
+}
+
+.ic-rss:before {
+  content: "\e60e";
+}
+
+.ic-facebook:before {
+  content: "\e60f";
+}
+
+.ic-twitter:before {
+  content: "\e610";
+}
+
+.ic-tag:before {
+  content: "\e611";
+}
+
+.ic-arrow-up:before {
+  content: "\e612";
+}
+
+.ic-arrow-down:before {
+  content: "\e613";
+}
+
+.ic-arrow-left:before {
+  content: "\e614";
+}
+
+.ic-arrow-right:before {
+  content: "\e615";
+}
+
+.ic-speaker:before {
+  content: "\e601";
+}
+
+
+
+// Extends
+// ----------------------------------
+.read-more {
+  @extend %text-label;
+}
+
+.publish-date {
+  font-size: $text-meta;
+  color: $col-gray-55;
+}
+
+// Follow icons
+.follow-link-wrapper {
+  display: inline-block;
+
+}
+
+.ln-this-site:before {
+  @extend .ic-rss:before;
+}
+
+.ln-facebook:before {
+  @extend .ic-fb:before;
+}
+
+.ln-googleplus:before {
+  @extend .ic-gplus:before;
+}
+
+.ln-twitter:before {
+  @extend .ic-twitter:before;
+}
+
+.ln-myspace:before {
+  @extend .ic-link:before;
+}
+
+.ln-youtube:before {
+  @extend .ic-link:before;
+}
+
+.ln-vimeo:before {
+  @extend .ic-link:before;
+}
+
+.ln-linkedin:before {
+  @extend .ic-linkedin:before;
+}

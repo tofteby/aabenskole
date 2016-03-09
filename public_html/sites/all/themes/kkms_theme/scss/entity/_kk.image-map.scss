@@ -1,0 +1,10 @@
+.node-image-map{
+  h1{
+    @extend .title-block;
+    margin-bottom: 0.5em;
+  }
+  // The label should have been hidden in display, but wasn't
+  .field-label{
+    display:none;
+  }
+}

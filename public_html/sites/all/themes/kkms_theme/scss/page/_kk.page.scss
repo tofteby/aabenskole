@@ -1,0 +1,649 @@
+// PAGE
+// -----------------------------
+.page {
+  background-color: $col-back;
+  @include background-image('page');
+  background-size: 100% auto;
+  position: relative;
+}
+
+.sec-inner {
+  position: relative;
+  
+  @include at-breakpoint($mq-bp-tablet-minus) {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+}
+
+// SECTIONS
+// -----------------------------
+// Header section.
+.sec-header {
+  .sec-inner {
+    @include background-image('header');
+    background-size: 100% auto;
+    padding-top: em(5,18);
+    padding-bottom: em(5,18);    
+    margin-bottom: em(-12,18);
+    @include ie8_font_fix;
+    
+    @include at-breakpoint($mq-bp-desktop) { 
+      min-height: em(122, 18);
+      padding-top: em(22,18);
+      padding-bottom: em(34,18);
+    }
+  }
+}
+
+// Main content deck, incl. sidebar.
+@include content-layout;
+
+// Menu section.
+.sec-menu {
+  @include menu-back-color;
+  margin: $padding 0 0;
+  @include under-menu-line-color;
+  
+  .sec-inner {
+    @include at-breakpoint($mq-bp-desktop) {
+      position: static;
+    }
+    
+    @include at-breakpoint($mq-bp-tablet-minus) {
+      padding: 0;
+    }
+  }
+}
+
+// Footer section.
+.sec-footer {
+  @include footer-back-color;
+  @include background-image('footer');
+  .sec-inner {
+    padding-top: $space;
+    padding-bottom: $space;
+  }
+  .bl-follow {
+    margin-bottom: 6em;
+    
+    @include at-breakpoint($mq-bp-desktop) {
+      margin-bottom: 5em;
+    }
+  }
+}
+
+// Bottom section with mandatory info.
+.sec-bottom {
+  @include bottom-back-color;
+  .sec-inner {
+    padding-top: $space;
+    padding-bottom: $space;
+  }
+}
+
+
+
+// REGIONS
+// -----------------------------
+%reg-full {
+}
+
+%reg-main {
+  @include at-breakpoint($mq-bp-desktop) {
+    @include span-columns(16,24);
+  }
+}
+
+%reg-sidebar {
+  @include at-breakpoint($mq-bp-desktop) {
+    @include span-columns(7,24);
+    @include omega;
+  }
+}
+
+.reg-content {
+  @extend %reg-main;
+}
+
+.reg-sidebar {
+  @extend %reg-sidebar;
+}
+
+.reg-top,
+.reg-bottom,
+.reg-middle {
+  clear: both;
+}
+
+@include at-breakpoint($mq-bp-desktop) {    
+  .reg-top-menu-left {
+    @include span-columns(4,6);
+  }
+  .reg-top-menu-right {
+    @include span-columns(2,6);
+    @include omega;
+  }
+}
+
+// BlOCK ELEMENTS
+// -----------------------------
+%block-e {
+  margin: $space 0;
+}
+
+%block-primary {
+  padding: $space;
+  background: $col-content;
+  
+  @include at-breakpoint($mq-bp-mobile) { 
+    padding: $space / 2;
+  }
+}
+
+%block-secondary {
+  padding: $padding;
+}
+
+%block-row {
+  padding: $padding 0;
+}
+
+%block-media {
+  position: relative;
+  margin-bottom: 2em;
+
+  .caption {
+    position: absolute;
+    right: em(8);
+    bottom: em(8);
+  }
+}
+
+// ------------------------------
+
+.bl-i {
+  display: inline-block;
+}
+
+.bl-type {
+  border-left: 1px solid $col-gray-55;
+  padding: 0 em(8);
+}
+
+.bl-search {
+  padding: $padding;
+  
+  @include at-breakpoint($mq-bp-desktop) {
+    @include span-columns(7,24);
+    @include omega;
+    padding: em(10) 0 0;
+  }
+  
+  @include at-breakpoint($mq-bp-tablet-minus) { 
+    display: none;
+    
+    &.active {
+      display: block;
+      clear: both;
+    }
+  }
+}
+
+
+// Page date element.
+.bl-date {
+  @extend %block-row;
+  margin-top: em(-28,15);
+}
+
+// Page title element.
+.bl-title {
+  margin-bottom: em(28,48);
+  margin-top: em(12,48);  
+  
+  @include at-breakpoint($mq-bp-desktop) {
+    @include post(8,24);
+  }
+}
+
+// Blocks with icon links.
+.bl-icons {
+  position: absolute;
+  top: $space/2;
+  right: $grid-padding;
+  z-index: 2;
+  li {
+    display: inline-block;
+    margin-left: em(12);
+  }
+
+  a {
+    @extend %link-grey;
+  }
+  
+  @include at-breakpoint($mq-bp-desktop) {
+    top: $space;
+  }
+}
+
+.bl-shareicons {
+  // Position relative to icon bar
+  position: absolute;
+  top: em(22,18);
+  right: 0;
+
+  // Give it a width to float icons in one row
+  float: right;
+  width: 15em;
+  overflow: visible !important;
+
+  // Add shadow and styling
+  @extend %block-primary;
+  @include add-shadow('light');
+
+  li {
+    float: right;
+    margin-right: $space;
+    margin-left: 0;
+
+    &:first-child {
+      margin-right: 0;
+    }
+  }
+
+  .csstransforms & {
+    top: em(36,18);
+    right: -15px;
+
+    &:before {
+      content: " ";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      @include rotate(45deg);
+      top: -10px;
+      right: 15px;
+      z-index: 10;
+      box-shadow: -1px -1px 0 rgba($col-text, 0.10);
+    }
+  }
+}
+
+// Figure element with images.
+.bl-img {
+  @extend %block-media;
+  img {
+    width: 100%;
+  }
+}
+
+// Figure elements with video.
+.bl-video {
+  @extend %block-media;
+}
+
+// Block with tags in footer of articles.
+// @todo: Override markup into a list, remove label, remove label and .field-items styling.
+.bl-tags {
+  @extend %block-e;
+  margin: 1em 0;
+
+  ul,
+  .links,
+  .item-list,
+  .field-items {
+    display: inline;
+  }
+
+  li,
+  .field-item {
+    display: inline-block;
+    padding: 0;
+    margin: 0 .5em 0 -3px; // -3px in order to count for the space between inline block elements
+    &:before{
+      border-left: 1px solid $col-gray-55;
+      padding: 0;
+      margin: 0 .5em 0 0;
+      content: ' ';
+      width: 1px;
+    }
+    &:first-child {
+      border: none;
+      padding: 0;
+      margin: 0 .5em 0 .5em;
+      &:before{
+        padding:0;
+        margin:0;
+        border: none;
+      }
+    }
+  }
+}
+
+
+
+
+
+// Info block for events.
+.bl-info {
+  border: 1px solid $col-contrast-two-bd;
+  background: $col-contrast-two-lt;
+  @extend %block-primary;
+  margin-bottom: $padding;
+}
+
+// Primary block with supplemental info.
+.bl-element {
+  @extend %block-primary;
+  @extend %block-e;
+  @include add-shadow;
+  border: 1px solid $col-gray-25;
+
+  h1,
+  h2,
+  h3,
+  .field-label {
+    @extend .title-block;
+    margin-bottom: 0.5em;
+  }
+}
+
+// Service spot
+.bl-service {
+  @extend .bl-element;
+  background-color: $col-contrast-three;
+  color: $col-gray-85;
+  font-size: em(16,18);
+
+  .field-label,
+  h3,
+  h2{
+    text-transform: uppercase;
+    font-size: em(20,16);
+    margin-bottom: em(12,24);
+    color: $col-gray-90;
+  }
+}
+
+.bl-aside {
+  margin-bottom: 2em;
+  font-size: em(16,18);
+  h2{
+    font-size: em(24,16);
+    margin-bottom: em(12,24);
+  }
+  .views-row{
+    margin-bottom: $padding;
+  }
+}
+
+.bl-grid{
+  @include container;
+  margin-bottom: 2em;
+  font-size: em(18,18);
+  vertical-align: top;
+  clear: both;
+  .view-header{
+    font-size: em(20,18);
+    text-transform: uppercase;
+  }
+
+  h2{
+    font-size: em(24,16);
+    margin-bottom: em(12,24);
+  }
+  .view-content{
+    vertical-align: top;
+  }
+  .views-row{
+    @include at-breakpoint($mq-bp-tablet) {
+      @include span-columns(12,24);
+      
+      &.views-row-even {
+        @include omega;
+      }
+    }
+    @include at-breakpoint($mq-bp-desktop) {
+      @include span-columns(8,24);
+      
+      &.third {
+        @include omega;
+      }
+    }
+    
+    @extend .bl-element;
+    margin-bottom: $padding;
+    height: auto;
+  }
+}
+
+.bl-grid-space{
+  @include container;
+  font-size: em(18,18);
+  vertical-align: top;
+  clear: right;
+  .view-header{
+    font-size: em(20,18);
+    text-transform: uppercase;
+  }
+
+  h2{
+    font-size: em(24,16);
+    margin-bottom: em(12,24);
+  }
+  .view-content{
+    vertical-align: top;
+    //overflow: hidden;
+    @include pie-clearfix;
+  }
+  .views-row{
+    @include at-breakpoint($mq-bp-tablet) {
+      @include span-columns(3, 6);
+      
+      &.views-row-even {
+        @include omega;
+      }
+      
+      &.views-row-odd {
+        clear: both;
+      }
+    }
+    @include at-breakpoint($mq-bp-desktop) {
+      @include span-columns(2, 6);
+      
+      &.third {
+        @include omega;
+      }
+      
+      &.first {
+        clear: both;
+      }
+    }
+    
+    @extend .bl-element;
+    margin-bottom: $padding;
+    padding: 1em;
+    height: auto;   
+  }
+
+  .pager {
+    margin-top: $padding;
+  }
+}
+
+.block-workbench {
+  @extend .bl-element;
+}
+
+.bl-footer { 
+  @include at-breakpoint($mq-bp-tablet) {
+    @include span-columns(12,24);
+
+    &.even {
+      @include omega;
+    }
+
+    &.odd {
+      clear: both;
+    }
+  }
+  @include at-breakpoint($mq-bp-desktop) {    
+    @include span-columns(8,24);
+
+    &.third {
+      @include omega;
+    }
+
+    &.first {
+      clear: both;
+    }
+  }
+  
+  @include ie8_footer_block;
+  
+  &.block-menu {
+    margin-bottom: $baseline;
+  }
+}
+
+.bl-follow {
+  @include at-breakpoint($mq-bp-desktop) {    
+    @include span-columns(8,24);
+  }
+  clear: both;
+}
+
+// LAYOUTS
+// -----------------------------
+// Twocolumn layout for block elements like info blocks.
+.l-twocol {
+  @include clearfix;
+  padding: 0;
+
+  .sec-col {
+    float: left;
+    width: 50%;
+    padding: $space;
+  }
+}
+
+
+// LISTS
+// -----------------------------
+.list-posts {
+  li {
+    margin-bottom: 1em;
+  }
+}
+
+
+// INLINE ELEMENTS
+// -----------------------------
+.bl-dateleaf {
+  text-align: center;
+  float: left;
+  margin-right: 1em;
+
+  .el-day {
+    font-size: em(28,16);
+    font-weight: bold;
+    width: 2em;
+    line-height: 1.392857143em;
+    background: $col-content;
+    border: 1px solid $col-primary;
+    display: block;
+
+    @include ie8_font_fix('b');
+  }
+
+  .el-month {
+    @extend %text-label;
+    background: $col-primary;
+    color: $col-content;
+    display: block; 
+  }
+}
+
+.bl-btm {
+  padding: 0.9em 0 0.8em;
+  color: $col-footer;
+
+  .title-bottom {
+    @include post(2,24);
+    float: left;
+  }
+
+  li {
+    float: left;
+    @include post(1,24);
+  }
+}
+
+.st-button {
+  display: inline-block;
+}
+
+
+// Messages
+div.messages{
+  @include add-shadow('light');
+  padding: 0;
+  @extend .tx-content;
+  color: $col-content;
+  padding: 1em;
+  background: $col-text none;
+  ul{
+    li{
+      &:before{
+        color: $col-content;
+      }
+    }
+  }
+  h2{
+    text-transform: uppercase;
+    font-weight: normal;
+  }
+
+  &.error{
+    background: $col-contrast-one none;
+    border-color: $col-gray-25;
+  }
+  &.status{
+    background: $col-contrast-two none;
+    border-color: $col-gray-25;
+  }
+  &.warning{
+    background: $col-contrast-three none;
+    border-color: $col-gray-25;
+    .messages-inner{
+      color: $col-text;
+      ul{
+        li{
+          &:before{
+            color: $col-text;
+          }
+        }
+      }
+    }
+  }
+  .messages-icon{
+    width: 17px;
+    height: 17px;
+    background-image: url("#{$theme_path}/images/icon-cross.png");
+    background-repeat: no-repeat;
+    background-position: right top;
+    float: right;
+    cursor: pointer;
+  }
+}
+
+.node-full {
+  overflow: hidden;
+}
+
+.placeholder{
+  margin:0;
+  padding:0;
+}

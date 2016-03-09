@@ -1,0 +1,82 @@
+/**
+ * Theming of map, area content-types.
+ * Task is to overrde styles provided by openlayers module.
+ *
+ * TODO:
+ * - The default openlayers theme is a dark colored theme and the icons and other graphics should be replaced with lighter ones.
+ *   The designers have been asked to provide these.
+ *
+*/
+
+.openlayers-tooltip-name{
+  font-size: $text-heading;
+  margin-bottom: .2em;
+  font-weight: bold;
+  @include ie8_font_fix('b');
+  a{
+    color: $col-text;
+  }
+}
+
+.openlayers-tooltip-description{
+  .views-field-field-email,
+  .views-field-field-telephone,
+  .views-field-field-opening-hours,
+  .views-field-field-address{
+    color: $col-text;
+  }
+
+  .views-field-field-address{
+    margin-bottom: em(9,18);
+  }
+
+  .views-field-field-opening-hours{
+    margin-top: $space/2;
+
+    .views-label-field-opening-hours{
+      font-size: em(14,18);
+      font-weight: bold;
+      
+      @include ie8_font_fix('b');
+    }
+
+    .field-content{
+      font-size: em(14,18);
+      .dates{
+        display: inline-block;
+        width: 40%;
+      }
+      .days{
+        background-color: $col-content;
+        color: $col-text;
+        display: inline-block;
+        width: 40%;
+      }
+      .time{
+        background-color: $col-content;
+        color: $col-text;
+        display: inline-block;
+        width: auto;
+      }
+      .day{
+        background-color: $col-content;
+        color: $col-text;
+        .name{
+          display: inline-block;
+          width: 50%;
+        }
+      }
+    }
+  }
+}
+
+// In template.php custom class added when the opening hours is empty.
+.views-label-hidden{
+  display: none;
+}
+
+.node-area{
+  .pane-views-panes{
+    margin-bottom: $space;
+  }
+}

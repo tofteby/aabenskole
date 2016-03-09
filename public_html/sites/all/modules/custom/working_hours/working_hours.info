@@ -1,0 +1,9 @@
+name = Working hours
+description = Provides a working hours field that can be attached to any entity.
+core = 7.x
+php = 5.3
+package = "Working hours"
+files[] = working_hours.module
+
+dependencies[] = field
+dependencies[] = date_popup

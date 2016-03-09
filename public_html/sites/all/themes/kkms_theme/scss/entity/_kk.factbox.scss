@@ -1,0 +1,17 @@
+.node-factbox{
+
+  h1{
+    @extend .title-block;
+    margin-bottom: 0.5em;
+  }
+  // The labels should have been hidden in display, but weren't
+  h3.field-label{
+    display:none;
+  }
+  .field-name-field-image-single,
+  .field-name-body{
+    .field-label{
+      display:none;
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+	"system" :
+	{
+		"defaults" :
+		{
+			"numberResultsReturned": 2
+		}
+	},
+	"classes" :
+	{
+		"01":
+		{
+			"id": "01",
+			"title": "EU countries",
+			"hidden":0,
+			"exclusive":0,
+			"thresholdWeight": 5,
+			"thresholdCount": 1,
+			"thresholdCountUnique": 1,
+			"terms":
+			{
+				"Denmark":
+				{
+					"title": "Denmark",
+					"weight": 5,
+					"required": 0, 
+					"requireTerm": "",
+					"excludeOnTerm": "",
+					"requireClass": "",
+					"excludeOnClass": "",
+					"prefix": "",
+					"suffix": ""
+				},
+				"Spain":
+				{
+					"title": "Spain",
+					"weight": 5,
+					"required": 0, 
+					"requireTerm": "",
+					"excludeOnTerm": "",
+					"requireClass": "",
+					"excludeOnClass": "",
+					"prefix": "",
+					"suffix": ""
+				},
+				"UK":
+				{
+					"title": "UK",
+					"weight": 5,
+					"required": 0, 
+					"requireTerm": "",
+					"excludeOnTerm": "",
+					"requireClass": "",
+					"excludeOnClass": "",
+					"prefix": "",
+					"suffix": ""
+				}
+			}
+		}
+	}
+}

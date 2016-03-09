@@ -1,0 +1,7 @@
+name = Decision tree
+description = Provide a decision tree flow 
+
+core = 7.x
+version = "7.x-1.0"
+
+dependencies[] = nodehierarchy_views

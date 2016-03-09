@@ -1,0 +1,6 @@
+name = KKMS Performance
+description = Provide performance optimizations for KKMS platform
+package = KKMS Custom
+core = 7.x
+
+dependencies[] = expire

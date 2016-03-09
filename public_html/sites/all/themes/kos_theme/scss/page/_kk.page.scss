@@ -1,0 +1,124 @@
+%title-local-list-item {
+  font-size: $basesize;
+  line-height: 1em;
+}
+
+%block-e {
+  margin: $space 0;
+}
+
+%block-primary {
+  padding: $space;
+  background: $col-content;
+  
+  @include at-breakpoint($mq-bp-mobile) { 
+    padding: $space / 2;
+  }
+}
+
+%title-block {
+  font-size: $text-block;
+  line-height: 1.15em;
+}
+
+.title-block {
+  @extend %title-block;
+  text-transform: uppercase;
+} // 'Kontakt'
+
+// Primary block with supplemental info.
+.bl-element {
+  @extend %block-primary;
+  @extend %block-e;
+  @include add-shadow;
+  border: 1px solid $col-gray-25;
+
+  h1,
+  h2,
+  h3,
+  .field-label {
+    @extend .title-block;
+    margin-bottom: 0.5em;
+  }
+} 
+
+
+.bl-grid-space{
+  @include container;
+  font-size: em(18,18);
+  vertical-align: top;
+  clear: right;
+  .view-header{
+    font-size: em(20,18);
+    text-transform: uppercase;
+  }
+
+  h2{
+    font-size: em(24,16);
+    margin-bottom: em(12,24);
+  }
+  .view-content{
+    vertical-align: top;
+    //overflow: hidden;
+    @include pie-clearfix;
+  }
+  .views-row{
+    @include at-breakpoint($mq-bp-tablet) {
+      @include span-columns(3, 6);
+      
+      &.views-row-even {
+        @include omega;
+      }
+      
+      &.views-row-odd {
+        clear: both;
+      }
+    }
+    @include at-breakpoint($mq-bp-desktop) {
+      @include span-columns(2, 6);
+      
+      &.third {
+        @include omega;
+      }
+      
+      &.first {
+        clear: both;
+      }
+    }
+    
+    @extend .bl-element;
+    margin-bottom: $padding;
+    padding: 1em;
+    height: auto;   
+  }
+
+  .pager {
+    margin-top: $padding;
+  }
+}
+
+.form-text{
+  font-size: em(16,18);
+  border: 1px solid $col-gray-55;
+  font-weight: bold;
+  font-style: italic;
+  color: $col-gray-70;
+  padding: em(9,16);
+  width: 100%;
+  -webkit-appearance: none;
+  @include border-radius(0);
+
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+
+  @include ie8_font_fix('bi');
+
+  &:focus{
+    background-color: $col-gray-25;
+    outline: none;
+    box-shadow: 0;
+  }
+}
+
+

@@ -1,0 +1,226 @@
+<?php
+
+/**
+ * Implements hook_cron().
+ */
+function pull_content_feed_cron() {
+  // the idea is to skip cron execution on install because it could take a lot of time
+  $skip_on_first_call = variable_get('pull_content_skip_on_first_call', 1);
+  if($skip_on_first_call) {
+    variable_set('pull_content_skip_on_first_call', 0);
+    return;
+  }
+  
+  //Process latest added/updated nodes
+  _pull_content_feed_cron_updated_nodes();
+
+  //Process latest deleted nodes
+  _pull_content_feed_cron_deleted_nodes();
+}
+
+/**
+ * 
+ * Process latest added/updated nodes
+ */
+function _pull_content_feed_cron_updated_nodes() {
+  $items = array();
+  try {
+    $client = _pull_content_feed_connection_get();
+    $items = $client->getLatestModifiedNodes(variable_get('pull_content_feed_datatime_updated', 0));
+  }
+  catch (Exception $e) {
+    if ($e instanceof ServicesClientConnectionResponseException || $e instanceof ServicesClientConnectionException) {
+      $e->log();
+    }
+    watchdog_exception('PULL CONTENT', $e, NULL, array(), WATCHDOG_ERROR);
+  }
+  if (!is_array($items)) {
+    return;
+  }
+  $last_updated_date = '';
+  $timestamp = 0;
+  $allowed_types = variable_get('pull_content_feed_types', array('institution', 'place'));
+  $queue = DrupalQueue::get('pull_content_feed');
+  foreach ($items as $item) {
+    if (in_array($item['type'], $allowed_types)) {
+      $queue->createItem($item);
+      $timestamp_tmp = strtotime($item['updated']);
+      if ($timestamp_tmp > $timestamp) {
+        $timestamp = $timestamp_tmp;
+        $last_updated_date = $item['updated'];
+      }
+    }
+  }
+  if ($last_updated_date) {
+    variable_set('pull_content_feed_datatime_updated', $last_updated_date);
+  }
+}
+
+/**
+ * 
+ * Process latest added/updated nodes
+ */
+function _pull_content_feed_cron_deleted_nodes() {
+  $items = array();
+  try {
+    $client = _pull_content_feed_connection_get();
+    $items = $client->getLatestDeletedNodes(variable_get('pull_content_feed_datatime_deleted', 0));
+  }
+  catch (Exception $e) {
+    if ($e instanceof ServicesClientConnectionResponseException || $e instanceof ServicesClientConnectionException) {
+      $e->log();
+    }
+    watchdog_exception('PULL CONTENT', $e, NULL, array(), WATCHDOG_ERROR);
+  }
+  if (!is_array($items)) {
+    return;
+  }
+  $last_deleted_date = '';
+  $timestamp = 0;
+  $allowed_types = variable_get('pull_content_feed_types', array('institution', 'place'));
+  $queue = DrupalQueue::get('pull_content_feed');
+  foreach ($items as $item) {
+    if (in_array($item['type'], $allowed_types)) {
+      $queue->createItem($item);
+      $timestamp_tmp = strtotime($item['deleted']);
+      if ($timestamp_tmp > $timestamp) {
+        $timestamp = $timestamp_tmp;
+        $last_deleted_date = $item['deleted'];
+      }
+    }
+  }
+  if ($last_deleted_date) {
+    variable_set('pull_content_feed_datatime_deleted', $last_deleted_date);
+  }
+}
+
+/**
+ * Implements hook_cron_queue_info().
+ */
+function pull_content_feed_cron_queue_info() {
+  $queues['pull_content_feed'] = array(
+    'worker callback' => '_pull_content_feed_worker',
+    'time' => 120,
+  );
+  return $queues;
+}
+
+function _pull_content_feed_worker($item) {
+  if (isset($item['deleted'])) {
+    _pull_content_feed_worker_delete_node($item);
+  }
+  elseif (isset($item['updated'])) {
+    _pull_content_feed_worker_update_node($item);
+  }
+}
+
+function _pull_content_feed_worker_update_node($item) {
+  try {
+    $client = _pull_content_feed_connection_get();
+    $types = node_type_get_types();
+    // The extrenal content type does not exist in the local context.
+    if (!isset($types[$item['type']])) {
+      return;
+    }
+    
+    $node = $client->getNodeById($item['nid']);
+    
+    // The remote content does not uuid - skip it.
+    if (empty($node['uuid'])) {
+      return;
+    }
+    $languages = array(LANGUAGE_NONE => t('Language neutral')) + locale_language_list('name');
+    if (!isset($languages[$node['language']])) {
+      return;
+    }
+    
+    $nid = reset(entity_get_id_by_uuid('node', array($node['uuid'])));
+    
+    // Tring to find the translation source. Rely that translation source node is already imported.
+    $tnid = NULL;
+    if ($node['tnid']) {
+      if ($node['tnid'] != $node['nid']) {
+        $tnode = $client->getNodeById($node['tnid']);
+        $tnid = reset(entity_get_id_by_uuid('node', array($tnode['uuid'])));
+      }
+      else {
+        $tnid = (int)$nid;
+      }
+      if (empty($tnid)) {
+        $tnid = NULL;
+      }
+    }
+
+    // Update existing node.
+    if ($nid) {
+      $node = _pull_content_node_create($node, $client, TRUE, NODE_PUBLISHED, TRUE, $nid, $tnid);
+    }
+    // Create a new node
+    else {
+      $node = _pull_content_node_create($node, $client, TRUE, NODE_PUBLISHED, TRUE, NULL, $tnid);
+    }
+  }
+  catch (Exception $e) {
+    switch (TRUE) {
+      case $e instanceof ServicesClientConnectionResponseException:
+        if ($e->response->error_code == '404') {
+          watchdog_exception('PULL CONTENT', $e, NULL, array(), WATCHDOG_NOTICE);
+          break;
+        }
+      case $e instanceof ServicesClientConnectionException:
+        $e->log();
+        break;
+      default:
+        watchdog_exception('PULL CONTENT', $e, NULL, array(), WATCHDOG_ERROR);
+        break;
+    }
+  }
+}
+
+function _pull_content_feed_worker_delete_node($item) {
+  try {
+    $client = _pull_content_feed_connection_get();
+    $types = node_type_get_types();
+    // The extrenal content type does not exist in the local context.
+    if (!isset($types[$item['type']])) {
+      return;
+    }
+    
+    // The remote content does not uuid - skip it.
+    if (empty($item['uuid'])) {
+      return;
+    }
+    $id = reset(entity_get_id_by_uuid('node', array($item['uuid'])));
+  
+    // Update existing node.
+    if ($id) {
+      node_delete($id);
+    }
+
+  }
+  catch (Exception $e) {
+    if ($e instanceof ServicesClientConnectionResponseException || $e instanceof ServicesClientConnectionException) {
+      $e->log();
+    }
+    watchdog_exception('PULL CONTENT', $e, NULL, array(), WATCHDOG_ERROR);
+  }
+}
+
+/**
+ * Create new connection client
+ *
+ * @param $name
+ * 
+ * @return PullContentServicesClientConnection
+ */
+function _pull_content_feed_connection_get() {
+  $client = &drupal_static(__FUNCTION__, NULL);
+  if (is_null($client)) {
+    $connection = services_client_connection_load(variable_get('pull_content_feed_client', 'pull_content_feed'));
+    if (!$connection) {
+      throw new Exception(t('Specified connection is not existing.'));
+    }
+    $client = new PullContentServicesClientConnection($connection);
+  }
+  return $client;
+}

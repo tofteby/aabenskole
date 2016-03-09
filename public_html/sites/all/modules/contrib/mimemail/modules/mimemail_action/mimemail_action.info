@@ -1,0 +1,15 @@
+name = "Mime Mail Action"
+description = "Provide actions for Mime Mail."
+package = Mail
+dependencies[] = mimemail
+dependencies[] = trigger
+core = 7.x
+
+
+
+; Information added by drush on 2014-06-26
+version = "7.x-1.0-beta1+0-dev"
+core = "7.x"
+project = "mimemail"
+datestamp = "1403780646"
+

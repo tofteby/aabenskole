@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the KK Config Services Client feature.
+ */
+
+include_once 'configuration_cmt_client.features.inc';

@@ -1,0 +1,329 @@
+<?php
+
+/**
+ * @file
+ * Apachesolr date install hooks.
+ */
+
+/**
+ * Implements hook_entity_info().
+ */
+function apachesolr_date_entity_info() {
+  $return = array(
+    'solrdate' => array(
+      'fieldable' => FALSE,
+      'label' => t('Solr date'),
+      'plural label' => t('Solr dates'),
+      'description' => t('An entity type used for Solr dates.'),
+      'entity class' => 'SolrDateEntity',
+      'controller class' => 'EntityDateController',
+      'base table' => 'solrdate',
+      'entity keys' => array(
+        'id' => 'did',
+      ),
+    ),
+  );
+
+  return $return;
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function apachesolr_date_apachesolr_entity_info_alter(&$entity_info) {
+  // Solr callbacks.
+  $entity_info['solrdate']['indexable'] = TRUE;
+  $entity_info['solrdate']['status callback'][] = 'apachesolr_date_status_callback';
+  $entity_info['solrdate']['document callback'][] = 'apachesolr_date_index_solr_document';
+  $entity_info['solrdate']['reindex callback'] = 'apachesolr_solrdate_solr_reindex';
+  $entity_info['solrdate']['index_table'] = 'apachesolr_index_entities_date';
+  //$entity_info['solrdate']['result callback'] = ??? // apachesolr_search_node_result
+}
+
+/**
+ * Implement hook_form_FORM_ID_alter().
+ */
+function apachesolr_date_form_node_type_form_alter(&$form, &$form_state) {
+  $options = array();
+  foreach (field_info_instances('node', $form['#node_type']->type) as $field_name => $instance) {
+    $field = field_info_field($field_name);
+    if (in_array($field['type'], array('date', 'datestamp', 'datetime')) && $field['settings']['repeat']) {
+      $options[$field_name] = "$instance[label] ($field_name)";
+    }
+  }
+
+  if (!$options) {
+    return;
+  }
+
+  $args['%content-type'] = $form['#node_type']->name;
+  $form['apachesolr_date'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Apachesolr date'),
+    '#group' => 'additional_settings',
+    '#description' => t('Configure Apachesolr date for %content-type content.', $args),
+  );
+
+  $options = array('' => '- Disabled -') + $options;
+  $form['apachesolr_date']['node_date_repeat'] = array(
+    '#type' => 'select',
+    '#title' => t('%content-type date repeat field', $args),
+    '#options' => $options,
+    '#default_value' => variable_get('node_date_repeat_' . $form['#node_type']->type, ''),
+    '#description' => t('Choose the date repeat field to use for recurring dates for %content-type content.', $args),
+  );
+}
+
+/**
+ * Status callback for solr dates.
+ */
+function apachesolr_date_status_callback($entity_id, $entity_type, $entity = NULL) {
+  if ($entity === NULL) {
+    $entity = entity_load($entity_type, array($entity_id));
+    $entity = $entity ? reset($entity) : FALSE;
+  }
+  if (empty($entity)) {
+    // If the object failed to load, just stop.
+    return FALSE;
+  }
+  // Make sure we have an integer value.
+  // Anything different from 1 becomes zero
+  return ($entity->status == 1 ? 1 : 0);
+}
+
+/**
+ * Reindexing callback for solr dates.
+ */
+function apachesolr_solrdate_solr_reindex() {
+  $env_id = apachesolr_default_environment();
+  if (!apachesolr_get_index_bundles($env_id, 'solrdate')) {
+    // Indexing disabled.
+    return;
+  }
+  $indexer_table = apachesolr_get_indexer_table('solrdate');
+  $transaction = db_transaction();
+  try {
+    // Leave status 0 rows - those need to be removed from the index later.
+    $delete = db_delete($indexer_table);
+    $delete->condition('status', 1);
+    $delete->execute();
+
+    $select = db_select('solrdate', 'd');
+    $select->innerJoin('node', 'n', 'n.nid = d.nid');
+    $select->condition('n.status', 1);
+    $select->addExpression("'solrdate'", 'entity_type');
+    $select->addExpression("'solrdate'", 'bundle');
+    $select->addField('d', 'did', 'entity_id');
+    $select->fields('n', array('status'));
+    $select->addExpression(REQUEST_TIME, 'changed');
+
+    $insert = db_insert($indexer_table)
+      ->fields(array('entity_id', 'status', 'entity_type', 'bundle', 'changed'))
+      ->from($select)
+      ->execute();
+  }
+  catch (Exception $e) {
+    $transaction->rollback();
+    throw $e;
+  }
+}
+
+function apachesolr_date_index_solr_document(ApacheSolrDocument $document, $date, $entity_type, $env_id) {
+  $node = node_load($date->nid);
+  $cache = &drupal_static(__FUNCTION__, array());
+  if (!isset($cache[$date->nid])) {
+    $documents = apachesolr_convert_entity_to_documents($node, 'node', $env_id);
+    $cache[$date->nid] = reset($documents);
+    $cache[$date->nid] = apachesolr_date_merge_documents($cache[$date->nid], $document);
+  }
+
+  // Generate Date documents
+  $documents = array();
+  // Clone is needed, also unique $document->id is needed to have separate documents.
+  $document = clone $cache[$date->nid];
+  $document->id = apachesolr_document_id($date->did, 'solrdate');
+  $document->entity_id = $date->did;
+  $document->is_date_nid = $date->nid;
+  $document->is_date_delta = $date->delta;
+  $document->ds_created_real = apachesolr_date_iso($node->created);
+  $field_name = variable_get('node_date_repeat_' . $node->type);
+  // Set date information.
+  unset($document->{'dm_' . $field_name}, $document->{'dm_' . $field_name . '_end'});
+  $fields = apachesolr_date_index_single_date($node, $date, $field_name);
+  foreach ($fields as $field) {
+    $document->setMultiValue($field['key'], $field['value']);
+  }
+  foreach ($fields as $field) {
+    if ($field['key'] === 'dm_' . $field_name) {
+      $document->ds_created = $field['value'];
+      break;
+    }
+  }
+  
+  $documents[] = $document;
+
+  return $documents;
+}
+
+function apachesolr_date_merge_documents(ApacheSolrDocument $document, ApacheSolrDocument $source_document, $fields = array('id', 'entity_id', 'entity_type', 'bundle', 'bundle_name')) {
+  foreach ($fields as $field) {
+    $document->{$field} = $source_document->{$field};
+  }
+
+  return $document;
+}
+
+/**
+ * Get solr index fields for a single date.
+ */
+function apachesolr_date_index_single_date($node, $date, $field_name) {
+  $fields = array();
+  if (isset($node->{$field_name}[LANGUAGE_NONE][$date->delta])) {
+    $field_info = field_info_field($field_name);
+    $mappings = apachesolr_get_field_mappings('node');
+    $function = reset($mappings[$field_info['type']]['indexing_callback']);
+    $fake_node = new stdClass();
+    $fake_node->{$field_name}[LANGUAGE_NONE][] = $node->{$field_name}[LANGUAGE_NONE][$date->delta];
+    foreach (array("dm_$field_name", "ds_$field_name") as $index_key) {
+      $fields = array_merge($fields, $function($fake_node, $field_name, $index_key, array()));
+    }
+  }
+  return $fields;
+}
+
+// Handle Building of Date entities.
+
+/**
+ * Implements hook_node_insert().
+ */
+function apachesolr_date_node_insert($node) {
+  apachesolr_date_node_update($node);
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function apachesolr_date_node_update($node) {
+  if ($field_name = variable_get('node_date_repeat_' . $node->type, FALSE)) {
+    if (!module_invoke('workbench_moderation', 'node_type_moderated', $node->type)) {
+      apachesolr_date_update_dates($node);
+    }
+  }
+}
+
+/**
+ * Implements hook_node_delete().
+ */
+function apachesolr_date_node_delete($node) {
+  if ($field_name = variable_get('node_date_repeat_' . $node->type, FALSE)) {
+    apachesolr_node_dates_delete($node->nid);
+  }
+}
+
+function apachesolr_node_dates_delete($nid, $exclude = array()) {
+  $select = db_select('solrdate', 'd')->fields('d', array('did'))->condition('d.nid', $nid);
+  if ($exclude) {
+    $select->condition('d.did', $exclude, 'NOT IN');
+  }
+  $delete = $select->execute()->fetchCol();
+  entity_delete_multiple('solrdate', $delete);
+}
+
+function apachesolr_date_update_dates($node) {
+  if ($field_name = variable_get('node_date_repeat_' . $node->type, FALSE)) {
+    $select = db_select('solrdate', 'd')->fields('d', array('delta', 'did'))->condition('d.nid', $node->nid);
+    $existing = $select->execute()->fetchAllKeyed();
+    $exclude = array();
+    // Create/update all Date entities.
+    list(, $dates) = each($node->$field_name);
+    foreach ($dates as $delta => $date) {
+      if (isset($existing[$delta])) {
+        $entity = entity_load('solrdate', array($existing[$delta]));
+        $entity = reset($entity);
+        $entity->save();
+        $exclude[$entity->did] = $entity->did;
+      }
+      else {
+        $values = array('nid' => $node->nid, 'delta' => $delta, 'status' => $node->status);
+        $entity = entity_create('solrdate', $values);
+        $entity->save();
+        $exclude[$entity->did] = $entity->did;
+      }
+    }
+
+    // Delete all the other dates
+    apachesolr_node_dates_delete($node->nid, $exclude);
+  }
+}
+
+function apachesolr_date_should_update_dates($node) {
+  if ($field_name = variable_get('node_date_repeat_' . $node->type, FALSE)) {
+    if (module_invoke('workbench_moderation', 'node_type_moderated', $node->type)) {
+      $current_state =  $node->workbench_moderation_state_new;
+    }
+    else {
+      return $node->status;
+    }
+  }
+  return FALSE;
+}
+
+function apachesolr_date_workbench_moderation_transition($node, $old_state, $new_state) {
+  if ($field_name = variable_get('node_date_repeat_' . $node->type, FALSE)) {
+    if ($new_state === 'published') {
+      apachesolr_date_update_dates($node);
+      // Published.
+    }
+    elseif ($old_state === 'published' && !isset($node->workbench_moderation['published'])) {
+      // Unpublished prevously published revision. Delete date entities.
+      apachesolr_node_dates_delete($node->nid);
+    }
+  }
+}
+
+/**
+ * Implements hook_date_formats().
+ */
+function apachesolr_date_date_formats() {
+  return array(
+    array(
+      'type' => 'medium',
+      'format' => 'd. M. Y, h:i',
+      'locales' => array(),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_extra_fields().
+ */
+function apachesolr_date_field_extra_fields() {
+  $extra = array();
+  $extra['node']['event'] = array(
+    'display' => array(
+      'apachesolr_date_fancy_day_month' => array(
+        'label' => t('Date fancy date month'),
+        'description' => t('Date fancy date month'),
+        'weight' => -10,
+      )
+    )
+  );
+  return $extra;
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function apachesolr_date_node_view($node, $view_mode = 'full') {
+  if ($node->type === 'event' && $node->field_date) {
+    list(, $dates) = each($node->field_date);
+    $date = new DateObject($dates[0]['value']);
+    $node->content['apachesolr_date_fancy_day_month'] = array(
+      '#markup' => '<div class="fancy-date">
+        <span class="day">' . $date->format('d') . '</span>
+        <span class="month">' . $date->format('M') . '</span>
+      </div>',
+      '#weight' => -10,
+    );
+  }
+}

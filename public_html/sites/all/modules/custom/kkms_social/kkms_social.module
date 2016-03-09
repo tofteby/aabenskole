@@ -1,0 +1,121 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function kkms_social_menu() {
+  $items = array();
+
+  $items['admin/config/system/kkms-social'] = array(
+    'title' => 'KKMS Social media',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('kkms_social_settings'),
+    'access arguments' => array('access administration pages'),
+  );
+
+  return $items;
+}
+
+function kkms_social_settings() {
+  $form['kkms_social_accessibility_link'] = array(
+    '#title' => 'Accessibility link',
+    '#type' => 'textfield',
+    '#default_value' => variable_get('kkms_social_accessibility_link', 'http://www.adgangforalle.dk'),
+  );
+  return system_settings_form($form);
+}
+
+
+/**
+ * Implements hook_block_info().
+ */
+function kkms_social_block_info() {
+  $blocks = array();
+  $blocks['kkms-social-share-block'] = array(
+    'info' => t('KKMS share block'),
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function kkms_social_block_view($delta = '') {
+  $block = array();
+  if ($delta == 'kkms-social-share-block') {
+    $block = array(
+      'subject' => t('Share'),
+      'content' => _kkms_social_share_block_view(),
+    );
+  }
+  return $block;
+}
+
+function _kkms_social_share_block_view() {
+  drupal_add_js(drupal_get_path('module', 'kkms_social') . '/kkms_social.js');
+  $urls = array(
+    array(
+    	'title' => t('Facebook share'),
+      'url' => "http://www.facebook.com/share.php?u=[URL]&title=[TITLE]",
+      'icon' => 'fb',
+    ),
+    array(
+    	'title' => t('Google+ share'),
+      'url' => "https://plus.google.com/share?url=[URL]",
+      'icon' => 'gplus',
+    ),
+    array(
+    	'title' => t('Linkedin share'),
+      'url' => "http://www.linkedin.com/shareArticle?mini=true&url=[URL]&title=[TITLE]&source=[DOMAIN]",
+      'icon' => 'linkedin',
+    ),
+    array(
+    	'title' => t('Twitter share'),
+      'url' => "http://twitter.com/home?status=[TITLE]+[URL]",
+      'icon' => 'twitter',
+    ),
+    array(
+    	'title' => t('Tell a friend'),
+      'url' =>  urldecode(url('forward', array('query' => array('path' => '[PATH]'),))),
+      'icon' => 'email',
+    ),
+  );
+  $map = array(
+    '[TITLE]' => rawurlencode(drupal_get_title()),
+    '[URL]' => rawurlencode("http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}"),
+    '[DOMAIN]' => rawurlencode($_SERVER['HTTP_HOST']),
+    '[PATH]' => rawurlencode(drupal_get_path_alias()),
+  );
+    
+  $links = array();
+  foreach ($urls as &$url) {
+    $attributes = array(
+      'data-share-url' => strtr($url['url'], $map),
+      'data-service' => $url['icon'],
+      'class' => array('kkms-social-share-item'),
+    );
+
+    $links[] = l("<span class='ic-" . $url['icon'] ."'></span><span class='tx-ic'>" . $url['title'] . "</span>", '#', array('title' => $url['title'], 'html' => true, 'attributes' => $attributes, 'external' => true));
+  }
+  //$output = theme('kkms_social_share_block_view', array('links' => $links));
+
+  $more_links = array(
+    l("<span class='ic-speaker'></span><span class='tx-ic'>" . t('Accessibility') . "</span>", variable_get('kkms_social_accessibility_link', 'http://www.adgangforalle.dk'), array('external' => true, 'html' => true, 'attributes' => array('target' => '_blank', 'title' => t('Accessibility')))),
+    l("<span class='ic-print'></span><span class='tx-ic'>" . t('Print') . "</span>", '#', array('external' => true, 'html' => true, 'attributes' => array('class' => 'print-this-page', 'title' => t('Print')))),
+  );
+  $output = theme('kkms_social_share_block_view', array('links' => $more_links, 'social_links' => $links));
+  return $output;
+}
+
+
+/**
+ * Implements hook_theme().
+ */
+function kkms_social_theme($existing, $type, $theme, $path) {
+  return array(
+    'kkms_social_share_block_view' => array(
+      'arguments' => array('links' => array()),
+      'template' => 'kkms-social-share-block-view'
+    )
+  );
+}

@@ -1,0 +1,16 @@
+name = Client Request
+description = Client request to server.
+core = 7.x
+package = KK Custom
+
+dependencies[] = services_client
+dependencies[] = kk_taxon_taxonomy_alter
+dependencies[] = taxonomy
+
+files[] = kk_client_request.install
+files[] = kk_client_request.module
+files[] = kk_client_request.admin.inc
+files[] = kk_client_request.cron.inc
+files[] = kk_client_request.services.inc
+files[] = kk_client_request.database.inc
+files[] = kk_client_request.batch.inc

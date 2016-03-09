@@ -1,0 +1,7 @@
+name = Pull content feed
+description = Module synchronise content between CTAX and local site
+core = 7.x
+
+dependencies[] = pull_content_feed_features
+dependencies[] = pull_content
+

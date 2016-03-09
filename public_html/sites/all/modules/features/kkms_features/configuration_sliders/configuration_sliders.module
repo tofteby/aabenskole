@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Configuration Sliders feature.
+ */
+
+include_once 'configuration_sliders.features.inc';

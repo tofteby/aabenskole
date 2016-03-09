@@ -1,0 +1,190 @@
+
+.field-name-field-event-type{
+  display: inline-block;
+  font-size: em(13,18);
+  .field-item{
+    padding-left: em(9,18);
+    border-left: 1px solid  $col-gray-55;
+  }
+}
+
+
+.node-event{
+  .group-quick-info{
+    @include add-shadow;
+    @include span-columns(16,16);
+    @include omega;
+    border: 1px solid $col-gray-25;
+    margin-bottom: $space;
+  }
+  .group-practical,
+  .group-date{
+    vertical-align: top;
+  }
+
+  .group-date{
+    @include at-breakpoint($mq-bp-tablet-plus) { 
+      @include span-columns(8,16);
+    }
+    
+    vertical-align: top;
+    padding: $space 0;
+
+    .field-label,
+    .fancy-date,
+    .field-name-field-date{
+      vertical-align: top;
+    }
+    .field-label,
+    .field-name-field-date{
+      vertical-align: top;
+      font-size: em(16,18);
+      margin-right: $space;
+      
+      @include at-breakpoint($mq-bp-tablet-plus) { 
+        margin-right: 0;
+      }
+    }
+    .field-label{
+      font-weight: bold;
+      clear: right;
+
+      @include ie8_font_fix('b');
+    }
+    .fancy-date{
+      border: 1px solid $col-gray-25;
+      font-weight: bold;
+      margin: 0 $space;
+      float: left;
+
+      @include ie8_font_fix('b');
+
+      .day{
+        line-height: 1.5em;
+        font-size: em(27,18);
+        text-align: center;
+        display: inline-block;
+        clear: right;
+        color: $col-primary;
+        width: 100%;
+      }
+      .month{
+        line-height: 1.5em;
+        font-size: em(14,18);
+        text-transform: uppercase;
+        text-align: center;
+        width: 100%;
+        color: $col-content;
+        background-color: $col-primary;
+        display: inline-block;
+        clear: right;
+      }
+    }
+  }
+
+  .group-practical{
+    padding: $space/2 0;
+    border-top: 1px solid $col-gray-25;
+    
+    @include at-breakpoint($mq-bp-tablet-plus) { 
+      @include span-columns(8,16);
+      @include omega;      
+      padding: $space 0;
+      border-top: none;
+    }    
+
+    .field-name-field-price,
+    .field-name-field-practical,
+    .field-name-field-link{
+      margin: 0 $space;
+    }
+    .field-name-field-practical{
+      margin-bottom: 0.5em;
+      clear: right;
+    }
+
+    .field-name-field-price{
+      font-weight: bold;
+
+      @include ie8_font_fix('b');
+    }
+    .field-name-field-link{
+      vertical-align: middle;
+      a{
+        text-transform: uppercase;
+        background-color: $col-contrast-two;
+        padding: $space/3;
+        display: block;
+        color: $col-content;
+        width: 100%;
+        &:after{
+          padding-top: .2em;
+          vertical-align: middle;
+          float: right;
+          @extend %icon;
+          @extend .ic-arrow-right:before;
+        }
+      }
+    }
+  }
+  .field-name-field-place{
+    @include span-columns(16,16);
+    @include omega;
+  }
+}
+
+.node-event{
+  .node-place{
+    border-top: 1px solid $col-gray-25;
+    .group-location,
+    .group-contact{
+      padding-top: 0.5em;
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    .group-location{
+      width: 100%;
+      
+      @include at-breakpoint($mq-bp-tablet-plus) { 
+        @include span-columns(8,16);
+        border-right: 1px solid $col-gray-25;
+      } 
+      
+      padding-top: 0.5em;
+      
+      h3,
+      .field-name-field-address{
+      }
+
+      h3{
+        padding: 0 $space/2;
+        font-weight: bold;
+        @include ie8_font_fix('b');
+        &:before{
+          color: $col-gray-70;
+          padding-right: $space/3;
+          @extend %icon;
+          @extend .ic-location:before;
+        }
+      }
+      .field-name-field-address{
+        margin: 0 $space*1.5;
+        margin-bottom: em(18,18);
+      }
+
+    }
+    .group-contact{
+      @include at-breakpoint($mq-bp-tablet-plus) { 
+        @include span-columns(8,16);
+        @include omega;
+      } 
+      
+      .field-name-field-email,
+      .field-name-field-telephone,
+      .field-name-field-links{
+        margin: .5em $space;
+      }
+    }
+  }
+}

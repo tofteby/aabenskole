@@ -1,0 +1,24 @@
+.tabs {
+  @extend %text-label;
+  overflow: hidden;
+
+  li {
+    display: inline-block;
+  }
+
+  a {
+    padding: em(10,13) em(16,13);
+    display: block;
+
+    &.active,
+    &:hover {
+      background: $col-content;
+      border-width: 1px 1px 0 1px;
+      @include add-shadow;
+    }
+
+    &.active {
+      padding: em(10,13) em(24,13);
+    }
+  }
+}

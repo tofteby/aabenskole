@@ -1,0 +1,33 @@
+// FOR DEBUGGING AND TESTING ONLY
+// --------------------------------------------------------
+
+// Settings file for debugging or testing
+// theme settings features.
+// Uncomment line 12 in kkms.style.default.scss to use this.
+
+// Colors
+$col_primary : #FFDB12;
+$col_back : #181515;
+$col_text : #231F20;
+$col_button_hover : #00ffff;
+$col_menu_bg : black;
+$col_footer_bg : grey;
+$col_bottom_bg : black;
+$col_shadows : true;
+$col_menu_link : true;
+
+// Layout
+$layout_full : true;
+$layout_bg_expose : false;
+$under_menu_line : false;
+
+// Config
+$debug_info : false;
+
+// Images
+$image_header_path : 'sites/default/files/Skærmbillede 2013-12-04 kl. 09.12.49.png';
+$image_bg_path : 'sites/default/files/jpeg.jpg';
+$image_footer_path : 'sites/default/files/skyline.png';
+
+// Theme path
+$theme_path : '/sites/all/themes/kkms_theme'; 

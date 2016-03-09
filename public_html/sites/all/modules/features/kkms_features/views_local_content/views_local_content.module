@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Views local content feature.
+ */
+
+include_once 'views_local_content.features.inc';

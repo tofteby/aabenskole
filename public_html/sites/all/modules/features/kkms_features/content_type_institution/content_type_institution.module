@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Content Type Institution feature.
+ */
+
+include_once 'content_type_institution.features.inc';

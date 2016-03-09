@@ -1,0 +1,22 @@
+/**
+ * #KKMN-507 -- remove the sticky header.
+*/
+.page-node-edit table.sticky-header,
+.page-node-add table.sticky-header{
+    display: none;
+}
+
+/**
+* #KKMN-517 -- close button disappears.
+*/
+.ui-dialog {
+  top:100px !important;
+}
+
+
+/**
+* Hack to adjust the overlay stacking.
+*/
+.ui-widget.ui-front { z-index: 1002; }
+.ui-widget-overlay.ui-front { z-index: 1002; }
+.ui-dialog.ui-widget.media-wrapper { z-index: 1003; }

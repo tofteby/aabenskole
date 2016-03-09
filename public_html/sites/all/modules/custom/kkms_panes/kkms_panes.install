@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * Implements hook_install() for kk_panes module.
+ * 
+ * Needed to set the module's weight properly, so module hooks to execute after 
+ * fieldable_panels_panes it needs to be executed after the 
+ */
+function kkms_panes_install() {
+  // Guarantee that the module is havier than fieldable_panels_panes so the 
+  // hooks are executed after to ones defined in fieldable_panels_panes
+  $weight = _kkms_panes_get_module_weight('fieldable_panels_panes');
+  _kkms_panes_set_module_weight('kkms_panes', $weight + 1);
+}
+
+/**
+ * Helper method that changes the module's weight value
+ * 
+ * @param string $module 
+ *   Module name to be changed.
+ * @param int $new_weight 
+ *   New weight to set for the weight value of $module.
+ */
+function _kkms_panes_set_module_weight($module, $new_weight) {
+  db_update('system')
+    ->fields(array('weight' => $new_weight))
+    ->condition('name', $module)
+    ->execute();
+}
+
+/**
+ * Helper method that extracts a module's weight.
+ * 
+ * @param string $module 
+ *   Module name to extract weight from.
+ * @return int 
+ *   The weight of the module
+ */
+function _kkms_panes_get_module_weight($module='kk_panes') {
+  return (int) db_select('system', 's')
+    ->fields('s', array('weight'))
+    ->condition('s.name', $module)
+    ->execute()
+    ->fetchField();      
+}

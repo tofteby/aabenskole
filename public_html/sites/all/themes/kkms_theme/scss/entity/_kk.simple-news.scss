@@ -1,0 +1,23 @@
+.block-simplenews{
+  @extend .tx-content;
+  h2.title{
+    @extend .title-form;
+    color: $col-text;
+  }
+}
+
+.feed-icon{
+  &:before{
+    @extend %icon;
+    @extend .ic-rss:before;
+    color: $col-gray-70;
+  }
+  &:hover{
+    &:before{
+      color: $col-primary;
+    }
+  }
+  img{
+    display:none;
+  }
+}

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Configuration image styles feature.
+ */
+
+include_once 'configuration_image_styles.features.inc';

@@ -1,0 +1,98 @@
+<?php
+
+/**
+ * @file
+ * Apachesolr date exports custom entities for recurring dates.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function apachesolr_date_schema() {
+  // Entity base table
+  $schema['solrdate'] = array(
+    'description' => 'The base table for Solr dates.',
+    'fields' => array(
+      'did' => array(
+        'description' => 'The primary identifier for Solr dates.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'nid' => array(
+        'description' => 'The node nid.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'delta' => array(
+        'description' => 'The delta of the date field.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'unique keys' => array(
+      'date' => array('nid', 'delta'),
+    ),
+    'foreign keys' => array(
+      'node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+    ),
+    'primary key' => array('did'),
+  );
+
+  // Solr date index table
+  $schema['apachesolr_index_entities_date'] = array(
+    'description' => 'Stores a record of when an date changed to determine if it needs indexing by Solr.',
+    'fields' => array(
+      'entity_type' => array(
+        'description' => 'The type of entity.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ),
+      'entity_id' => array(
+        'description' => 'The primary identifier for an entity.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'bundle' => array(
+        'description' => 'The bundle to which this entity belongs.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+      ),
+      'status' => array(
+        'description' => 'Boolean indicating whether the entity should be in the index.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'changed' => array(
+        'description' => 'The Unix timestamp when an entity was changed.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'indexes' => array(
+      'changed' => array('bundle', 'changed', 'status'),
+    ),
+    'primary key' => array('entity_id'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Remove nid column from apachesolr_date table.
+ */
+function apachesolr_date_update_7001() {
+  db_drop_field('apachesolr_index_entities_date', 'nid');
+}

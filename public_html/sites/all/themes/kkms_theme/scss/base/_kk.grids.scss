@@ -1,0 +1,28 @@
+// Grid container
+.sec-inner {
+  @include container;
+  position: relative;
+}
+
+// Grid spans
+// ----------------------------
+@include grid(grid, 24, 24);
+
+// Omega
+// ----------------------------
+
+.omega {
+  @include omega;
+}
+
+// Margins: Left
+// ----------------------------
+@include left(pr, 23, 24);
+
+// Margins: Right
+// ----------------------------
+@include right(po, 23, 24);
+
+.cl {
+  clear: both;
+}

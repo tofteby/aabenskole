@@ -1,0 +1,41 @@
+name = KK Multisite
+description = Multisite Theme for Københavns Kommune
+core = 7.x
+engine = phptemplate
+screenshot = screenshot.png
+
+; ----- / REGIONS / -----
+
+regions[page_top] = Page Top
+regions[page_bottom] = Page Bottom
+regions[content] = Content
+regions[sidebar] = Sidebar
+
+regions[header] = Header
+regions[menu] = Menu
+regions[help] = Help
+regions[footer] = Footer
+regions[bottom] = Bottom
+regions[topbar_search] = Topbar Search
+
+; ----- / STYLESHEETS / -----
+
+stylesheets[print][] = css/kkms.print.css
+
+
+; ----- / SCRIPTS /
+
+scripts[] = js/libraries/modernizr.min.js
+scripts[] = js/kk.ms.script.js
+
+
+; ----- / PANELS / -----
+
+plugins[panels][layouts] = templates/panels_layouts
+plugins[panels][styles] = templates/panels_styles
+
+; ----- / SETTINGS / ------
+
+features[] = logo
+features[] = favicon
+features[] = main_menu

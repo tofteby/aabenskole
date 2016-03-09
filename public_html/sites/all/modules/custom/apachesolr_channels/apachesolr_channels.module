@@ -1,0 +1,295 @@
+<?php
+
+/**
+ * @file
+ *
+ * Channels management, solr integration and indexing adjustments.
+ * Developed for the KKMS platform.
+ *
+ * Keep the module file small and clean.
+ * Split it in thematically grouped files if it gets big.
+ */
+
+// Field API related code
+require_once 'includes/fields.inc';
+
+// Solr indexing related code
+require_once 'includes/solr.index.inc';
+
+// Facetapi callbacks
+require_once 'includes/facetapi.callbacks.inc';
+
+/**
+ * Implementation of hook_views_api().
+ */
+function apachesolr_channels_views_api() {
+  return array('api' => '3.0');
+}
+
+/**
+ * Implements hook_menu().
+ */
+function apachesolr_channels_menu() {
+
+  $items['admin/config/content-sharing'] = array(
+    'title' => 'Content sharing',
+    'description' => 'Administration related to the content sharing system.',
+    'position' => 'right',
+    'weight' => -20,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('administer content sharing'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+
+  $items['admin/config/content-sharing/filters'] = array(
+    'title' => 'Content sharing filters',
+    'description' => 'Settings for sites and channels that content can be shared to.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('site_content_sharing_filters'),
+    'access arguments' => array('administer content sharing'),
+    'file' => 'apachesolr_channels.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['admin/config/content-sharing/image-styles'] = array(
+    'title' => 'Solr image styles',
+    'description' => 'Configure image styles to be generated and indexed in solr core.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('site_content_sharing_image_styles'),
+    'access arguments' => array('administer image styles'),
+    'file' => 'apachesolr_channels.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['admin/reports/channels'] = array(
+    'title' => 'Channels registry information',
+    'description' => 'Report page for channels registry information.',
+    'page callback' => 'site_registered_channels_report',
+    'access arguments' => array('view channels registry'),
+    'file' => 'apachesolr_channels.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  // Shared taxonomy autocomplete callback
+  $items['admin/views/ajax/autocomplete/shared-taxonomy'] = array(
+    'page callback' => 'channels_views_ajax_autocomplete_shared_taxonomy',
+    'theme callback' => 'ajax_base_page_theme',
+    'access callback' => 'user_access',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'includes/ajax.inc',
+  );
+
+  // Site field autocomplete callback
+  $items['sites/autocomplete'] = array(
+    'page callback' => 'shared_sites_autocomplete',
+    'access arguments' => array('administer nodes'),
+    'type' => MENU_CALLBACK,
+    'file' => 'apachesolr_channels.pages.inc',
+  );
+
+  // Multiple hash view autocomplete callback
+  $items['multiple-hash/autocomplete'] = array(
+    'page callback' => 'multiple_hash_autocomplete',
+    'access arguments' => array('administer nodes'),
+    'type' => MENU_CALLBACK,
+    'file' => 'apachesolr_channels.pages.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function apachesolr_channels_permission() {
+  $permissions = array();
+
+  $permissions['administer content sharing'] = array(
+    'title' => t('Administer content sharing'),
+    'description' => t('Administer content sharing filter settings'),
+  );
+
+  $permissions['view channels registry'] = array(
+    'title' => t('View channels registry'),
+    'description' => t('Access report page for channels registry information'),
+  );
+
+  return $permissions;
+}
+
+/**
+ * Gets the profiles from which to show remote content from Apachesolr.
+ */
+function kk_apachesolr_search_profiles() {
+  $profiles = variable_get('kk_apachesolr_search_profiles', FALSE);
+  if ($profiles === FALSE) {
+    // Defaults to site installed profile. If changed, make sure the variable is an Srray.
+    $profiles = array(drupal_get_profile());
+    variable_set('kk_apachesolr_search_profiles', $profiles);
+  }
+  return $profiles;
+}
+
+/**
+ * Implements hook_views_query_alter().
+ * - Filter current languge, except on admin pages.
+ * - Show content only from specific Drupal profiles.
+ */
+function apachesolr_channels_views_query_alter($view, $query) {
+  if ($query instanceof apachesolr_views_query) {
+    if (!path_is_admin(current_path())) {
+      $languages = $GLOBALS['language']->language . ' OR ' . LANGUAGE_NONE;
+      $query->add_filter('ss_language', $languages);
+    }
+    $profiles = implode(' OR ', kk_apachesolr_search_profiles());
+    $query->add_filter('ss_site_profile', $profiles);
+  }
+}
+
+/**
+ * Limit to local content, site subscribed channels, or content shared directly to this site.
+ */
+function apachesolr_channels_subquery_shared_or_local() {
+  $subq = new SolrFilterSubQuery('OR');
+  $subq->addFilter('hash', apachesolr_site_hash());
+  $subq->addFilter('sm_share_site_field_sites', apachesolr_site_hash());
+  if ($channels = Channels::registry()->get()) {
+    $subq->addFilter('im_shared_tax_channels', '(' . implode(' OR ', $channels). ')');
+  }
+  return $subq;
+}
+
+/**
+ * Implement hook_form_FORM_ID_alter().
+ */
+function apachesolr_channels_form_node_type_form_alter(&$form, &$form_state) {
+  // Configuration for default channel setting per node type.
+  // Make sure not to export it as feature. It is meant to be configurable per site.
+  $voc = taxonomy_vocabulary_machine_name_load('channels');
+  if (empty($voc->vid)) {
+    // No channels vocabulary
+    return;
+  }
+
+  $form['channels'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Channel settings'),
+    '#group' => 'additional_settings',
+    '#description' => t('Pick node-type defaults for content channel categorization.'),
+  );
+
+  $channels = taxonomy_get_tree($voc->vid);
+  $options = _shared_terms_build_options($channels);
+  // filter channels based on global configuration
+  $channel_filters = variable_get('site_content_sharing_channels', array());
+  $options = array_intersect_key($options, $channel_filters);
+  $args['%content-type'] = $form['#node_type']->name;
+  $form['channels']['node_type_channels'] = array(
+    '#type' => 'select',
+    '#title' => t('Default %content-type channels', $args),
+    '#options' => $options,
+    '#multiple' => TRUE,
+    '#default_value' => variable_get('node_type_channels_' . $form['#node_type']->type, array()),
+    '#description' => t('Choose the channels that will be initially selected for all %content-type content.', $args),
+  );
+}
+
+/**
+ * Helper function - get sites Allowed from metadata
+ */
+function apachesolr_channels_get_allowed_sites() {
+  $sites = apachesolr_multisitesearch_map_hash();
+  $allowed = variable_get('site_content_sharing_sites', array());
+  return array_intersect_key($sites, $allowed);
+}
+
+/**
+ * Helper function - build term options for shared terms, if found in mapping
+ * Note: using $hierarchy, and then filtering out certain options is problematic
+ */
+function _shared_terms_build_options($tree, $hierarchy = FALSE) {
+  $options = array();
+  foreach ($tree as $term) {
+    if ($server_tid = kk_client_request_get_server_tid($term->tid)) {
+      $prefix = $hierarchy? str_repeat('-', $term->depth): '';
+      $options[$term->tid] = $prefix . $term->name;
+    }
+  }
+  return $options;
+}
+
+/**
+ * Implement hook_form_FORM_ID_alter().
+ * Override callback for getting content panes - local context conf
+ */
+function apachesolr_channels_form_views_content_views_panes_content_type_edit_form_alter(&$form, &$form_state) {
+  if (!empty($form_state['view'])) {
+    $form['#submit'][] = 'local_context_form_submit';
+    $view = $form_state['view'];
+    $conf = $form_state['conf'];
+    $allow = $view->display_handler->get_option('allow');
+    $conf += array(
+      'local_context' => $view->display_handler->get_option('local_context'),
+    );
+    if ($allow['local_context'] ) {
+      $form['local_context'] = array(
+        '#type' => 'checkbox',
+        '#default_value' => isset($conf['local_context']) ? $conf['local_context'] : $view->display_handler->get_option('local_context'),
+        '#title' => t('Link to content in local context'),
+      );
+    }
+  }
+}
+
+/**
+ * Store local context value in $conf.
+ */
+function local_context_form_submit(&$form, &$form_state) {
+  if (isset($form_state['values']['local_context'])) {
+    $form_state['conf']['local_context'] = $form_state['values']['local_context'];
+  }
+}
+
+/**
+ * Pass context information for ajax views
+ */
+function apachesolr_channels_preprocess_views_view(&$vars) {
+  $view = $vars['view'];
+  // If using AJAX, pass context information about this view
+  if ($view->use_ajax && empty($view->is_attachment) && empty($view->live_preview)) {
+    if ($view->display_handler->get_option('is_local_context')) {
+      // The settings will be merged with the ones in template_preprocess_views_view()
+      // The parameters will be send as post data on ajax requests
+      $settings = array(
+        'views' => array(
+          'ajax_path' => url('views/ajax'),
+          'ajaxViews' => array(
+            'views_dom_id:' . $vars['dom_id'] => array(
+              'is_local_context' => TRUE,
+            ),
+          ),
+        ),
+      );
+
+      drupal_add_js($settings, 'setting');
+    }
+  }
+}
+
+/**
+ * Implementation of hook_node_update().
+ */
+function apachesolr_channels_node_update($node) {
+  $node_registry = new ChannelsNodeRegistry($node->nid);
+  $node_registry->build($node);
+}
+
+/**
+ * Implementation of hook_node_delete().
+ */
+function apachesolr_channels_node_delete($node) {
+  $node_registry = new ChannelsNodeRegistry($node->nid);
+  $node_registry->clear();
+}

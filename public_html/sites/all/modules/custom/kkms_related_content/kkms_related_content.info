@@ -1,0 +1,7 @@
+name = KKMS Related Content
+description = "This module improves on Secondary content types and Related boxes: UI, developer tools, and presentation."
+core = 7.x
+dependencies[] = node
+dependencies[] = entity
+dependencies[] = field_group
+dependencies[] = field_collection

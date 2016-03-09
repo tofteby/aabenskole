@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the KOS User account settings and rules feature.
+ */
+
+include_once 'kos_user_account_settings_and_rules.features.inc';

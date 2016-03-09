@@ -1,0 +1,25 @@
+<?php
+
+
+/**
+ * Implements hook_node_delete().
+ */
+function history_node_deleted_node_delete($node) {
+  $fields = array(
+    'nid' => $node->nid,
+    'type' => $node->type,
+    'timestamp' => REQUEST_TIME,
+    'uuid' => isset($node->uuid) ? $node->uuid : '',
+  );
+  db_insert('history_node_deleted')->fields($fields)->execute();
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function history_node_deleted_views_api() {
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', 'history_node_deleted') . '/views',
+  );
+}

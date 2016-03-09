@@ -1,0 +1,2294 @@
+<?php
+
+/**
+ * @file
+ * Implements the main functionality and hooks of the kk_client_request module.
+ */
+define('KK_CLIENT_REQUEST_COUNTER_CRONQUEUE', 1);
+require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'kk_client_request') . '/kk_client_request.batch.inc';
+
+/**
+ * === START Hooks
+ */
+
+/**
+ * Implements hook_help().
+ */
+function kk_client_request_help($path, $arg) {
+  $output = '';
+
+  switch ($path) {
+    case "admin/help#kk_client_request":
+      $output = t('Client request to server.');
+      break;
+  }
+
+  return $output;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function kk_client_request_menu() {
+  $items['admin/config/kk'] = array(
+    'title' => 'KK Administration',
+    'description' => 'Administration of all the modules specifically made for KK.',
+    'position' => 'left',
+    'weight' => -20,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+
+  $items['admin/config/kk/client_request_resources'] = array(
+    'title' => 'Manual taxonomy synchronization',
+    'description' => 'Select methods to retrieve resources.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('kk_client_request_admin_form'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'kk_client_request.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['admin/config/kk/client_request_resources_settings'] = array(
+    'title' => 'Taxonomy synchronization settings',
+    'description' => 'Select methods to retrieve resources.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('kk_client_request_settings_admin_form'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'kk_client_request.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function kk_client_request_menu_alter(&$items) {
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/edit']['access callback'] = 'kk_client_request_taxonomy_access_custom';
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/edit']['access arguments'] = array(3);
+
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/fields']['access callback'] = 'kk_client_request_taxonomy_access_custom';
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/fields']['access arguments'] = array(3);
+
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/display']['access callback'] = 'kk_client_request_taxonomy_access_custom';
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/display']['access arguments'] = array(3);
+
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/translate']['access callback'] = 'kk_client_request_taxonomy_access_custom';
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/translate']['access arguments'] = array(3);
+
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/add']['access callback'] = 'kk_client_request_taxonomy_access_custom';
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/add']['access arguments'] = array(3);
+
+  $items['taxonomy/term/%taxonomy_term/edit']['access callback'] = 'kk_client_request_taxonomy_term_access_custom';
+  $items['taxonomy/term/%taxonomy_term/edit']['access arguments'] = array(2);
+}
+
+/**
+ * Implements hook_permission().
+ */
+function kk_client_request_permission() {
+  $permissions = array();
+
+  foreach (taxonomy_get_vocabularies() as $vocabulary) {
+    $permissions += array(
+      'allow access to ' . $vocabulary->machine_name => array(
+        'title' => t('Allow access to vocabulary %vocabulary', array('%vocabulary' => $vocabulary->name)),
+      ),
+    );
+  }
+
+  return $permissions;
+}
+
+/**
+ * Implements hook_cron().
+ */
+function kk_client_request_cron() {
+  // Checks if there are cron queues already. Execute cron only if there aren't.
+  $queue = DrupalQueue::get('kk_client_request_import_install');
+  if (!$queue->numberOfItems()) {
+    // Sync terms on install part. Get a few variables to decide if to continue.
+    $sync_terms_on_install = variable_get('__sync_terms_on_site_create__', 0);
+    $import_on_install_executed = variable_get('import_on_install_executed', 1);
+    $perform_on_cron = variable_get('kk_client_request_cron', 1);
+
+    if (!$sync_terms_on_install) {
+      variable_set('import_on_install_executed', 0);
+    }
+
+    $services_client_name = variable_get('kk_client_request_connection_name', '');
+
+    if ($sync_terms_on_install && $import_on_install_executed) {
+      try {
+        kk_client_request_vocabulary_create($services_client_name);
+      }
+      catch (Exception $e) {
+        kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+        drupal_set_message(t('Failed to sync vocabularies on cron. Please, check the reports for more details.'), 'error');
+      }
+
+      variable_set('import_on_install_executed', 0);
+    }
+    elseif (!$import_on_install_executed && $perform_on_cron) {
+      try {
+        kk_client_request_vocabulary_delete($services_client_name);
+        kk_client_request_vocabulary_create($services_client_name);
+        kk_client_request_vocabulary_update($services_client_name);
+      }
+      catch (Exception $e) {
+        kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+        drupal_set_message(t('Failed to sync vocabularies on cron. Please, check the reports for more details.'), 'error');
+      }
+    }
+  }
+  $json_queue = DrupalQueue::get('kk_client_request_generate_json_file');
+  if(!$json_queue->numberOfItems()) {
+    $kle_taxonomy = taxonomy_vocabulary_machine_name_load('kle');
+    $json_queue->CreateItem($kle_taxonomy->vid);
+  }
+}
+
+/**
+ * Executes the cron queue worker.
+ *
+ * @param array $item
+ *   Array with the terms, operations and cron flag.
+ */
+function kk_client_request_import_install($item) {
+  if ($item['operation'] == 'term_insert') {
+    foreach ($item['terms'] as $term) {
+      kk_client_request_create_client_term($term, $item['from_voc']);
+    }
+  }
+
+  if ($item['operation'] == 'term_update') {
+    foreach ($item['terms'] as $term) {
+      kk_client_request_update_client_term($term);
+    }
+  }
+}
+
+/**
+ * Implements hook_cron_queue_info().
+ */
+function kk_client_request_cron_queue_info() {
+  $queues['kk_client_request_import_install'] = array(
+    'worker callback' => 'kk_client_request_import_install',
+    'time' => 60,
+  );
+  $queues['kk_client_request_generate_json_file'] = array(
+    'worker callback' => 'kk_client_request_generate_json_file',
+    'time' => 150,
+  );
+
+  return $queues;
+}
+
+/**
+ * Implements hook_taxonomy_term_insert().
+ */
+function kk_client_request_taxonomy_term_insert($term) {
+  $check_term = kk_client_request_sync_object_check($term);
+  if (isset($check_term) && !empty($check_term)) {
+    try {
+      $fields = array(
+        'client_vid' => $term->vid,
+        'client_tid' => $term->tid,
+        'server_tid' => $term->server_tid,
+        'timestamp' => time(),
+      );
+      if (isset($term->server_tid)) {
+        db_insert('kk_client_request_term')->fields($fields)->execute();
+      }
+      else {
+        watchdog('KK Client Request', 'Term with no server tid (@info)!', array('@info' => json_encode($fields),), WATCHDOG_ERROR);
+      }
+    }
+    catch (Exception $e) {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      drupal_set_message(t('Failed to insert into the kk_client_request_vocabulary. Please, check the reports for more details.'), 'error');
+
+      return FALSE;
+    }
+
+    try {
+      $result = db_select('kk_client_voc_term_update_timestamp', 'kkvt')
+        ->fields('kkvt', array('vid'))
+        ->condition('kkvt.vid', $term->vid, '=')
+        ->execute()
+        ->fetchAll();
+
+      if (!empty($result)) {
+        db_update('kk_client_voc_term_update_timestamp')
+          ->fields(array(
+            'timestamp' => time(),
+            'status' => 'C',
+          ))
+          ->condition('vid', $term->vid, '=')
+          ->execute();
+      }
+      else {
+        db_insert('kk_client_voc_term_update_timestamp')
+          ->fields(array(
+            'vid' => $term->vid,
+            'timestamp' => time(),
+            'status' => 'C',
+          ))
+          ->execute();
+      }
+    }
+    catch (Exception $e) {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      drupal_set_message(t('Failed to update the kk_client_voc_term_update_timestamp table. Please, check the reports for more details.'), 'error');
+
+      return FALSE;
+    }
+  }
+}
+
+/**
+ * Implements hook_taxonomy_term_update().
+ */
+function kk_client_request_taxonomy_term_update($term) {
+  $check_term = kk_client_request_sync_object_check($term);
+  if (isset($check_term) && !empty($check_term)) {
+    try {
+      db_update('kk_client_request_term')
+          ->fields(array(
+            'timestamp' => time(),
+          ))
+          ->condition('client_tid', $term->tid, '=')
+          ->execute();
+    }
+    catch (Exception $e) {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      drupal_set_message(t('Failed to update the kk_client_request_term table during term update. Please, check the reports for more details.'), 'error');
+
+      return FALSE;
+    }
+
+    try {
+      $query = db_select('kk_client_voc_term_update_timestamp', 'kkvt');
+      $result = $query
+          ->fields('kkvt', array('vid'))
+          ->condition('kkvt.vid', $term->vid, '=')
+          ->execute();
+      $result = $result->fetchAll();
+
+      if (!empty($result)) {
+        db_update('kk_client_voc_term_update_timestamp')
+            ->fields(array(
+              'timestamp' => time(),
+              'status' => 'U',
+            ))
+            ->condition('vid', $term->vid, '=')
+            ->execute();
+      }
+    }
+    catch (Exception $e) {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      drupal_set_message(t('Failed to update the kk_client_voc_term_update_timestamp table. Please, check the reports for more details.'), 'error');
+
+      return FALSE;
+    }
+    return TRUE;
+  }
+}
+
+/**
+ * Implements hook_taxonomy_term_delete().
+ */
+function kk_client_request_taxonomy_term_delete($term) {
+  $check_term = kk_client_request_sync_object_check($term);
+  if (isset($check_term) && !empty($check_term)) {
+    try {
+      db_delete('kk_client_request_term')
+          ->condition('client_tid', $term->tid, '=')
+          ->execute();
+    }
+    catch (Exception $e) {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      drupal_set_message(t('Could not delete kk_client_request_term record for :tid during term delete.', array(':tid' => $term->tid)), 'error');
+      drupal_set_message(check_plain($e->getMessage()), 'error');
+    }
+
+    try {
+      $query = db_select('kk_client_voc_term_update_timestamp', 'kkvt');
+      $result = $query
+          ->fields('kkvt', array('vid'))
+          ->condition('kkvt.vid', $term->vid, '=')
+          ->execute();
+      $result = $result->fetchAll();
+
+      if (!empty($result)) {
+        db_update('kk_client_voc_term_update_timestamp')
+            ->fields(array(
+              'timestamp' => time(),
+              'status' => 'D',
+            ))
+            ->condition('vid', $term->vid, '=')
+            ->execute();
+      }
+    }
+    catch (Exception $e) {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      drupal_set_message(t('Failed to update into the kk_client_voc_term_update_timestamp table. Please, check the reports for more details.'), 'error');
+
+      return FALSE;
+    }
+  }
+}
+
+/**
+ * Implements hook_taxonomy_vocabulary_insert().
+ */
+function kk_client_request_taxonomy_vocabulary_insert($vocabulary) {
+  if (isset($vocabulary->server_vid) && !empty($vocabulary->server_vid)) {
+    kk_client_request_insert_new_vocabulary($vocabulary, $vocabulary->server_vid);
+  }
+}
+
+/**
+ * Implements hook_taxonomy_vocabulary_update().
+ */
+function kk_client_request_taxonomy_vocabulary_update($vocabulary) {
+  $check_voc = kk_client_request_sync_object_check($vocabulary);
+  if (isset($check_voc) && !empty($check_voc)) {
+    try {
+      db_update('kk_client_request_vocabulary')
+          ->fields(array(
+            'timestamp' => time(),
+          ))
+          ->condition('client_vid', $vocabulary->vid, '=')
+          ->execute();
+
+      // TODO: Handle result;
+      return TRUE;
+    }
+    catch (Exception $e) {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      drupal_set_message(t('Failed to update the kk_client_request_vocabulary table during vocabulary update. Please, check the reports for more details.'), 'error');
+
+      return FALSE;
+    }
+  }
+}
+
+/**
+ * Implements hook_taxonomy_vocabulary_delete().
+ */
+function kk_client_request_taxonomy_vocabulary_delete($vocabulary) {
+  $check_voc = kk_client_request_sync_object_check($vocabulary);
+  if (isset($check_voc) && !empty($check_voc)) {
+    try {
+      db_delete('kk_client_request_vocabulary')
+          ->condition('client_vid', $vocabulary->vid, '=')
+          ->execute();
+    }
+    catch (Exception $e) {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      drupal_set_message(t('Could not delete kk_vocabulary_update_timestamp record for :vid during vocabulary delete.', array(':vid' => $vocabulary->vid)), 'error');
+      drupal_set_message(check_plain($e->getMessage()), 'error');
+    }
+
+    try {
+      db_delete('kk_client_voc_term_update_timestamp')
+          ->condition('vid', $vocabulary->vid, '=')
+          ->execute();
+    }
+    catch (Exception $e) {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      drupal_set_message(t('Could not delete kk_vocabulary_update_timestamp record for :vid during vocabulary delete.', array(':vid' => $vocabulary->vid)), 'error');
+      drupal_set_message(check_plain($e->getMessage()), 'error');
+    }
+  }
+}
+
+/**
+ * === END Hooks ===
+ */
+/**
+ * === START Create vocabularies ===
+ */
+
+/**
+ * Trigger the process of updating vocabulary and its terms.
+ *
+ * @param stdClass $connection
+ *   The connection object.
+ * @param array $vids
+ *   Array with the vocabulary objects to be created keyed by vocabulary id.
+ */
+function kk_client_request_process_create_vocabularies($connection, $vids = array(), $from_cron = FALSE) {
+  $operations = array();
+  $flag_generate_json = FALSE;
+  $flag_kkorg = FALSE;
+
+  $retrieved_vocs = kk_client_request_retrieve_vocabularies($connection, $vids);
+  if ($retrieved_vocs) {
+    foreach ($retrieved_vocs as $voc_id => $voc_obj) {
+      $status_local_voc = kk_client_request_create_local_vocabulary($voc_obj);
+      if ($status_local_voc) {
+        if ($voc_obj['machine_name'] == 'kle') {
+          $client_vid = kk_client_request_get_client_vid($voc_id);
+          if ($client_vid) {
+            $flag_generate_json = $client_vid;
+          }
+        }
+        if ($voc_obj['machine_name'] == 'kkorg') {
+          $flag_kkorg = TRUE;
+        }
+        // Fields support.
+        if (!empty($voc_obj['term_fields'])) {
+          foreach ($voc_obj['term_fields'] as $field) {
+            // Check if the field already exists, if not - create it.
+            kk_client_request_create_taxonomy_term_field($field, $voc_obj['machine_name']);
+          }
+        }
+        $voc_terms = kk_client_request_retrieve_vocabulary_terms($connection, $voc_id);
+        if (!empty($voc_terms)) {
+          if ($from_cron) {
+            kk_client_request_cron_queue_terms($voc_terms, 'term_insert', TRUE);
+          }
+          else {
+            kk_client_request_batch_terms($voc_terms, 'term_insert', TRUE, $operations);
+          }
+        }
+      }
+    }
+    if (!$from_cron && !empty($operations)) {
+      if ($flag_generate_json) {
+        $operations[] = array('kk_client_request_batch_generate_json', array($flag_generate_json));
+      }
+      if ($flag_kkorg) {
+        $operations[] = array('kk_client_request_batch_workbench_access_reset_tree', array());
+      }
+
+      kk_client_request_batch_terms_execute($operations);
+    }
+  }
+}
+
+/**
+ * Processes partial import of terms.
+ *
+ * @param stdClass $connection
+ *   Connection object
+ * @param array $vids
+ *   Array with vocabulary ids to sync
+ * @param array $vocs_spec_terms_to_create
+ *   Array with terms to sync.
+ */
+function kk_client_request_process_create_vocabularies_and_selected_terms($connection, $vids = array(), $vocs_spec_terms_to_create = array()) {
+  // Get the vocabulary objects for the provided vocabularies.
+  $operations = array();
+  $flag_generate_json = FALSE;
+  $flag_kkorg = FALSE;
+  $retrieved_vocs = kk_client_request_retrieve_vocabularies($connection, $vids);
+  if (!$retrieved_vocs) {
+    return;
+  }
+  foreach ($retrieved_vocs as $voc_id => $voc_obj) {
+    $status_local_voc = kk_client_request_create_local_vocabulary($voc_obj);
+    if (!$status_local_voc) {
+      continue;
+    }
+    if ($voc_obj['machine_name'] == 'kle') {
+      $client_vid = kk_client_request_get_client_vid($voc_id);
+      if ($client_vid) {
+        $flag_generate_json = $client_vid;
+      }
+    }
+    if ($voc_obj['machine_name'] == 'kkorg') {
+      $flag_kkorg = TRUE;
+    }
+
+    // Fields support.
+    if (!empty($voc_obj['term_fields'])) {
+      foreach ($voc_obj['term_fields'] as $field) {
+        // Check if the field already exists, if not - create it.
+        kk_client_request_create_taxonomy_term_field($field, $voc_obj['machine_name']);
+      }
+    }
+    $voc_terms = kk_client_request_retrieve_vocabulary_term_objects($connection, $voc_id, $vocs_spec_terms_to_create);
+    if (!empty($voc_terms)) {
+      foreach ($voc_terms as $parent_term_id => $value) {
+        kk_client_request_batch_terms($value, 'term_insert', TRUE, $operations);
+      }
+    }
+  }
+  if (!empty($operations)) {
+    if ($flag_generate_json) {
+      $operations[] = array('kk_client_request_batch_generate_json', array($flag_generate_json));
+    }
+    if ($flag_kkorg) {
+      $operations[] = array('kk_client_request_batch_workbench_access_reset_tree', array());
+    }
+
+    kk_client_request_batch_terms_execute($operations);
+  }
+}
+
+/**
+ * Creates just vocabularies and no terms.
+ *
+ * @param stdClass $connection
+ *   Connection object
+ * @param array $vids
+ *   Array with the vocabulary ids to sync.
+ */
+function kk_client_request_process_create_vocabularies_and_no_terms($connection, $vids = array()) {
+  // Get the vocabulary objects for the provided vocabularies.
+  $retrieved_vocs = kk_client_request_retrieve_vocabularies($connection, $vids);
+  if ($retrieved_vocs) {
+    foreach ($retrieved_vocs as $voc_id => $voc_obj) {
+      $status_local_voc = kk_client_request_create_local_vocabulary($voc_obj);
+      if ($status_local_voc) {
+        // Fields support.
+        if (!empty($voc_obj['term_fields'])) {
+          foreach ($voc_obj['term_fields'] as $field) {
+            // Check if the field already exists, if not - create it.
+            kk_client_request_create_taxonomy_term_field($field, $voc_obj['machine_name']);
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Create vocabulary and make a record in the database table of the module.
+ *
+ * Updating the macine_name, change the vocabulary admin path!
+ */
+function kk_client_request_create_local_vocabulary($voc) {
+  $vocabularies_to_skip = variable_get('vocabularies_to_skip', array('kle', 'kkorg', 'sites_for_important_news', 'common_categories', 'theme_categories'));
+  $vocabularies_to_skip = array_filter($vocabularies_to_skip);
+  if (in_array($voc['machine_name'], $vocabularies_to_skip)) {
+    $local_vocabulary = taxonomy_vocabulary_machine_name_load($voc['machine_name']);
+    if ($local_vocabulary) {
+      $mapping_status = kk_client_request_insert_new_vocabulary($local_vocabulary, $voc['vid']);
+      return $mapping_status;
+    }
+    else {
+      drupal_set_message(t('Unable to load vocabulary with machine name: @voc_name. Please, check the reports for more details.', array('@voc_name' => $voc['machine_name'])), 'error', FALSE);
+
+      return FALSE;
+    }
+  }
+
+  $not_existing_voc = kk_client_request_check_local_existing_vocabulary($voc);
+
+  if ($not_existing_voc) {
+// Create vocabulary locally.
+    try {
+      $client_voc = new stdClass();
+      $client_voc->name = $voc['name'];
+      $client_voc->description = $voc['description'];
+      $client_voc->machine_name = $voc['machine_name'];
+      $client_voc->server_vid = $voc['vid'];
+
+// Language support.
+      if (module_exists('i18n')) {
+        if (isset($voc['i18n_mode'])) {
+          $client_voc->i18n_mode = $voc['i18n_mode'];
+        }
+      }
+
+      $status = taxonomy_vocabulary_save($client_voc);
+      if ($status == SAVED_NEW) {
+        drupal_set_message(t('Successfully created new vocabulary with name @voc_name.', array('@voc_name' => $voc['name'])), 'status', FALSE);
+      }
+      else {
+        drupal_set_message(t('The new vocabulary with name @voc_name was NOT successfully created.', array('@voc_name' => $voc['name'])), 'error', FALSE);
+      }
+    }
+    catch (Exception $e) {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      drupal_set_message(t('Unable to create new vocabulary with name @voc_name. Please, check the reports for more details.', array('@voc_name' => $voc['name'])), 'error', FALSE);
+
+      return FALSE;
+    }
+  }
+  else {
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+/**
+ * Returns specific terms for specific vocabularies from the server.
+ *
+ * @param stdClass $connection
+ *   The connection object.
+ * @param int $voc_key
+ *   The vocabulary if against which the server to check and return terms.
+ */
+function kk_client_request_retrieve_vocabulary_term_objects($connection, $voc_key, $vocs_spec_terms_to_create) {
+  try {
+    $vocabulary_tree = kk_client_request_taxonomy_vocabulary_retrieve_specific_terms_adapter($connection, $voc_key, $vocs_spec_terms_to_create);
+    if (empty($vocabulary_tree)) {
+      drupal_set_message(t('There are no terms for the selected vocabulary: @vid.', array('@vid' => $voc_key)), 'status', FALSE);
+    }
+  }
+  catch (Exception $e) {
+    kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+    drupal_set_message(t('There is problem with the vocabulary on the server. Please, check the reports for more details.'), 'error', FALSE);
+
+    return FALSE;
+  }
+
+  return $vocabulary_tree;
+}
+
+/**
+ * Returns all terms for specific vocabularies from the server.
+ *
+ * @param stdClass $connection
+ *   The connection object.
+ * @param int $voc_key
+ *   The vocabulary if against which the server to check and return terms.
+ */
+function kk_client_request_retrieve_vocabulary_term_names($connection, $voc_key) {
+  $vocabulary_tree = array();
+
+  try {
+    $vocabulary_tree = $connection->action('taxonomy_vocabulary', 'retrieveAllNames', array('vid' => $voc_key));
+
+    if (!empty($vocabulary_tree)) {
+      $vocabulary_tree['-all-'] = t('- All Terms -');
+    }
+  }
+  catch (Exception $e) {
+    kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+    drupal_set_message(t('There is problem with the vocabulary on the server. Cannot retrieve list with the term names. Please, check the reports for more details.'), 'error', FALSE);
+
+    return FALSE;
+  }
+
+  ksort($vocabulary_tree);
+  return $vocabulary_tree;
+}
+
+/**
+ * Create taxonomy term and make a database record in the table of the module.
+ *
+ * @param array $term
+ * @param bool $from_voc Wether the $term data comes from the remote vocabulary.
+ * @return boolean TRUE on success.
+ */
+function kk_client_request_create_client_term($term, $from_voc = FALSE) {
+  $local_vid = kk_client_request_get_client_vid($term['vid']);
+  $local_tid = kk_client_request_get_client_tid($term['tid'], $local_vid);
+
+  if (!($local_vid && empty($local_tid))) {
+    return FALSE;
+  }
+  try {
+    $client_term = new stdClass();
+    $client_term->server_tid = $term['tid'];
+
+    _kk_client_request_populate_local_term_object($local_vid, $client_term, $term);
+    if(is_null($client_term)) {
+      DrupalQueue::get('kk_client_request_import_install')->createItem(array(
+        'terms' => array($term),
+        'operation' => 'term_update',
+        'from_voc' => TRUE,
+      ));
+      return FALSE;
+    }
+
+    // Term saved.
+    if (taxonomy_term_save($client_term) != SAVED_NEW) {
+      drupal_set_message(t('The new term with name @term_name was NOT successfully created.', array('@term_name' => $client_term->name)), 'error', FALSE);
+      return FALSE;
+    }
+  }
+  catch (Exception $e) {
+    $message = t('Unable to create new term. Please, check the reports for more details.');
+    kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+    drupal_set_message($message, 'error', FALSE);
+    return FALSE;
+  }
+
+  $message = t('Successfully created new term: @term_name', array('@term_name' => $client_term->name,));
+  drupal_set_message($message, 'status', FALSE);
+  return TRUE;
+}
+
+function _kk_client_request_populate_local_term_object($local_vid, &$term_object, $remote_term) {
+  $term_object->vid = $local_vid;
+  $term_object->name = $remote_term['name'];
+  $term_object->description = $remote_term['description'];
+  $term_object->format = $remote_term['format'];
+  $term_object->weight = $remote_term['weight'];
+
+  // Skip Pathauto support.
+  $term_object->path['pathauto'] = 0;
+
+  // Language support.
+  if (module_exists('i18n') && isset($remote_term['language'])) {
+    $term_object->language = $remote_term['language'];
+  }
+
+  // Hierarchy support.
+  $term_object->parent = 0;
+  if (isset($remote_term['parents']) && is_array($remote_term['parents'])) {
+    foreach ($remote_term['parents'] as $parent_tid_remote) {
+      //Note the $parent_tid_remote could be 0 sometimes
+      if ($parent_tid_remote && ($parent_tid_local = kk_client_request_get_client_tid($parent_tid_remote, $local_vid)) !== FALSE) {
+        $term_object->parent = $parent_tid_local;
+      }
+      if(isset($parent_tid_local) && $parent_tid_local === FALSE) {
+        $term_object = NULL;
+        return;
+      }
+    }
+  }
+
+  // Fields support.
+  if (!empty($remote_term['term_fields'])) {
+    foreach ($remote_term['term_fields'] as $field) {
+      // Assign field value and then save term.
+      $field_name = $field['field_info']['field_name'];
+      $term_object->$field_name = $remote_term[$field_name];
+    }
+  }
+}
+
+/**
+ * Checks if term field exists.
+ *
+ * If not creates the field and its instance and binds it to the bundle.
+ *
+ * @param stdClass $field
+ *   The field object
+ * @param string $bundle_name
+ *   The bundle name
+ */
+function kk_client_request_create_taxonomy_term_field($field, $bundle_name) {
+  try {
+    $prior_field = field_read_field($field['field_info']['field_name']);
+    if (!$prior_field) {
+// Create field.
+      $term_field = array(
+        'field_name' => $field['field_info']['field_name'],
+        'type' => $field['field_info']['type'],
+        'label' => $field['field_instance']['label'],
+      );
+      field_create_field($term_field);
+
+// Attach the field to our taxonomy entity.
+      $instance = array(
+        'field_name' => $field['field_info']['field_name'],
+        'entity_type' => 'taxonomy_term',
+        'bundle' => $bundle_name,
+        'label' => $field['field_instance']['label'],
+        'description' => $field['field_instance']['description'],
+        'required' => $field['field_instance']['required'],
+        'widget' => $field['field_instance']['widget'],
+      );
+      field_create_instance($instance);
+    }
+    else {
+      try {
+        $field['field_info']['id'] = $prior_field['id'];
+        field_update_field($field['field_info']);
+        field_update_instance($field['field_instance']);
+      }
+      catch (Exception $e) {
+        kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+        drupal_set_message(t('Unable to update field @field settings. Please, check the reports for more details.', array('@field' => $field['field_info']['field_name'])), 'error', FALSE);
+      }
+
+      kk_client_request_watchdog_custom('KK Client Request', 'The field %field and its instance to taxonomy term bundle %bundle already exist.', array('%field' => $field['field_info']['field_name'], '%bundle' => $bundle_name), WATCHDOG_INFO);
+    }
+  }
+  catch (Exception $e) {
+    kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+    drupal_set_message(t('Unable to create field @field and attach it to bundle @bundle. Please, check the reports for more details.', array('@field' => $field['field_info']['field_name'], '@bundle' => $bundle_name)), 'error', FALSE);
+  }
+}
+
+/**
+ * === END Create new vocabularies ===
+ */
+/**
+ * === START Update existing vocabularies ===
+ */
+
+/**
+ * Triggers the process of updating local vocabularies and their terms.
+ *
+ * @param stdClass $connection
+ *   The connection object
+ *
+ * @param array $client_vids
+ *   Array with the local vocabulary objects keyed by their vocabulary ids.
+ * @param bool $from_cron
+ *   Boolean to determine from where we call the function.
+ */
+function kk_client_request_process_update_vocabularies($connection, $client_vids, $from_cron = FALSE) {
+  $voc_terms_update = array();
+  $voc_terms_create = array();
+  $operations = array();
+  $flag_generate_json = FALSE;
+  $flag_kkorg = FALSE;
+  foreach ($client_vids as $vid => $voc_name) {
+    $vocabulary = taxonomy_vocabulary_load($vid);
+    if ($vocabulary->machine_name == 'kle') {
+      $flag_generate_json = $vid;
+    }
+    if ($vocabulary->machine_name == 'kkorg') {
+      $flag_kkorg = TRUE;
+    }
+    $update_voc = kk_client_request_check_update_need_vocabulary($connection, $vid);
+
+    if (!empty($update_voc)) {
+      kk_client_request_update_client_voc($update_voc['voc_object']);
+    }
+
+    // Delete non existent on the server terms.
+    kk_client_request_delete_client_term($connection, $vid, $from_cron);
+
+    // Update already synced terms
+    $term_tids = kk_client_request_get_local_terms_per_vocabulary($vid);
+    if (isset($term_tids) && !empty($term_tids)) {
+      $terms_to_update = kk_client_request_check_update_need_terms($connection, $vid, $term_tids);
+    }
+
+    if (!empty($terms_to_update)) {
+      foreach ($terms_to_update as $key => $term_obj) {
+        if ($term_obj['status'] === 'U') {
+          $voc_terms_update[] = $term_obj;
+        }
+      }
+      if ($from_cron) {
+        kk_client_request_cron_queue_terms($voc_terms_update, 'term_update', TRUE);
+      }
+      else {
+        kk_client_request_batch_terms($voc_terms_update, 'term_update', TRUE, $operations);
+      }
+    }
+
+    $terms_to_create = kk_client_request_create_new_specific_client_term($connection, $vid);
+    if (!empty($terms_to_create)) {
+      if ($from_cron) {
+        kk_client_request_cron_queue_terms($terms_to_create, 'term_insert', TRUE);
+      }
+      else {
+        kk_client_request_batch_terms($terms_to_create, 'term_insert', TRUE, $operations);
+      }
+    }
+  }
+  if (!$from_cron && !empty($operations)) {
+    if ($flag_generate_json) {
+      $operations[] = array('kk_client_request_batch_generate_json', array($flag_generate_json));
+    }
+    if ($flag_kkorg) {
+      $operations[] = array('kk_client_request_batch_workbench_access_reset_tree', array());
+    }
+
+    kk_client_request_batch_terms_execute($operations);
+  }
+}
+
+/**
+ * Triggers the process of updating local vocabularies and specific terms.
+ *
+ * @param stdClass $connection
+ *   The connection object
+ *
+ * @param array $client_vids
+ *   Array with the local vocabulary objects keyed by their vocabulary ids.
+ * @param array $vocs_spec_terms_to_create
+ *   Array with term ids to be updated.
+ */
+function kk_client_request_process_update_vocabularies_and_selected_terms($connection, $client_vids, $vocs_spec_terms_to_update = array()) {
+  $voc_terms_update = array();
+  $voc_terms_create = array();
+  $operations = array();
+  $flag_generate_json = FALSE;
+  $flag_kkorg = FALSE;
+  foreach ($client_vids as $vid => $voc_name) {
+    $vocabulary = taxonomy_vocabulary_load($vid);
+    if ($vocabulary->machine_name == 'kle') {
+      $flag_generate_json = $vid;
+    }
+    if ($vocabulary->machine_name == 'kkorg') {
+      $flag_kkorg = TRUE;
+    }
+
+    // Update vocabulary if needed.
+    $update_voc = kk_client_request_check_update_need_vocabulary($connection, $vid);
+    if (!empty($update_voc)) {
+      kk_client_request_update_client_voc($update_voc['voc_object']);
+    }
+
+    // Delete non existent on the server terms.
+    kk_client_request_delete_specific_client_term($connection, $vid, $vocs_spec_terms_to_update);
+
+    // Update already synced terms
+    $term_tids = kk_client_request_get_local_terms_per_vocabulary($vid);
+    if (isset($term_tids) && !empty($term_tids)) {
+      $terms_to_update = kk_client_request_check_update_need_terms($connection, $vid, $term_tids);
+    }
+
+    if (!empty($terms_to_update)) {
+      foreach ($terms_to_update as $key => $term_obj) {
+        if ($term_obj['status'] === 'U') {
+          $voc_terms_update[] = $term_obj;
+        }
+      }
+      kk_client_request_batch_terms($voc_terms_update, 'term_update', TRUE, $operations);
+    }
+
+    $terms_to_create = kk_client_request_update_create_specific_client_term($connection, $vid, $vocs_spec_terms_to_update);
+    if (!empty($terms_to_create)) {
+      kk_client_request_batch_terms($terms_to_create, 'term_insert', TRUE, $operations);
+    }
+  }
+  if (!empty($operations)) {
+    if ($flag_generate_json) {
+      $operations[] = array('kk_client_request_batch_generate_json', array($flag_generate_json));
+    }
+    if ($flag_kkorg) {
+      $operations[] = array('kk_client_request_batch_workbench_access_reset_tree', array());
+    }
+
+    kk_client_request_batch_terms_execute($operations);
+  }
+}
+
+/**
+ * Triggers the process of updating local vocabularies without the terms.
+ *
+ * @param stdClass $connection
+ *   The connection object
+ *
+ * @param array $client_vids
+ *   Array with the local vocabulary objects keyed by their vocabulary ids.
+ */
+function kk_client_request_process_update_vocabularies_and_no_terms($connection, $client_vids) {
+  foreach ($client_vids as $vid => $voc_name) {
+    $update_voc = kk_client_request_check_update_need_vocabulary($connection, $vid);
+    if (!empty($update_voc)) {
+      kk_client_request_update_client_voc($update_voc['voc_object']);
+    }
+  }
+}
+
+/**
+ * Updates vocabulary options.
+ *
+ * @param stdClass $voc
+ *   The vocabulary object.
+ */
+function kk_client_request_update_client_voc($voc) {
+  $client_voc_vid = kk_client_request_get_client_vid($voc['vid']);
+
+  if ($client_voc_vid) {
+// Remove deleted fields from the server.
+    kk_client_request_remove_term_field($voc['term_fields'], $voc['machine_name']);
+
+    $client_voc_obj = taxonomy_vocabulary_load($client_voc_vid);
+
+    if (isset($client_voc_obj) && !empty($client_voc_obj)) {
+      try {
+        $client_voc_obj->name = $voc['name'];
+        $client_voc_obj->description = $voc['description'];
+        $client_voc_obj->machine_name = $voc['machine_name'];
+
+// Language support.
+        if (module_exists('i18n')) {
+          if (isset($voc['i18n_mode'])) {
+            $client_voc_obj->i18n_mode = $voc['i18n_mode'];
+          }
+        }
+
+// Fields support.
+        if (!empty($voc['term_fields'])) {
+          foreach ($voc['term_fields'] as $field) {
+// Check if the field already exists, if not - create it.
+            kk_client_request_create_taxonomy_term_field($field, $voc['machine_name']);
+          }
+        }
+
+// Save changes.
+        $voc_status = taxonomy_vocabulary_save($client_voc_obj);
+        if ($voc_status == SAVED_UPDATED) {
+          drupal_set_message(t('Successfully updated vocabulary: @voc_name.', array('@voc_name' => $voc['name'])), 'status', FALSE);
+        }
+        else {
+          drupal_set_message(t('Vocabulary with name @voc_name was NOT successfully updated .', array('@voc_name' => $voc['name'])), 'error', FALSE);
+        }
+
+        return TRUE;
+      }
+      catch (Exception $e) {
+        kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+        drupal_set_message(t('Failed to update the :voc vocabulary during vocabulary update. Please, check the reports for more details.', array(':voc' => $voc['name'])), 'error');
+
+        return FALSE;
+      }
+    }
+    else {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      drupal_set_message(t('Unable to load local vocabulary. Please, check the reports for more details.'), 'error');
+
+      return FALSE;
+    }
+  }
+  else {
+    drupal_set_message(t('Unable to get local vid by provided server vid. Please, check the reports for more details.'), 'error');
+
+    return FALSE;
+  }
+}
+
+/**
+ * Delete term because it was deleted on the central installation.
+ *
+ * Delete the term from kk_client_request_term table.
+ *
+ * @param stdClass $connection
+ *   The connection object.
+ * @param int $client_vid
+ *   The vocabulary id of the local vocabulary.
+ * @param bool $on_cron
+ *   To determine from where we call the function.
+ */
+function kk_client_request_delete_client_term($connection, $client_vid, $on_cron) {
+  $server_term_tids = array();
+  $terms_report_del = array();
+
+  
+  try {
+    $server_vid = kk_client_request_get_server_vid($client_vid);
+    $server_vocabulary_tree = _kk_client_request_terms_retrieve_all($server_vid);
+    $client_vocabulary_tree = taxonomy_get_tree($client_vid);
+    foreach ($server_vocabulary_tree as $server_voc_key => $server_voc_term) {
+      $server_term_tids[] = $server_voc_term['tid'];
+    }
+    unset($server_vocabulary_tree); // Not needed anymore.
+
+    foreach ($client_vocabulary_tree as $key => $term) {
+      $server_tid = kk_client_request_get_server_tid($term->tid);
+      if (!$server_tid || in_array($server_tid, $server_term_tids)) {
+        continue;
+      }
+      if ($on_cron === FALSE) {
+        $status = taxonomy_term_delete($term->tid);
+        if ($status == SAVED_DELETED) {
+          $message = t('The @term term was deleted successfully.', array(
+            '@term' => $term->name,
+          ));
+          drupal_set_message($message, 'status', FALSE);
+        }
+        else {
+          $message = t('The @term term was NOT deleted successfully.', array(
+            '@term' => $term->name,
+          ));
+          drupal_set_message($message, 'error', FALSE);
+        }
+      }
+      else {
+        $terms_report_del[] = $term->name;
+      }
+    }
+    if (!empty($terms_report_del)) {
+      $terms_to_delete_titles = implode(', ', $terms_report_del);
+      kk_client_request_watchdog_custom('KK Client Request', 'Terms NOT deleted on cron during synchronization: %terms. Please, consider to remove them with manual synchronisation.', array('%terms' => $terms_report_del), WATCHDOG_INFO);
+    }
+  }
+  catch (Exception $e) {
+    kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+    drupal_set_message(t('There are no terms for the selected vocabulary or there is problem with the vocabulary on the server.'), 'error', FALSE);
+  }
+}
+
+/**
+ * Delete term because it was deleted on the central installation.
+ *
+ * Delete the term from kk_client_request_term table.
+ *
+ * @param stdClass $connection
+ *   The connection object.
+ * @param int $client_vid
+ *   The vocabulary id of the local vocabulary.
+ */
+function kk_client_request_create_new_specific_client_term($connection, $client_vid) {
+  $client_term_tids = array();
+  $server_term_to_create = array();
+
+  try {
+    $server_vid = kk_client_request_get_server_vid($client_vid);
+    $server_vocabulary_tree = _kk_client_request_terms_retrieve_all($server_vid);
+
+    foreach ($server_vocabulary_tree as $server_voc_key => $server_voc_term) {
+      $client_tid = kk_client_request_get_client_tid($server_voc_term['tid'], $client_vid);
+      if (empty($client_tid)) {
+        $server_term_to_create[] = $server_voc_term;
+      }
+    }
+  }
+  catch (Exception $e) {
+    kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+    drupal_set_message(t('There are no terms for the selected vocabulary or there is problem with the vocabulary on the server.'), 'error', FALSE);
+
+    return FALSE;
+  }
+
+  return $server_term_to_create;
+}
+
+/**
+ * Delete term because it was deleted on the central installation.
+ *
+ * Delete the term from kk_client_request_term table.
+ *
+ * @param stdClass $connection
+ *   The connection object.
+ * @param int $client_vid
+ *   The vocabulary id of the local vocabulary.
+ */
+function kk_client_request_update_create_specific_client_term($connection, $client_vid, $terms) {
+  $server_term_to_create = array();
+
+  try {
+    $server_vid = kk_client_request_get_server_vid($client_vid);
+    $server_vocabulary_tree = kk_client_request_taxonomy_vocabulary_retrieve_specific_terms_adapter($connection, $server_vid, $terms);
+
+    foreach ($server_vocabulary_tree as $server_voc_key => $server_voc_term_value) {
+      foreach ($server_voc_term_value as $id => $server_voc_term) {
+        $client_tid = kk_client_request_get_client_tid($server_voc_term['tid'], $client_vid);
+        if (empty($client_tid)) {
+          $server_term_to_create[] = $server_voc_term;
+        }
+      }
+    }
+  }
+  catch (Exception $e) {
+    kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+    drupal_set_message(t('There are no terms for the selected vocabulary or there is problem with the vocabulary on the server.'), 'error', FALSE);
+
+    return FALSE;
+  }
+
+  return $server_term_to_create;
+}
+
+/**
+ * Delete specific terms because deleted on the central installation.
+ *
+ * Delete the term from kk_client_request_term table.
+ *
+ * @param stdClass $connection
+ *   The connection object.
+ * @param int $client_vid
+ *   The vocabulary id of the local vocabulary.
+ * @param bool $on_cron
+ *   To determine from where we call the function.
+ */
+function kk_client_request_delete_specific_client_term($connection, $client_vid, $vocs_spec_terms_to_update) {
+  $server_term_tids = array();
+
+  try {
+    // Get Server terms.
+    $server_vid = kk_client_request_get_server_vid($client_vid);
+    $server_vocabulary_tree = kk_client_request_taxonomy_vocabulary_retrieve_specific_terms_adapter($connection, $server_vid, $vocs_spec_terms_to_update);
+    $term_tids = kk_client_request_get_local_terms_per_vocabulary($client_vid);
+
+    foreach ($server_vocabulary_tree as $server_term_id => $server_term_object) {
+      foreach ($server_term_object as $id => $server_term) {
+        $server_term_tids[] = $server_term['tid'];
+      }
+    }
+    // Clear the data as it may be large and is not needed anymore
+    unset($server_vocabulary_tree);
+
+    foreach ($term_tids as $local_server_tid => $local_server_tid_value) {
+      if (in_array($local_server_tid, $server_term_tids)) {
+        continue;
+      }
+      $client_tid = kk_client_request_get_client_tid($local_server_tid, $client_vid);
+      if (empty($client_tid)) {
+        continue;
+      }
+      $term_obj = taxonomy_term_load($client_tid);
+      $status = taxonomy_term_delete($client_tid);
+      $args = array('@term' => $term_obj->name,);
+      if ($status == SAVED_DELETED) {
+        drupal_set_message(t('The @term term was deleted successfully.', $args), 'status', FALSE);
+      }
+      else {
+        drupal_set_message(t('The @term term was NOT deleted successfully.', $args), 'error', FALSE);
+      }
+    }
+  }
+  catch (Exception $e) {
+    kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+    drupal_set_message(t('There are no terms for the selected vocabulary or there is problem with the vocabulary on the server.'), 'error', FALSE);
+  }
+}
+
+/**
+ * Method to use for calling the taxonomy_vocabulary service's
+ * retrieveSpecificTerms action. Because of a service API chage the use of this
+ * module was needed to convert the new response data format to the old format
+ * locally. The new response format is more compact, making it more efficient
+ * for transfer and parsing.
+ *
+ * @param type $connection
+ * @param int $vid
+ * @param array $terms
+ * @return array
+ */
+function kk_client_request_taxonomy_vocabulary_retrieve_specific_terms_adapter($connection, $vid, $terms) {
+  $response = $connection->action('taxonomy_vocabulary', 'retrieveSpecificTerms', array(
+    'vid' => $vid,
+    'terms' => $terms,
+  ));
+
+  // Conversion to old format - add term_fields property to all terms.
+  foreach($response['terms_tree'] as &$terms_list) {
+    foreach($terms_list as &$term) {
+      $term['term_fields'] = $response['term_fields'];
+    }
+  }
+
+  return $response['terms_tree'];
+}
+
+/**
+ * Updates vocabulary term.
+ *
+ * @param <object> $term
+ *   Term object.
+ */
+function kk_client_request_update_client_term($term) {
+  $local_vid = kk_client_request_get_client_vid($term['term_object']['vid']);
+  $local_tid = kk_client_request_get_client_tid($term['term_object']['tid'], $local_vid);
+
+  if (empty($local_tid)) {
+    // No local term ID - needs insert NOT update!
+    return FALSE;
+  }
+  // Remove deleted fields from the server.
+  kk_client_request_remove_term_field($term['term_object']['term_fields'], $term['term_object']['vocabulary_machine_name']);
+
+  if (($term_obj = taxonomy_term_load($local_tid)) === FALSE) {
+    // Unable to load the local term object!
+    return FALSE;
+  }
+  try {
+    // Fields support.
+    if (!empty($term['term_object']['term_fields'])) {
+      foreach ($term['term_object']['term_fields'] as $field) {
+        // Check if the field already exists, if not - create it.
+        kk_client_request_create_taxonomy_term_field($field, $term['term_object']['vocabulary_machine_name']);
+      }
+    }
+
+    _kk_client_request_populate_local_term_object($local_vid, $term_obj, $term['term_object']);
+    if(is_null($term_obj)) {
+      DrupalQueue::get('kk_client_request_import_install')->createItem(array(
+        'terms' => array($term),
+        'operation' => 'term_update',
+        'from_voc' => TRUE,
+      ));
+      return FALSE;
+    }
+
+    // Save term object.
+    if (taxonomy_term_save($term_obj) !== SAVED_UPDATED) {
+      $message = t('Term with name @term_name was NOT successfully updated.', array('@term_name' => $term['term_object']['name'],));
+      drupal_set_message($message, 'error', FALSE);
+      return FALSE;
+    }
+    $message = t('Successfully updated term: @term_name.', array('@term_name' => $term['term_object']['name'],));
+    drupal_set_message($message, 'status', FALSE);
+    return TRUE;
+  }
+  catch (Exception $e) {
+    kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+    drupal_set_message(t('Unable to update the term @term. Please, check the reports for more details.', array('@term' => $term['term_object']['name'])), 'error', FALSE);
+    return FALSE;
+  }
+}
+
+/**
+ * === END Update existing vocabularies ===
+ */
+/**
+ * === START Delete existing vocabularies ===
+ */
+
+/**
+ * Returns the array of vocabulary objects to be deleted.
+ *
+ * @param array $local_vocabularies
+ *   Array with the local vocabulary ids.
+ * @param array $server_vocabularies
+ *   Array with the server vocabulary ids.
+ */
+function kk_client_request_get_vocabularies_to_delete(& $local_vocabularies, $server_vocabularies) {
+  $vocabularies_to_delete = array();
+  if (!empty($local_vocabularies)) {
+    foreach ($local_vocabularies as $key => $value) {
+      $server_vid = kk_client_request_get_server_vid($key);
+      if ($server_vid !== FALSE) {
+        if (!empty($server_vid)) {
+          if (!array_key_exists($server_vid, $server_vocabularies)) {
+            $vocabularies_to_delete[$key] = $value;
+            unset($local_vocabularies[$key]);
+          }
+        }
+      }
+      else {
+        return FALSE;
+      }
+    }
+  }
+
+  return $vocabularies_to_delete;
+}
+
+/**
+ * Deletes vocabularies.
+ *
+ * @param array $vocs_to_del
+ *   Array of vocabularies to be deleted.
+ */
+function kk_client_request_delete_vocabularies($vocs_to_del) {
+  foreach ($vocs_to_del as $vid => $title) {
+    try {
+      $status = taxonomy_vocabulary_delete($vid);
+      if ($status == SAVED_DELETED) {
+        drupal_set_message(t('The @voc vocabulary was deleted successfully.', array('@voc' => $title)), 'status', FALSE);
+      }
+      else {
+        drupal_set_message(t('The @voc vocabulary was NOT deleted successfully.', array('@voc' => $title)), 'error', FALSE);
+      }
+    }
+    catch (Exception $e) {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      drupal_set_message(t('Unable to delete the @vocabulary vocabulary. Please, check the reports for more details.', array('@vocabulary' => $title)), 'error', FALSE);
+    }
+  }
+}
+
+/**
+ * === END Delete vocabularies ===
+ */
+/**
+ * === START Helper functions ===
+ */
+
+/**
+ * Gets all the services clients connections.
+ */
+function kk_client_request_get_client_connections() {
+  $voc_names = array();
+  $connection_names = array();
+  $connections = services_client_connection_load_all();
+
+  if (isset($connections) && !empty($connections)) {
+    foreach ($connections as $connection) {
+      $connection_names[$connection->name] = $connection->admin_title;
+    }
+
+    return $connection_names;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Filters the server vocabularies  to exclude the ones already imported.
+ *
+ * @param stdClass $connection
+ *   The connection object.
+ */
+function kk_client_request_get_list_vocabularies($connection) {
+  $retrieve_all = kk_client_request_get_all_vocabularies($connection);
+
+  if ($retrieve_all !== FALSE) {
+    if (!empty($retrieve_all)) {
+      foreach ($retrieve_all as $key => $name) {
+        $has_local_vid = kk_client_request_get_client_vid($key);
+        if ($has_local_vid) {
+          unset($retrieve_all[$key]);
+        }
+      }
+    }
+    else {
+      return array();
+    }
+  }
+  else {
+    return FALSE;
+  }
+
+  return $retrieve_all;
+}
+
+/**
+ * Gets vocabulary by machine_name.
+ *
+ * @param stdClass $connection
+ *   The connection object
+ */
+function kk_client_request_get_vocabulary_machine_name($connection) {
+  $retrieve_all = array();
+
+  try {
+    $retrieve_all = $connection->action('taxonomy_vocabulary', 'retrieveMachineNameList');
+  }
+  catch (Exception $e) {
+    kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+    return FALSE;
+  }
+
+  return $retrieve_all;
+}
+
+/**
+ * Checks if an taxonomy object should be synched.
+ *
+ * @param stdClass $taxonomy_obj
+ *   The taxonomy object
+ */
+function kk_client_request_sync_object_check($taxonomy_obj) {
+  try {
+    return db_select('kk_client_request_vocabulary', 'kkcrv')
+      ->fields('kkcrv', array('server_vid'))
+      ->condition('kkcrv.client_vid', array($taxonomy_obj->vid), '=')
+      ->execute()
+      ->fetchField();
+  }
+  catch (Exception $e) {
+    kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+    drupal_set_message(t('Failed to select server term vid from the kk_client_request_vocabulary table. Please, check the reports for more details.'), 'error');
+    return FALSE;
+  }
+}
+
+/**
+ * Gets the connection object.
+ *
+ * @param string $services_client_name
+ *   The services client connection machine name.
+ */
+function kk_client_request_get_client_object($services_client_name) {
+  $connections = &drupal_static(__FUNCTION__, array());
+
+  // Chech the cache.
+  if (isset($connections[$services_client_name])) {
+    return $connections[$services_client_name];
+  }
+
+  if (isset($services_client_name) && !empty($services_client_name)) {
+    try {
+      $api = services_client_connection_get($services_client_name);
+      $connections[$services_client_name] = $api; // cache it
+    }
+    catch (ServicesClientConnectionResponseException $e) {
+      // Do not chache it might be something temporary.
+      $e->log();
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      drupal_set_message(check_plain($e->getMessage()), 'error', FALSE);
+      $api = FALSE;
+    }
+  }
+  else {
+    // Do not chache it's a wrong function call.
+    drupal_set_message(t('Services client name is not set. Please, go back and pikc a connection.'), 'error');
+    $api = FALSE;
+  }
+
+  return $api;
+}
+
+/**
+ * Checks if term field is deleted and removes it from the local taxonomy.
+ *
+ * @param array $term_fields
+ *   Array with the term  fields properties.
+ * @param string $bundle_name
+ *   The bundle name.
+ */
+function kk_client_request_remove_term_field($term_fields, $bundle_name) {
+  $client_term_fields = field_info_instances('taxonomy_term', $bundle_name);
+
+  foreach ($client_term_fields as $key => $value) {
+    if (!empty($term_fields)) {
+      if (!array_key_exists($key, $term_fields)) {
+        field_delete_field($value['field_name']);
+      }
+    }
+    else {
+      field_delete_field($value['field_name']);
+    }
+  }
+}
+
+/**
+ * Enables the watchdog messages.
+ *
+ * @param string $type
+ *   Human readable name. Usually the module name.
+ * @param string $message
+ *   Message to be posted in the reports
+ * @param array $variables
+ *   Array with the placeholders to replace in the message
+ * @param string $severity
+ *   Severity.
+ */
+function kk_client_request_watchdog_custom($type, $message, $variables = array(), $severity = WATCHDOG_DEBUG) {
+  if (variable_get('kk_client_request_debug', 0) == 1) {
+    watchdog($type, $message, $variables, $severity);
+  }
+}
+
+/**
+ * Checks the current user against certain permissions for accessing taxonomies.
+ *
+ * @param stdClass $vocabulary
+ *   Object holding vocabulary properties.
+ */
+function kk_client_request_taxonomy_access_custom($vocabulary, $second_vocabulary = array()) {
+  $account = $GLOBALS['user'];
+
+  if ($account->uid == 0) {
+    return FALSE;
+  }
+
+  if($account->uid == 1) {
+    return TRUE;
+  }
+
+  // $account->uid > 1
+  // Check for the main permissions. Whether could administer taxonomies.
+  if (!user_access('administer taxonomy', $account)) {
+    return FALSE;
+  }
+
+  $local_voc = kk_client_request_taxonomy_access_custom_server_check($vocabulary->machine_name);
+  if ($local_voc) {
+    return TRUE;
+  }
+
+  // Checks whether there is access denied permission for that vocabulary.
+  if (user_access('allow access to ' . $vocabulary->machine_name, $account)) {
+    return TRUE;
+  }
+
+  // In case second vocabulary is presented (from the Taxonomy Manager).
+  // Same checks are made for it as well.
+  if (isset($second_vocabulary) && !empty($second_vocabulary) && !$local_voc) {
+    return user_access('allow access to ' . $second_vocabulary->machine_name, $account);
+  }
+
+  return FALSE;
+}
+
+/**
+ * Checks term access permissions.
+ *
+ * @param stdClass $term
+ *   Term object against which to make the check.
+ */
+function kk_client_request_taxonomy_term_access_custom($term) {
+  $account = $GLOBALS['user'];
+  $local_voc = kk_client_request_taxonomy_access_custom_server_check($term->vocabulary_machine_name);
+
+  if ($account->uid == 0) {
+    return FALSE;
+  }
+
+  if ($account->uid == 1) {
+    return TRUE;
+  }
+
+  // $account->uid > 1
+  // Check for the main permissions. Whether could administer taxonomies.
+  if (!user_access('edit terms in ' . $term->vid, $account) && !user_access('administer taxonomy', $account)) {
+    return FALSE;
+  }
+
+  // Checks whether there is access denied permission for that vocabulary.
+  if ($local_voc) {
+    return TRUE;
+  }
+
+  return user_access('allow access to ' . $term->vocabulary_machine_name, $account);
+}
+
+/**
+ * === END Helper functions ===
+ */
+/**
+ * CRON PART END.
+ */
+
+/**
+ * Executes on cron kk_client_request_vocabulary_delete.
+ */
+function kk_client_request_vocabulary_delete($connection_name) {
+// Get connection.
+  $connection = kk_client_request_get_client_object($connection_name);
+  if ($connection) {
+    try {
+// Get local and server vocabularies. Determine which ones to be deleted.
+      $local_vocabularies = kk_client_request_get_local_sync_vocabularies();
+      $server_vocabularies = kk_client_request_get_all_vocabularies($connection);
+      $vocs_to_delete = kk_client_request_get_vocabularies_to_delete($local_vocabularies, $server_vocabularies);
+    }
+    catch (Exception $e) {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), WATCHDOG_ERROR);
+      drupal_set_message(t('Failed to get the connection and/or the vocabularies for deletion. Please, check the reports for more details.'), 'error', FALSE);
+    }
+
+    if (!empty($vocs_to_delete)) {
+      $voc_to_delete_titles = implode(', ', $vocs_to_delete);
+      kk_client_request_watchdog_custom('KK Client Request', 'Vocabularies NOT deleted on cron during synchronization: %vocabularies. Please, consider to remove them with manual synchronisation.', array('%vocabularies' => $voc_to_delete_titles), WATCHDOG_INFO);
+    }
+    else {
+      kk_client_request_watchdog_custom('KK Client Request', 'There are no vocabularies to be deleted on cron synchronization.', array(), WATCHDOG_INFO);
+    }
+  }
+}
+
+/**
+ * Worker callback for queue kk_client_request_vocabulary_create.
+ */
+function kk_client_request_vocabulary_create($connection_name) {
+  $connection = kk_client_request_get_client_object($connection_name);
+  if ($connection) {
+    try {
+// Get list of all vocabularies. Determine which ones to be created.
+      $vocs_to_create = kk_client_request_get_list_vocabularies($connection);
+      $create_voc_status = kk_client_request_process_create_vocabularies($connection, $vocs_to_create, TRUE);
+    }
+    catch (Exception $e) {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      drupal_set_message(t('Failed to create local vocabularies on cron. Please, check the reports for more details.'), 'error');
+    }
+  }
+}
+
+/**
+ * Worker callback for queue kk_client_request_vocabulary_update.
+ */
+function kk_client_request_vocabulary_update($connection_name) {
+  $connection = kk_client_request_get_client_object($connection_name);
+  if ($connection) {
+    try {
+// Get local synced vocabularies. Determine which ones to be updated.
+      $local_vocabularies = kk_client_request_get_local_sync_vocabularies();
+      kk_client_request_process_update_vocabularies($connection, $local_vocabularies, TRUE);
+    }
+    catch (Exception $e) {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      drupal_set_message(t('Failed to update local vocabularies on cron. Please, check the reports for more details.'), 'error');
+    }
+  }
+}
+
+/**
+ * Creates cron queue item.
+ *
+ * @param array $voc_terms
+ *   Array with term objects.
+ * @param string $operation
+ *   Type of operation.
+ * @param bool $from_voc
+ *   Whether or not it is comming from vocabularies.
+ */
+function kk_client_request_cron_queue_terms($voc_terms, $operation, $from_voc) {
+  foreach(array_chunk($voc_terms, KK_CLIENT_REQUEST_COUNTER_CRONQUEUE) as $terms_to_operate) {
+    DrupalQueue::get('kk_client_request_import_install')->createItem(array(
+      'terms' => $terms_to_operate,
+      'operation' => $operation,
+      'from_voc' => $from_voc,
+    ));
+  }
+}
+
+/**
+ * CRON PART END.
+ */
+/**
+ * DATABASE PART BEGINING.
+ */
+
+/**
+ * Gets list of the server term ids of the terms of particular vocabulary.
+ * @param int $client_vid
+ *   The vocabulary id of the provided taxonomy.
+ */
+function kk_client_request_get_local_terms_per_vocabulary($client_vid) {
+// TODO: Optimize with Drupal Static caches.
+  $local_sync_terms = array();
+
+  try {
+    $res = db_select('kk_client_request_term', 'kkcrt')
+      ->fields('kkcrt', array('server_tid'))
+      ->condition('kkcrt.client_vid', array($client_vid), '=')
+      ->execute()
+      ->fetchAllAssoc('server_tid');
+    if (!empty($res)) {
+      foreach ($res as $server_tid => $server_tid_obj) {
+        $local_sync_terms[$server_tid] = $server_tid;
+      }
+    }
+  }
+  catch (Exception $e) {
+    kk_client_request_watchdog_custom('KK Client Request', 'Possible problems with the database. Could not select from database table "kk_client_request_term" on getting the locally synched vocabularies.', array(), WATCHDOG_ERROR);
+    drupal_set_message(t('Possible database issues. Please, check the reports for more details.'), 'error', FALSE);
+
+    return FALSE;
+  }
+
+  return $local_sync_terms;
+}
+
+/**
+ * Gets list of the local vocabularies imported from the server.
+ */
+function kk_client_request_get_local_sync_vocabularies() {
+// TODO: Optimize with Drupal Static caches.
+  $local_sync_voc = array();
+
+  try {
+    $result = db_select('kk_client_request_vocabulary', 'kk')
+      ->fields('kk', array('client_vid'))
+      ->execute()
+      ->fetchAllAssoc('client_vid');
+
+    if (!empty($result)) {
+      $vocabularies = taxonomy_get_vocabularies();
+      foreach ($result as $key => $value) {
+        foreach ($vocabularies as $v_key => $v_value) {
+          if ($v_value->vid == $key) {
+            $local_sync_voc[$key] = $v_value->name;
+          }
+        }
+      }
+    }
+  }
+  catch (Exception $e) {
+    kk_client_request_watchdog_custom('KK Client Request', 'Possible problems with the database. Could not select from database table "kk_client_request_vocabulary" on getting the locally synched vocabularies.', array(), WATCHDOG_ERROR);
+    drupal_set_message(t('Possible database issues. Please, check the reports for more details.'), 'error', FALSE);
+
+    return FALSE;
+  }
+
+  return $local_sync_voc;
+}
+
+/**
+ * Returns the server vid by provided client vid.
+ *
+ * @param int $client_vid
+ *   The client vocabulary id.
+ */
+function kk_client_request_get_server_vid($client_vid) {
+  $server_vids = &drupal_static(__FUNCTION__, array());
+
+  if (!isset($server_vids[$client_vid])) {
+    try {
+      $server_vid = db_select('kk_client_request_vocabulary', 'kkcrv')
+        ->fields('kkcrv', array('server_vid'))
+        ->condition('kkcrv.client_vid', $client_vid, '=')
+        ->execute()
+        ->fetchField();
+
+      if (!$server_vid) {
+        return FALSE;
+      }
+
+      $server_vids[$client_vid] = $server_vid;
+    }
+    catch (Exception $e) {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      drupal_set_message(t('Failed to select server vocabulary id from the kk_client_request_vocabulary table. Please, check the reports for more details.'), 'error');
+      return FALSE;
+    }
+  }
+
+  return $server_vids[$client_vid];
+}
+
+/**
+ * Helper function that insert vocabulary.
+ */
+function kk_client_request_insert_new_vocabulary($vocabulary, $service_vid) {
+  try {
+    db_insert('kk_client_request_vocabulary')
+      ->fields(array(
+        'server_vid' => $service_vid,
+        'client_vid' => $vocabulary->vid,
+        'timestamp' => time(),
+      ))
+      ->execute();
+
+    return TRUE;
+  }
+  catch (Exception $e) {
+    kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+    drupal_set_message(t('Failed to insert the :voc vocabulary into the kk_client_request_vocabulary table. Please, check the reports for more details.', array(':voc' => $vocabulary->name)), 'error');
+
+    return FALSE;
+  }
+}
+
+/**
+ * Checks by machine name for existing voc.
+ */
+function kk_client_request_check_local_existing_vocabulary($voc) {
+  try {
+    $result = db_select('taxonomy_vocabulary', 'tv')
+      ->fields('tv', array('vid', 'machine_name'))
+      ->condition('machine_name', $voc['machine_name'], '=')
+      ->execute()
+      ->fetchAll();
+  }
+  catch (Exception $e) {
+    kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+    drupal_set_message(t('Failed to select from the taxonomy_vocabulary table. Please, check the reports for more details.'), 'error');
+    return FALSE;
+  }
+
+  if (!empty($result)) {
+    drupal_set_message(t('The selected vocabulary :voc could not be created locally, because there is already another local vocabulary with the same machine name. Please, either remove the local vocabulary or rename the one on the server.', array(':voc' => $voc['machine_name'])), 'error', FALSE);
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+/**
+ * Gets client vocabulary id by given server vocaulary id.
+ *
+ * @param int $server_vid
+ *   The server vocabulary id against which to return local id.
+ */
+function kk_client_request_get_client_vid($server_vid) {
+  $client_vids = &drupal_static(__FUNCTION__, array());
+
+  if (!isset($client_vids[$server_vid])) {
+    try {
+      $result = db_select('kk_client_request_vocabulary', 'cv')
+        ->fields('cv', array('client_vid'))
+        ->condition('cv.server_vid', $server_vid, '=')
+        ->execute();
+      $client_vid = $result ? $result->fetchField() : FALSE;
+      if (!$client_vid) {
+        return FALSE;
+      }
+      $client_vids[$server_vid] = $client_vid;
+    }
+    catch (Exception $e) {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      drupal_set_message(t('Failed to select client term id from the kk_client_request_term table. Please, check the reports for more details.'), 'error');
+      return FALSE;
+    }
+  }
+
+  return $client_vids[$server_vid];
+}
+
+/**
+ * Gets client taxonomy term id by given server id.
+ *
+ * @param int $server_tid
+ *   The server vocabulary tid against which to return the local one.
+ * @param int $client_vid
+ *   The client's vocabulary id against which to return the local tid.
+ */
+function kk_client_request_get_client_tid($server_tid, $client_vid = NULL) {
+  $client_tids = &drupal_static(__FUNCTION__, array());
+  $cache_key = "$server_tid-$client_vid";
+
+  // Searching for invalid server_tid is an error.
+  if (!$server_tid) {
+    $client_tids[$cache_key] = FALSE;
+  }
+
+  if (!isset($client_tids[$cache_key])) {
+    try {
+      $query = db_select('kk_client_request_term', 'ct')
+        ->fields('ct', array('client_tid'))
+        ->condition('ct.server_tid', $server_tid, '=');
+
+      // Filter by vocabulary if available.
+      if ($client_vid) {
+        $query->condition('ct.client_vid', $client_vid, '=');
+      }
+
+      $result = $query->execute();
+      if (!$result || $result->rowCount() != 1) {
+        // Do not cache this result, to make sure we can re-check for the same tid later.
+        return FALSE;
+      }
+      $client_tids[$cache_key] = $result->fetchField();
+    }
+    catch (Exception $e) {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      drupal_set_message(t('Failed to select client term id from the kk_client_request_term table. Please, check the reports for more details.'), 'error');
+      return FALSE;
+    }
+  }
+
+  return $client_tids[$cache_key];
+}
+
+/**
+ * Gets last update time for vocabulary by its client vid.
+ *
+ * @param <int> $vid
+ *   The client vocabulary id against which to return the timestamp.
+ */
+function kk_client_request_get_vocabulary_timestamp($vid) {
+  try {
+    $result = db_select('kk_client_request_vocabulary', 'cv')
+      ->fields('cv', array('timestamp'))
+      ->condition('cv.client_vid', $vid, '=')
+      ->execute()
+      ->fetchAll();
+
+    if (!isset($result) || empty($result)) {
+      return FALSE;
+    }
+
+    $voc_time_result = reset($result);
+    return $voc_time_result->timestamp;
+  }
+  catch (Exception $e) {
+    kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+    drupal_set_message(t('Failed to select vocabulary timestamp from the kk_client_request_vocabulary table. Please, check the reports for more details.'), 'error');
+
+    return FALSE;
+  }
+}
+
+/**
+ * Returns server tid by provided client tid.
+ *
+ * @param string $client_tid
+ *   The client term id.
+ */
+function kk_client_request_get_server_tid($client_tid) {
+  $server_tids = &drupal_static(__FUNCTION__, array());
+
+  if (!isset($server_tids[$client_tid])) {
+    try {
+      $server_tid = db_select('kk_client_request_term', 'kkcrt')
+        ->fields('kkcrt', array('server_tid'))
+        ->condition('kkcrt.client_tid', $client_tid, '=')
+        ->execute()
+        ->fetchField();
+
+      if (!$server_tid) {
+        return FALSE;
+      }
+
+      $server_tids[$client_tid] = $server_tid;
+    }
+    catch (Exception $e) {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      drupal_set_message(t('Failed to select server term id from the kk_client_request_term table. Please, check the reports for more details.'), 'error');
+      return FALSE;
+    }
+  }
+
+  return $server_tids[$client_tid];
+}
+
+/**
+ * Gets last update time for vocabulary by its client vid.
+ *
+ * @param <int> $vid
+ *   The client vocabulary id.
+ */
+function kk_client_request_get_voc_term_timestamp($vid) {
+  try {
+    $result = db_select('kk_client_voc_term_update_timestamp', 'cvtut')
+      ->fields('cvtut', array('timestamp'))
+      ->condition('cvtut.vid', $vid, '=')
+      ->execute()
+      ->fetchAll();
+
+    if (!isset($result) || empty($result)) {
+      return 10000; // Return really, really low timestamp.
+    }
+
+    $voc_time_result = reset($result);
+    return $voc_time_result->timestamp;
+  }
+  catch (Exception $e) {
+    kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+    drupal_set_message(t('Failed to select vocabulary term timestamp from the kk_client_request_vocabulary table. Please, check the reports for more details.'), 'error');
+
+    return FALSE;
+  }
+}
+
+/**
+ * DATABASE PART END.
+ */
+/**
+ * SERVICES PART BEGINING.
+ */
+
+/**
+ * Gets all the server vocabularies.
+ *
+ * @param stdClass $connection
+ *   The connection object
+ */
+function kk_client_request_get_all_vocabularies($connection) {
+  $retrieve_all = &drupal_static(__FUNCTION__, NULL);
+
+  if (!isset($retrieve_all)) {
+    try {
+      $retrieve_all = $connection->action('taxonomy_vocabulary', 'retrieveNameList');
+    }
+    catch (Exception $e) {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      return FALSE;
+    }
+  }
+
+  return $retrieve_all;
+}
+
+/**
+ * Gets vocabulary objects with fields from the server.
+ */
+function kk_client_request_retrieve_vocabularies($connection, $vids = array()) {
+  $retrieved_vocs = array();
+
+  if (!empty($vids)) {
+    try {
+      $retrieved_vocs = $connection->action('taxonomy_vocabulary', 'getVocObjectWithFields', array('vids' => $vids));
+      if (isset($retrieved_vocs) && !empty($retrieved_vocs)) {
+        foreach ($retrieved_vocs as $voc_key => $voc) {
+          drupal_set_message(t('Successfully retrieved the vocabulary object for the provided vocabulary @voc_name (id: @voc_id).', array('@voc_name' => $voc['name'], '@voc_id' => $voc_key)), 'status', FALSE);
+        }
+      }
+      else {
+        drupal_set_message(t('The server did not returned the object for the provided vocabulary with ids.'), 'error', FALSE);
+      }
+    }
+    catch (Exception $e) {
+      kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+      drupal_set_message(t('Unable to retrieve vocabulary object for the vocabulary ids. Please, check the reports for more details.'), 'error', FALSE);
+    }
+  }
+
+  return $retrieved_vocs;
+}
+
+/**
+ * Returns all terms for specific vocabularies from the server.
+ *
+ * @param stdClass $connection
+ *   The connection object.
+ * @param int $voc_key
+ *   The vocabulary if against which the server to check and return terms.
+ */
+function kk_client_request_retrieve_vocabulary_terms($connection, $voc_key) {
+  $vocabulary_tree = array();
+
+  try {
+    $vocabulary_tree = _kk_client_request_terms_retrieve_all($voc_key);
+    if (empty($vocabulary_tree)) {
+      drupal_set_message(t('There are no terms for the selected vocabulary: @vid.', array('@vid' => $voc_key)), 'status', FALSE);
+    }
+  }
+  catch (Exception $e) {
+    kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+    drupal_set_message(t('There is problem with the vocabulary on the server. Please, check the reports for more details.'), 'error', FALSE);
+
+    return FALSE;
+  }
+
+  return $vocabulary_tree;
+}
+
+/**
+ * Checks whether a vocabulary needs to be updated.
+ *
+ * @param stdClass $connection
+ *   The connection object
+ * @param int $vid
+ *   The vocabulary id against which to perform the check.
+ */
+function kk_client_request_check_update_need_vocabulary($connection, $vid) {
+  $server_updated_voc = array();
+
+  try {
+    $timestamp = kk_client_request_get_vocabulary_timestamp($vid);
+    $server_vid = kk_client_request_get_server_vid($vid);
+
+    if ($timestamp && $server_vid) {
+      $server_updated_voc = $connection->action('taxonomy_vocabulary', 'retrieveUpdated', array(
+        'timestamp' => $timestamp,
+        'vid' => $server_vid,
+      ));
+    }
+  }
+  catch (Exception $e) {
+    kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+    drupal_set_message(t('Failed to get the server vocabulary object. Please, check the reports for more details.'), 'error');
+
+    return FALSE;
+  }
+
+  return $server_updated_voc;
+}
+
+/**
+ * Updates selected vocabularies and their trees.
+ *
+ * @param stdClass $connection
+ *   The connection object.
+ * @param int $vid
+ *   Checks if there are terms updated against that local vocabulary id on the
+ *   server.
+ */
+function kk_client_request_check_update_need_terms($connection, $vid, $term_tids) {
+  $server_updated_terms = array();
+
+  try {
+    $timestamp = kk_client_request_get_voc_term_timestamp($vid);
+    $server_vid = kk_client_request_get_server_vid($vid);
+
+    if ($timestamp && $server_vid) {
+      $updated_terms = $connection->action('taxonomy_term', 'retrieveSpecificUpdated', array(
+        'timestamp' => $timestamp,
+        'vid' => $server_vid,
+        'term_tids' => $term_tids,
+      ));
+      _kk_client_request_retrieve_updated_adapter_processor($updated_terms);
+      return $updated_terms['terms_updated'];
+    }
+  }
+  catch (Exception $e) {
+    kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+    drupal_set_message(t('Failed to get the terms that should be updated from the server. Please, check the reports for more details.'), 'error');
+
+    return FALSE;
+  }
+
+  return $server_updated_terms;
+}
+
+/**
+ * Helper method to post-process the response to add term_fields property to
+ * all of the response term objects.
+ *
+ * @param &array $result
+ *   Reference to the parsed service responce, will be mutated.
+ */
+function _kk_client_request_retrieve_updated_adapter_processor(&$result) {
+  // Fix for empty responces.
+  if (!isset($result['terms_updated']) || !is_array($result['terms_updated'])) {
+    $result['terms_updated'] = array();
+  }
+
+  foreach($result['terms_updated'] as &$term_info) {
+    $term_info['term_object']['term_fields'] = $result['term_fields'];
+  }
+}
+
+/**
+ * Checks if the vocabulary is from server or is local.
+ *
+ * @param stdClass $vocabulary
+ *   Object holding vocabulary properties.
+ * @return true is local, FALSE otherwise.
+ */
+function kk_client_request_taxonomy_access_custom_server_check($voc_machine_name) {
+  $connection_name = variable_get('kk_client_request_connection_name', '');
+  if ($connection_name) {
+    $connection = kk_client_request_get_client_object($connection_name);
+    if ($connection) {
+      $server_vocabularies = kk_client_request_get_vocabulary_machine_name($connection);
+      if ($server_vocabularies && in_array($voc_machine_name, $server_vocabularies)) {
+        return FALSE;
+      }
+      else {
+        return TRUE;
+      }
+    }
+  }
+
+  return TRUE;
+}
+
+/**
+ * Executes the cron queue worker.
+ *
+ * @param vid
+ *   Generate json file on cron.
+ */
+function kk_client_request_generate_json_file($vid) {
+  try {
+    kk_taxon_taxonomy_alter_generate_json_file($vid);
+  }
+  catch (Exception $e) {
+    kk_client_request_watchdog_custom('KK Client Request', check_plain($e->getMessage()), array(), WATCHDOG_ERROR);
+    drupal_set_message(t('Failed to generate json file. Please, check the reports for more details.'), 'warning');
+  }
+}
+
+/**
+ * SERVICES PART END.
+ */
+
+/**
+ * Implements hook_form_alter().
+ */
+function kk_client_request_form_alter(&$form, $form_state, $form_id) {
+  if($form_id == 'taxonomy_overview_terms') {
+    $form['#validate'][] = '_kk_client_request_taxonomy_overview_terms_validate';
+  }
+}
+
+function  _kk_client_request_taxonomy_overview_terms_validate(&$form, $form_state) {
+  if(!kk_client_request_taxonomy_access_custom($form['#vocabulary'])) {
+    form_set_error('', t('Access denied'));
+  }
+}
+
+// REST wrapper functions
+
+function _kk_client_request_terms_retrieve_all($server_vid)
+{ 
+  $connection = kk_client_request_get_client_object(variable_get('kk_client_request_connection_name', ''));
+  $server_terms = $connection->action('taxonomy_vocabulary', 'retrieveAll', array('vid' => $server_vid));
+  
+  // Failover to the old response structure
+  if(!isset($server_terms['term_fields'])) {
+    return $server_terms;
+  }
+  $term_fields = $server_terms['term_fields'];
+  $server_terms = $server_terms['terms_tree'];
+  
+  
+  foreach ($server_terms as $key => $term) {
+    $server_terms[$key]['term_fields'] =  $term_fields;
+  }
+  return $server_terms;
+}
+
+

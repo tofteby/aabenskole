@@ -1,0 +1,130 @@
+
+kk_taxon_taxonomy_alter 7.x-1.2, until 28-10-2013
+-------------------------------------------------
+- KKNI-1396 Updated CHANGELOG to 7.x-1.2.
+- KKNI-1396 Added CHANGELOG.
+- KKMN-81 - KKMS tax integration - fixed missing parameter.
+- KKNI Fixed method signatures.
+- KKNI Readability refactoring.
+- KKNI Decided to use exception based error-handling.
+- KKNI Equivalent code refactoring.
+- KKNI Fixed formatting issues. Small code refactoring. Added a space symbol after the ; to keep value consistent after autotag.
+- KKNI Added check for istall_cron.
+- KKNI-929 Fixed error.
+- KKNI-929 Removed full path to json file.
+- KKNI-943 Removed unnecessary dependency.
+- KKNI-882 Removed br and divs from button html.
+- KKNI-662 Changed maxlenght of taxon url field
+- KKNI Added arg vid to function that generates json file.
+- KKNI-260 Fixed variable set.
+- KKNI-260 Now the path to the public folder is retrieved in the proper way. So it works with aegir.
+- KKNI-260 Added missing files.
+- KKNI-260 Fixed wrong branch.
+- KKNI-260 Completely wrong commit.
+- KKNI-260 Removed debug.
+- KKNI-260 Removed wrong files.
+- KKNI-260 Fixed the taxon taxonomy alter module.
+- KKNI-260 Fixed the Taxon URL.
+- KKNI-260 Removed unnecessary variables from feature kk_autotagging_config.
+- KKNI-260 Code review clean ups and TODOs
+- KKNI-232 Recreated feature kk_search_config.
+- KKNI-260 Added dependencies in info file.
+- KKNI-260 Add news body and article body wysiwyg profiles to feature kk_config_text_format.
+- KKNI-260 Removed kk wysiwyg profiles feature.
+- KKNI-260 Added feature wysiwyg profiles.
+- KKNI-260 Added feature autotagging config.
+- KKNI Configured the minutes importer. Added mapping for the Posting's Url attribute.
+- KKNI Added original URL field to the 3 imported content types.
+- KKNI-233 Added feature kk_search_page.
+- KNII-233 Added feature kk search config.
+- KKNI Added the configuration and tampers of meetings_of_minutes and news node importers. Fixed dependancy issues.
+- KKNI Added the apache_solr_exclude_node field to the minutes_of_meetings and news content types.
+- KKNI-218 Small typo fix.
+- KKNI Added dependancy to the apachesolr_exclude_node and the variable configuration for the article content type.
+- KKNI Fixed issue with IsRobotIndexable mapping (boolean invertion of the value). Added dependancy to module.
+- KKNI Added create time mapping in the import and added the fix of the image article field.
+- KKNI Removed old features and combined them all in the article importers feature.
+- KKNI-156 Updated features from live.
+- KNII-273 Recreated feature content type news.
+- KKNI-273 Changed , with ; terms separetor in kk_taxon taxonomy alter js.
+- KKNI Added image mapping rule.
+- KKNI Improvements in the content type mappings.
+- KKNI Updated the file importer fieature for the article content type.
+- KKNI Added a feature for the node importer of the article content type.(working)
+- KKNI-226 Fixed typos and add comment body to comments moderation workbench tab view. Update features from KK.
+- KKNI-235 Done TODOS in kk_taxon_taxonomy_alter.
+- KKNI-205 Quick fix of the permissions feature.
+- KKNI-235 Code review clean ups.
+- KKNI-234 Removed hook_cron for generation json file.
+- KKNI-234 Set default value of variable get.
+- KKNI-226 Removed flag abuse dependencies.
+- KKNI-226 Recreated featute KK views abusive listing.
+- KKNI Added hierarchy strcuture importer feature for the article content type.
+- KKNI-226 Small typo fixes on the view and add Comment Body column.
+- KKNI-226 Reorganized features.
+- KKNI-235 Added drupal_dirname function.
+- KKNI-325 Added disabled to url taxon ws.
+- KKNI-325 Alter taxon taxonomy admin form.
+- KKNI Added a feature for the article node importer configuration.
+- KKNI Updated the name of feeds files importer for the article content type.
+- KKNI-226 Recreated the feature kk abuse comments.
+- KKNI-156 Enabled comments on Notices Board content type.
+- KKNI-226 Added view with abusive comments listing and flag Abuse.
+- KKNI-122 Fixed ;
+- KKNI Added configuration feature for the articles file importer.
+- KKNI-122 Fixed TODOs
+- KKNI-161 New feature with main permissions and variables of the Workbench modules and an example user role that has the needed permissions to test modules.
+- KKNI-156 Updated the News content type feature from the Live.
+- KKNI-122 Modified code for json file.
+- KKNI-156 Quick reorganization of the feature.
+- KKNI-156 Added dependency to the News content type feature - the Sites to share important news taxonomy.
+- KKNI-156 Added new feature to export the Sites for Important News taxonomy.
+- KKNI-156 Removed the taxonomy Sites to share important news from the News content type feature.
+- KKNI-156 Fixed features and update from the KK Demo.
+- KKNI-122 Recreated feature KK taxon Suggestion term.
+- KKNI-122 Increased time out of drupal request.
+- KKNI-156 Fixed variable names.
+- KKNI-118 Added feature for all configurations. Note that a feature needs to be connected to reflect KK AD Organization.
+- KKNI-156 Updated News content type with fields for important news.
+- KKNI Updated DAM media view.
+- KKNI Solr configuration feature.
+- KKNI-132 Added configuration & dependancies to include linkit_picker into the editor.
+- KKNI-153 Added a feature to show an example content type with file field with media widget.
+- KKNI-178 Fixed error in module.
+- KKNI-155 Add example solr view to kk features.
+- KKNI-179 Fixed typo.
+- KKNI Added entity field settings feature - for file management.
+- KKNI-156 Fixed undefined function plain_text.
+- KKNI-179 Code review clean ups and TODOs to be implemented.
+- KKNI-52 Added small fix in the module. Correct path to niceJSON.php.
+- KKNI-90 Recreated feature KK taxon suggestion term.
+- KKNI-83 Fixed errors.
+- KKNI-83 Added custom module kk_taxon_taxonomy_alter.
+- KKNI-90 Added feature kk suggestion tags.
+- KKNI-124 Changed unclear fields to be text only.
+- KKNI-124 Added Published/Unpublished fields to Webform, Minutes of Meetings and News.
+- KKNI-124 Added Published/Unpublished fields to Article.
+- KKNI-124 Added Published/Unpublished fields to Blog.
+- KKNI-124 Added Published/Unpublished fields to Events.
+- KKNI-25 Small change on the Info box body field. Removed the summary.
+- KKNI-112 Removed options for local video from the Video field.
+- KKNI-106 Added new field collection to the factbox content type so we can have the image description override field.
+- KKNI-110 Added separate text format for every content type. Setup and exported features.
+- KKNI-110 Removed unnecessary Comments Moderator fields where the comments are closed.
+- KKNI-110 Fixed front end issues with content types.
+- KKNI-105 Added specific Teaser field everywhere needed.
+- KKNI-110 Closed comments on FAQ/QA, Factbox and Notices board content type.
+- KKNI-87 Updated the KK Config Text Formats. Added the WYSIWYG profiles.
+- KKNI-87 Removed the KK Config WYSIWYG feature.
+- KKNI-87 Exported the WYSIWYG profiles into the KK Config WYSIWYG features.
+- KKNI-26 Updated the Content types from kk-dev.
+- KKNI-26 Updated the KK Content Type News from kk-dev.
+- KKNI-26 Removed unnecessary KK Content type Flea market.
+- KKNI-26 Changed the name of Bulleting board to Notices Board content type..
+- KKNI-26 Updated the KK Content Type News from kk-dev.
+- KKNI-26 Updated the KK Content Type Events from kk-dev.
+- KKNI-26 Updated the KK Content Type Webform and KK Content Type News from kk-dev.
+- KKNI-26 Updated the KK Content Type Blog from kk-dev.
+- KKNI-26 Updated the KK Content Type Article from kk-dev.
+- KKNI-26 Updated the KK Config Text Formats from kk-dev with the changes to the filtered HTML text format.
+- KKNI Init kk_features.

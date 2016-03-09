@@ -1,0 +1,13 @@
+name = Views JSON
+description = "Views style plugin to render node content as JSON."
+package = Views
+core = 6.x
+dependencies[] = views
+php = 5.1
+
+; Information added by drush on 2014-06-26
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "views_datasource"
+datestamp = "1403780490"
+

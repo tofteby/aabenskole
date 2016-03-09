@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Configuration pull content feature.
+ */
+
+include_once 'configuration_pull_content.features.inc';

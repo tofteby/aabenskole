@@ -1,0 +1,15 @@
+.openlayers-map {
+  .ic-email,
+  .ic-phone {
+    overflow: hidden;    
+    div {
+      padding-right: 2.5em;
+    }
+  }
+  
+  .olPopup .olPopupCloseBox {
+    width: 13px !important;
+    height: 13px !important;
+    background-image: url("#{$theme_path}/images/icon-cross-small.png");
+  }
+}

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Configuration elysia cron feature.
+ */
+
+include_once 'configuration_elysia_cron.features.inc';

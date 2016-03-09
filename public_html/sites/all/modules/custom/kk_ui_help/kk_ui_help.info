@@ -1,0 +1,8 @@
+name = KK UI help
+description = Provides a user interface for adding tooltips to fields.
+core = 7.x
+
+dependencies[] = field
+dependencies[] = jquery_update
+
+files[] = includes/translation.inc

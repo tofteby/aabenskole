@@ -1,0 +1,15 @@
+name = Nodequeue generate
+description = Bulk assign nodes into queues for quickly populating a site.
+package = Development
+dependencies[] = nodequeue
+core = 7.x
+
+files[] = nodequeue_generate.module
+
+
+; Information added by drush on 2014-06-26
+version = "7.x-2.0-beta1+19-dev"
+core = "7.x"
+project = "nodequeue"
+datestamp = "1403780479"
+

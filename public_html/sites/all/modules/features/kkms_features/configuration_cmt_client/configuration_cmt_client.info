@@ -1,0 +1,13 @@
+name = Configuration CMT client
+description = Feature module exports service client configurations for importing taxonomies from the CMT.
+core = 7.x
+package = Configuration
+project = configuration_cmt_client
+dependencies[] = ctools
+dependencies[] = services_client_connection
+features[ctools][] = services_client_connection:default_services_client_connection:1
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:2
+features[services_client_connection][] = cmt_client
+features[variable][] = kk_client_request_connection_name
+features[variable][] = kk_client_request_cron

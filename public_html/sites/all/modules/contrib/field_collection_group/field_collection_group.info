@@ -1,0 +1,24 @@
+name = Field collection group
+description = Groups individual collections items of a multi-value field collection
+core = 7.x
+dependencies[] = field_group
+dependencies[] = field_collection
+
+files[] = "include/collection_format.inc"
+files[] = "include/collection_format_vertical.inc"
+files[] = "include/collection_format_horizontal.inc"
+files[] = "include/collection_format_fieldset.inc"
+files[] = "include/collection_format_accordion.inc"
+files[] = "include/group_base.inc"
+files[] = "include/group_accordion.inc"
+files[] = "include/group_horizontal.inc"
+files[] = "include/group_vertical.inc"
+files[] = "include/group_fieldset.inc"
+
+
+; Information added by drush on 2014-06-26
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "field_collection_group"
+datestamp = "1403780292"
+

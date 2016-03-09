@@ -1,0 +1,17 @@
+name = Language Switcher Dropdown
+package = Multilingual
+description = Provides a dropdown select to switch between available languages.
+dependencies[] = locale
+configure = 'admin/structure/block'
+core = 7.x
+
+files[] = lang_dropdown.module
+files[] = lang_dropdown.install
+
+
+; Information added by drush on 2014-06-26
+version = "7.x-1.5+4-dev"
+core = "7.x"
+project = "lang_dropdown"
+datestamp = "1403780710"
+

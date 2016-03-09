@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Views shared content feature.
+ */
+
+include_once 'views_shared_content.features.inc';

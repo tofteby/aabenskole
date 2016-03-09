@@ -1,0 +1,505 @@
+<?php
+
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+
+define('WORKING_HOURS_DAY_SEPARATOR', ',');
+
+define('WORKING_HOURS_DAY_NAME_FORMAT_SHORT', 'short');
+define('WORKING_HOURS_DAY_NAME_FORMAT_FULL', 'FULL');
+
+require_once dirname(__FILE__) . '/includes/working_hours.helpers.inc';
+
+/**
+ * Implements HOOK_working_hours_default_categories do define defaults provided 
+ * by the module.
+ * 
+ * @return type
+ */
+function working_hours_working_hours_default_categories() {
+  return array(
+    t('Working days') => t('Category used to describe working time during normal conditions, for example - monday through friday.'),
+    t('Holidays') => t('Category used for non-usual woking days, for example - saturday and sunday.'),
+  );
+}
+
+/**
+ * Implements hook_field_info().
+ *
+ * Provides the description of the field.
+ */
+function working_hours_field_info() {
+  return array(
+    // We name our field as the associative name of the array.
+    'field_working_hours' => array(
+      'label' => t('Working hours'),
+      'description' => t('Collects the working hours data in a field.'),
+      'default_widget' => 'working_hours_widget_full',
+      'default_formatter' => 'working_hours_formatter_days',
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_is_empty().
+ *
+ * hook_field_is_emtpy() is where Drupal asks us if this field is empty.
+ * Return TRUE if it does not contain data, FALSE if it does. This lets
+ * the form API flag an error when required fields are empty.
+ */
+function working_hours_field_is_empty($item, $field) {
+  foreach(_working_hours_get_required_fields() as $field_name) {
+    if(empty($item[$field_name])) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_field_widget_error().
+ *
+ * hook_field_widget_error() lets us figure out what to do with errors
+ * we might have generated in hook_field_validate(). Generally, we'll just
+ * call form_error().
+ *
+ * @see working_hours_field_validate()
+ * @see form_error()
+ */
+function working_hours_field_widget_error($element, $error, $form, &$form_state) {
+  switch ($error['error']) {
+    case 'working_hours_error':
+      form_error($element, $error['message']);
+      break;
+  }
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ *
+ * We need to tell Drupal that we have two different types of formatters
+ * for this field. One will change the text color, and the other will
+ * change the background color.
+ *
+ * @see working_hours_field_formatter_view()
+ */
+function working_hours_field_formatter_info() {
+  return array(
+    'working_hours_formatter_full' => array(
+      'label' => t('Basic formatter'),
+      'field types' => array('field_working_hours'),
+    ),
+    'working_hours_formatter_days' => array(
+      'label' => t('Days formatter'),
+      'field types' => array('field_working_hours'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ *
+ * @see working_hours_field_formatter_info()
+ */
+function working_hours_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+
+  if ($items) {
+    switch ($display['type']) {
+      case 'working_hours_formatter_full':
+        $element[0] = array(
+          '#type' => 'html_tag',
+          '#tag' => 'div',
+          '#value' => theme('working_hours_default', array('items' => $items,)),
+        );
+        break;
+      case 'working_hours_formatter_days':
+        $element[0] = array(
+          '#type' => 'html_tag',
+          '#tag' => 'div',
+          '#value' => theme('working_hours_days', array('items' => $items,)),
+        );
+        break;
+    }
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_theme
+ * 
+ * @param type $existing
+ * @param type $type
+ * @param type $theme
+ * @param type $path
+ * @return array
+ */
+function working_hours_theme($existing, $type, $theme, $path) {
+  $themmable = array();
+  $themmable['working_hours_default'] = array(
+    'template' => 'theme/working-hours-default',
+    'variables' => array(
+      'items' => array(),
+    ),
+  );
+  $themmable['working_hours_days'] = array(
+    'template' => 'theme/working-hours-days',
+    'variables' => array(
+      'items' => array(),
+    ),
+  );
+  return $themmable;
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ * 
+ * Preprocess method for the working_hours_formatter_days theme data.
+ * 
+ * @param array $variables
+ */
+function working_hours_preprocess_working_hours_days(&$variables) {
+  // Initialization
+  $time_format = _working_hours_get_date_format('time');
+  $work_days = _working_hours_get_days(WORKING_HOURS_DAY_NAME_FORMAT_FULL);
+  $result = array(
+    'days' => array(),
+    'notes' => array(),
+  );
+  foreach($variables['items'] as $item) {
+    if(!empty($item['notes'])) {
+      $result['notes'][] = $item['notes'];
+    }
+    $days = array_intersect_key($work_days, $item['days']);
+    foreach($days as $name) {
+      // Override existing date records.
+      $result['days'][$name] = array(
+        'time_start' => date($time_format, strtotime($item['from'])),
+        'time_end' => date($time_format, strtotime($item['to'])),
+      );
+    }
+  }
+  // Ensure propper days order within $resilt['days'] array.
+  $days = array();
+  foreach($work_days as $name) {
+    if (!isset($result['days'][$name])) {
+      continue;
+    }
+    $days[$name] = $result['days'][$name];
+  }
+  $result['days'] = $days;
+  $result['notes'] = array_unique($result['notes']);
+  $variables['items'] = $result;
+}
+
+/**
+ * Implement hook_preprocess_HOOK() 
+ * 
+ * Required to change the data dormat for the display to be groupped based 
+ * on category.
+ * 
+ * @param array $variables
+ */
+function working_hours_preprocess_working_hours_default(&$variables) {
+  // Initialisation
+  $items = $variables['items'];
+  $date_format = _working_hours_get_date_format('date');
+  $time_format = _working_hours_get_date_format('time');
+  $work_days = _working_hours_get_days(WORKING_HOURS_DAY_NAME_FORMAT_SHORT);
+  
+  // Collect needed terms
+  $term_ids = array_map(function($item){ return $item['type_tid']; }, $items);
+  $terms = _working_hours_get_terms($term_ids);
+  
+  $render_data = array();
+  foreach ($items as $item) {
+    // Init conversion
+    $from = strtotime($item['from']);
+    $to = strtotime($item['to']);
+
+    // Convert field values formats.
+    $item['date_from'] = date($date_format, $from);
+    $item['date_to'] = date($date_format, $to);
+    $item['time_start'] = date($time_format, $from);
+    $item['time_end'] = date($time_format, $to);
+    $item['days'] = array_intersect_key($work_days, $item['days']);
+    $item['type'] = isset($terms[$item['type_tid']]) 
+      ? $terms[$item['type_tid']]->name 
+      : $item['type_tid'];
+
+    // Clear unneeded fields...
+    unset($item['type_tid'], $item['from'], $item['to']);
+
+    // Group items by type.
+    if(!isset($render_data[$item['type']])) {
+      $render_data[$item['type']] = array();
+    }
+    $render_data[$item['type']][] = $item;
+  }
+  
+  // Rewrite items data with one item and our custom grouping.
+  $variables['items'] = $render_data;
+}
+
+/**
+ * Implements hook_field_widget_info().
+ *
+ * These widget types will eventually show up in hook_field_widget_form,
+ * where we will have to flesh them out.
+ *
+ * @see working_hours_field_widget_form()
+ */
+function working_hours_field_widget_info() {
+  return array(
+    'working_hours_widget_full' => array(
+      'label' => t('Basic widget'),
+      'field types' => array('field_working_hours'),
+    ),
+  );
+}
+
+
+
+/**
+ * Implements hook_field_widget_form().
+ *
+ * hook_widget_form() is where Drupal tells us to create form elements for
+ * our field's widget.
+ *
+ */
+function working_hours_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  // Get initial value
+  $value = isset($items[$delta]) && $items[$delta] ? $items[$delta] : array();
+  
+  // Assign defaults to the missing properties.
+  $value += array(
+    'from' => '',
+    'to' => '',
+    'type_tid' => 0,
+    'days' => array(),
+    'notes' => '',
+  );
+  // Prepare date
+  foreach(array('from', 'to') as $name) {
+    if(!empty($value[$name])) {
+      $value[$name] = date(DATE_FORMAT_DATETIME, strtotime($value[$name]));
+    }
+  }
+  
+  // Since Form API doesn't allow a fieldset to be required, we
+  // have to require each field element individually.
+  $required = array('#required' => $instance['required'] == 1,);
+  
+  $widget = &$element;
+  $widget['#delta'] = $delta;
+
+  switch ($instance['widget']['type']) {
+    case 'working_hours_widget_full':
+      // Add defaults.
+      // Init common configurations.
+      $date_configs = array(
+        '#type' => 'date_popup',
+        '#date_type' => DATE_UNIX,
+        '#date_format' => _working_hours_get_date_format('date_time'),
+        '#date_timezone' => date_default_timezone(),
+        '#date_increment' => 1,
+        '#date_year_range' => '-1:+10',
+      );
+      
+      // Begin of widget form.
+      $widget += array(
+        '#type' => 'fieldset',
+        '#element_validate' => array('working_hours_widget_full_validate'),
+      );
+      
+      $widget['type_tid'] = $required + array(
+        '#title' => t('category'),
+        '#type' => 'select',
+        '#default_value' => $value['type_tid'],
+        '#options' => _working_hours_get_types(),
+      );
+      
+      $widget['from'] = $date_configs + $required  + array(
+        '#title' => t('From'),
+        '#default_value' => $value['from'],
+      );
+      
+      $widget['to'] = $date_configs + $required  + array(
+        '#title' => t('To'),
+        '#default_value' => $value['to'],
+      );
+      
+      $widget['days'] = $required  + array(
+        '#type' => 'checkboxes',
+        '#title' => t('Days'),
+        '#options' => _working_hours_get_days(),
+        '#default_value' => $value['days'],
+      );
+      
+      $widget['notes'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Notes'),
+        '#default_value' => $value['notes'],
+      );
+      
+      break;
+  }
+  
+  return $element;
+}
+
+/**
+ * Validation callback for the working_hours_widget_full widget form.
+ * 
+ * @see working_hours_field_widget_form()
+ * 
+ * @param type $element
+ * @param type $form_state
+ */
+function working_hours_widget_full_validate($element, &$form_state) {
+  $delta = $element['#delta']; 
+  $language = $element['#language'];
+  $field_state = &$form_state['field'][$element['#field_name']][$language];
+  $field_name = $field_state['field']['field_name'];
+  if(!isset($form_state['values'][$field_name][$language][$delta])) {
+    return;
+  }
+  
+  $element_values = $form_state['values'][$field_name][$language][$delta];
+  $element_values['days'] = array_filter($element_values['days']);
+
+  form_set_value($element, $element_values, $form_state);
+}
+
+function working_hours_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  if ($field['type'] !== 'field_working_hours') {
+    return;
+  }
+  foreach($items as $delta => $item) {
+    $items[$delta]['days'] = implode(WORKING_HOURS_DAY_SEPARATOR, array_values($item['days']));
+
+    foreach(array('from', 'to',) as $date_property) {
+      $items[$delta][$date_property] = strtotime($item[$date_property]);
+    }
+  }
+}
+
+/**
+ * Implementas HOOK_field_load
+ * 
+ * Processing of field data when loading from DB.
+ * 
+ * @param type $entity_type
+ * @param type $entities
+ * @param type $field
+ * @param type $instances
+ * @param type $langcode
+ * @param type $items
+ * @param type $age
+ */
+function working_hours_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
+  foreach ($entities as $id => $entity) {
+    foreach ($items[$id] as $delta => $item) {
+      $items[$id][$delta]['days'] = drupal_map_assoc(explode(WORKING_HOURS_DAY_SEPARATOR, $item['days']));
+      
+      foreach(array('from', 'to',) as $propoerty) {
+        $items[$id][$delta][$propoerty] = date(DATE_FORMAT_DATETIME, $item[$propoerty]);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_validate().
+ *
+ * This hook gives us a chance to validate content that's in our
+ * field. We're really only interested in the $items parameter, since
+ * it holds arrays representing content in the field we've defined.
+ *
+ * @see working_hours_field_widget_error()
+ */
+function working_hours_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+  $field_labels = working_hours_get_field_labels();
+  $required = _working_hours_get_required_fields();
+  
+  foreach ($items as $delta => $item) {
+    // Init utilities.
+    $new_error = function($msg) use (&$errors, $field, $langcode, $delta) {
+      $errors[$field['field_name']][$langcode][$delta][] = array(
+        'error' => 'working_hours_error', 
+        'message' => $msg,
+      );
+    };
+    // Perform required validation, only when some of the 
+    // required fields are not empty.
+    if(_working_hours_field_check_all_empty($item)) {
+      continue;
+    }
+    foreach($required as $field_name) {
+      if (!empty($item[$field_name])) {
+        continue;
+      }
+      $new_error(t('Field `%label` is required!', array(
+        '%label' => $field_labels[$field_name],
+      )));
+    }
+    // Validate `days` property.
+    $day_values = array_keys(_working_hours_get_days());
+    foreach(array_filter($item['days']) as $day) {
+      if(!in_array($day, $day_values)) {
+        $new_error(t('Invalid selection in `%label` property!', array(
+          '%label' => $field_labels['days'],
+        )));
+      }
+    }
+    // Validate `type_tid` property
+    $vid_is_set = ($vid = variable_get('working_hours_vid', FALSE)) !== FALSE;
+    if (!empty($item['type_tid']) && $vid_is_set) {
+      $result = taxonomy_term_load_multiple(array($item['type_tid']), array(
+        'vid' => $vid,
+      ));
+      if (!array_key_exists($item['type_tid'], $result)) {
+        $new_error(t('Invalid or no `%label` selected!', array(
+          '%label' => $field_labels['type_tid'],
+        )));
+      }
+    }
+  }
+}
+
+/**
+ * Implements HOOK_date_formats for working_hours
+ * 
+ * @return array
+ */
+function working_hours_date_formats() {
+  $formats = _working_hours_get_default_date_formats();
+  $result = array();
+  foreach($formats as $type => $value) {
+    $result[] = array(
+      'type' => "working_hours_$type",
+      'format' => $value,
+      'locales' => array(),
+    );
+  }
+  return $result;
+}
+
+/**
+ * Implements HOOK_date_format_types to add the date formats used in the module.
+ * 
+ * @return type
+ */
+function working_hours_date_format_types() {
+  $formats = _working_hours_get_default_date_formats();
+  $result = array();
+  foreach($formats as $type => $format) {
+    $result["working_hours_$type"] = t('Working hours @type', array('@type'=> $type));
+  }
+  return $result;
+}

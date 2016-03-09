@@ -1,0 +1,67 @@
+/**
+ * Styling of webform content type
+ */
+
+.node-webform{
+  h1{
+    @extend .title-form;
+  }
+}
+.webform-client-form{
+  .webform-component{
+    margin-bottom: em(18,18);
+  }
+}
+
+
+.webform-gitter{
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+}
+
+.webform-component-webform_grid{
+  .sticky-header{
+    display: none;
+  }
+
+  table{
+    display: table;
+    float: left;
+    width: auto;
+    table-layout:fixed;
+    border-collapse: collapse;
+    font-size: em(16,18);
+    thead{
+      tr{
+        background-color: $col-gray-10;
+      }
+    }
+    tr.even{
+      background-color: $col-gray-10;
+    }
+    th,
+    td{
+      border: 0;
+      display: table-cell;
+      float: none;
+      word-wrap: break-word;
+      padding: 0.80em;
+      text-align: left;
+      vertical-align: top;
+    }
+    th{
+      background-color: $col-gray-10;
+      font-weight: bold;
+      @include ie8_font_fix('b');
+    }
+
+  }
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+}

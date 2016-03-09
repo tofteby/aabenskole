@@ -1,0 +1,259 @@
+// Border objects
+@mixin obj-border ($selector, $position: 'both', $style: 'positive') {
+  $color: $col-text;
+  $border-img: '../images/border-dots.png';
+
+  @if $style == 'negative' {
+    $color: #fff;
+    $border-img: '../images/border-dots-neg.png';
+  }
+
+  #{$selector} {
+    @if $position == 'both' {
+      background-image: url(#{$border-img}), url(#{$border-img});
+      background-position: 0% 0%, 0% 100%;
+    } @else {
+      background-image: url(#{$border-img});
+    }
+
+    @if $position == 'top' {
+      background-position: 0% -1px;
+    } @else if $position == 'bottom' {
+      background-position: 0% 100%;
+    }
+
+    background-repeat: repeat-x;
+  }
+
+  @if $position == both {
+    .no-multiplebgs #{$selector} {
+      border: dotted $color;
+      border-width: 1px 0;;
+    }
+  }
+}
+
+@mixin clearfix {
+  &:after, &:before {
+      content: "";
+      display: table;
+  }
+  &:after {
+      clear: both;
+  }
+  & {
+      *zoom: 1;
+  }
+}
+// Theme setting mixins
+// Defines styles based on theme settings loaded as variables.
+// --------------------------------
+
+// Colors
+// Defines text color for main menu.
+@mixin menu-text-color {
+  @if $col_menu_link == true {
+    color: $col-primary;
+  } @else {
+    color: $col-text;
+  }
+}
+
+// Defines background color for main menu.
+@mixin menu-back-color {
+  @if $col_menu_bg == white {
+    background-color: $col-back-w;
+  } @else if $col_menu_bg == black {
+    background-color: $col-back-b;
+  }
+}
+
+// Defines background color for footer.
+@mixin footer-back-color {
+  @if $col_footer_bg == white {
+    background-color: $col-back-w;
+  } @else if $col_footer_bg == grey {
+    background-color: $col-back-g;
+  } @else if $col_footer_bg == black {
+    background-color: $col-back-b;
+    color: $col-content;
+  }
+}
+
+// Defines background color for footer.
+@mixin bottom-back-color {
+  @if $col_bottom_bg == white {
+    background-color: $col-back-w;
+  } @else if $col_bottom_bg == grey {
+    background-color: $col-back-g;
+  } @else if $col_bottom_bg == black {
+    background-color: $col-back-b;
+    color: $col-content;
+  }
+}
+
+// Defines the appearance of the line under the menu section
+@mixin under-menu-line-color {
+  @if $under_menu_line == true {
+    border-bottom: 1.5*$padding solid $col-primary;
+  } @else {
+    margin-bottom: 1.5*$padding;
+  }
+}
+
+// Background images
+// ----------------------------------------------------------
+
+@mixin background-image ($section) {
+  background-repeat: no-repeat;
+  background-position: center top;
+
+  @if $section == 'page' {
+    @if $image_bg_path != false {
+      background-image: url('#{$image_bg_path}');
+    }
+  } @else if $section == 'header' {
+    @if $image_header_path != false {
+      background-image: url('#{$image_header_path}');
+      
+      .lt-ie9 & { 
+        position: relative;
+        filter: progid:DXImageTransform.Microsoft.AlphaImageLoader( src='#{$image_header_path}', sizingMethod='scale'); 
+        -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader( src='#{$image_header_path}', sizingMethod='scale')";
+      }
+    }
+  } @else if $section == 'footer' {
+    @if $image_footer_path != false {
+      background-image: url('#{$image_footer_path}');
+      background-position: center bottom;
+    }
+  }
+}
+
+
+
+// Content section layouts
+// ----------------------------------------------------------
+// Generates css for the main content section, controlling the
+// background color of the outer wrapper and position of inner
+// wrapper based on theme settings.
+
+@mixin content-layout {
+  $sec-offset: em(317,18);
+
+  .sec-content {
+    .sec-inner {
+      padding-top: 1.5*$space;
+      padding-bottom: $space;
+      background-color: $col-sec-back;
+      
+      @include at-breakpoint($mq-bp-desktop) {
+        padding-top: $space;
+      }
+    }
+  }
+
+    @if $layout_full == true {
+    
+      // Full width decks on section pages
+      .node-type-section-page {
+        .sec-content {
+          .sec-inner {
+            max-width: none;
+            padding-left: 0;
+            padding-right: 0;
+          }
+        }
+      }
+      
+    } @else {
+    
+      // $layout_full == false
+      .sec-content {
+        .sec-inner {
+          max-width: $content-width;
+        }
+      }
+    }
+    
+    @if $layout_bg_expose == true {
+      // Show uploaded background image
+      .sec-content {
+        background-color: transparent;
+      }
+    } @else {
+      .sec-content {
+        background-color: $col_back;
+      }
+    }
+  }
+
+
+// Shadows
+// ------------------------------------------------
+// Adds a box shadow. Using either primary color or text
+// color as base depending on theme settings and using one
+// two opacities based on argument.
+
+@mixin add-shadow ($type: 'default') {
+  $col-base: $col-text !default;
+  $col-shadow: rgba($col-base, 0.15) !default;
+
+  @if $col_shadows == true {
+    $col-base: $col-primary;
+  } @else {
+    $col-base: $col-text;
+  }
+
+  @if $type == 'light' {
+    $col-shadow: rgba($col-base, 0.10);
+  } @else {
+    $col-shadow: rgba($col-base, 0.15);
+  }
+
+  @include box-shadow(3px 3px 0 $col-shadow, 0px 0px 1px $col-shadow);
+}
+
+@mixin ie8_font_fix ($type: 'n') {
+  .lt-ie9 & {
+    @if $type == 'b' {
+      font-family: "Gill Sans W01_n7", "Gill Sans", serif;
+      font-weight: normal;
+    }@else if $type == 'i' {
+      font-family: "Gill Sans W01_i4", "Gill Sans", serif;
+      font-style: normal;
+    }@else if $type == 'bi' {
+      font-family: "Gill Sans W01_i7", "Gill Sans", serif;
+      font-weight: normal;
+      font-style: normal;
+    } @else if $type == 'n' {
+      font-family: "Gill Sans W01", "Gill Sans", serif;
+    }
+  }
+}
+
+@mixin ie8_footer_block {
+  .lt-ie9 & { 
+      @include at-breakpoint($mq-bp-tablet) {
+        @include span-columns(11,24);
+      }
+      @include at-breakpoint($mq-bp-desktop) {    
+        @include span-columns(7,24);
+      }
+  }  
+}
+
+@mixin content_type_school {
+  .panels_school_content_type {
+    .wrapper-layout {
+      .content-wrap {
+        width: 100%;
+      }
+      .reg-sidebar {
+        float: none;
+        padding: 0;
+        width: 100%; 
+      }
+    }
+  }  
+}

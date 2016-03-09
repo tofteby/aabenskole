@@ -1,0 +1,7 @@
+name = KKMS Search
+description = KKMS Search Page alterations
+core = 7.x
+dependencies[] = "apachesolr_channels"
+
+files[] = plugins/facetapi/filter.inc
+files[] = plugins/facetapi/query_type_date_month.inc

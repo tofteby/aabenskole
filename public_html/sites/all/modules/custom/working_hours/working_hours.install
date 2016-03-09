@@ -1,0 +1,97 @@
+<?php
+
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+function working_hours_install() {
+  _working_hours_init_vocabulary();
+ _working_hours_init_date_formats();
+}
+
+function working_hours_field_schema($field) {
+  return array(
+    'columns' => array(
+      'type_tid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'Term ID from the `Working Hours` vocabulary.',
+      ),
+      'from' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'Collects the start date/time for the period being stored.',
+      ),
+      'to' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'Collects the end date/time for the period being stored.',
+      ),
+      'days' => array(
+        'type' => 'varchar',
+        'length' => 30,
+        'not null' => TRUE,
+        'description' => 'Days selection of the working hours, separated by comma.',
+      ),
+      'notes' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+      ),
+    ),
+    'indexes' => array(
+      'from' => array('from',),
+      'to' => array('to',),
+      'tid' => array('type_tid',),
+    ),
+  );
+}
+
+/**
+ * Initializes the vocabulary that will be used for the categorisation of the 
+ * working hours entries. The vocabulary ID is stored into `working_hours_vid` 
+ * variable name for later access.
+ */
+function _working_hours_init_vocabulary() {
+  $vocabularies = taxonomy_vocabulary_load_multiple(array(), array(
+    'machine_name' => 'working_hours_vocabulary',
+  ));
+  if (($vocabulary = reset($vocabularies)) === FALSE) {
+    $vocabulary = new stdClass();
+    $vocabulary->name = t('Working Hours');
+    $vocabulary->machine_name = 'working_hours_vocabulary';
+    $vocabulary->description = t('Working hours categories.');
+    $vocabulary->weight = '0';
+    $vocabulary->hierarchy = '0';
+    $vocabulary->module = 'working_hours';
+  }
+  taxonomy_vocabulary_save($vocabulary);
+  variable_set('working_hours_vid', $vocabulary->vid);
+
+  // Create a newsletter taxonomy term if none exists.
+  $tree = taxonomy_get_tree($vocabulary->vid);
+  if (count($tree) !== 0) {
+    return;
+  }
+    
+  $categories = module_invoke_all('working_hours_default_categories');
+  drupal_alter('working_hours_default_categories', $categories);
+
+  foreach ($categories as $name => $description) {
+    taxonomy_term_save((object) array(
+      'name' => $name,
+      'description' => $description,
+      'vid' => $vocabulary->vid
+    ));
+  }
+}
+
+/**
+ * Helper method that adds two custom date formatters on install.
+ */
+function _working_hours_init_date_formats() {
+  foreach(array_keys(_working_hours_get_default_date_formats()) as $type) {
+    variable_set("date_format_working_hours_$type", _working_hours_get_date_format($type));
+  }
+}

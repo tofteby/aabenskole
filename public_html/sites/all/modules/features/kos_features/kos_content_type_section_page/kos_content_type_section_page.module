@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Content type Section page feature.
+ */
+
+include_once 'kos_content_type_section_page.features.inc';

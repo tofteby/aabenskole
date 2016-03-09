@@ -1,0 +1,12 @@
+name = Instagram Block
+description = Creates a block that displays images from instagram.
+core = 7.x
+
+dependencies[] = block
+
+; Information added by drupal.org packaging script on 2013-08-09
+version = "7.x-1.0"
+core = "7.x"
+project = "instagram_block"
+datestamp = "1376072509"
+

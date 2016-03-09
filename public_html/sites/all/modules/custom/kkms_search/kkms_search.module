@@ -1,0 +1,274 @@
+<?php
+
+/**
+ * @file
+ * KKMS Search Page alterations
+ */
+
+/**
+ * Implements hook_page_alter().
+ */
+function kkms_search_page_alter(&$page) {
+  if (isset($page['topbar_search']) && isset($page['content']['system_main']['search_form'])) {
+    $page['topbar_search']['top'] = array('search_form' => $page['content']['system_main']['search_form']);
+    unset($page['content']['system_main']['search_form']);
+
+  }
+}
+
+/**
+ * Implements hook_apachesolr_query_alter().
+ * Adds certain fields to queries, etc.
+ * Adds filter to the global search - to limit language, and local/shared content
+ */
+function kkms_search_apachesolr_query_alter(DrupalSolrQueryInterface $query) {
+  $query->addParam('fl', 'im_shared_tax_common');
+  $query->addParam('fl', 'im_local_tax_' . apachesolr_site_hash() . '_tags_local');
+  $query->addParam('fl', 'im_shared_tax_place');
+  $query->addParam('fl', 'im_shared_tax_event');
+
+  $profiles = implode(' OR ', kk_apachesolr_search_profiles());
+  $query->addFilter('ss_site_profile', "($profiles)");
+
+  $c = $query->getContext();
+  // Limit to current language or language neutral.
+  $languages = $GLOBALS['language']->language . ' OR ' . LANGUAGE_NONE;
+  if (is_array($c) && isset($c['page_id']) && $c['page_id'] === 'core_search') {
+    $query->addFilter('ss_language', "($languages)");
+    // Exclude solrdate entities.
+    $query->addFilter('entity_type', 'solrdate', TRUE);
+    // Limit to local content and shared content.
+    $query->addFilterSubQuery(apachesolr_channels_subquery_shared_or_local());
+    if (!arg(2)) {
+      // Order by published date, if no free text search.
+      $query->setAvailableSort('ds_created', 'desc');
+      $query->setSolrsort('ds_created', 'desc');
+    }
+  }
+
+  if (arg(0) == 'news' && arg(1) == 'list') {
+    $query->addFilter('ss_language', "($languages)");
+    $query->addFilter('hash', apachesolr_site_hash());
+    $query->addParam('fl', 'sm_field_teaser');
+    if (!arg(2)) {
+      // Order by published date, if no free text search.
+      $query->setAvailableSort('ds_created', 'desc');
+      $query->setSolrsort('ds_created', 'desc');
+    }
+  }
+
+  $events_subpages = array('list', 'grid');
+  if (arg(0) == 'events' && in_array(arg(1), $events_subpages)) {
+    $query->addFilter('ss_language', "($languages)");
+    // Limit to local content and shared content.
+    $query->addFilterSubQuery(apachesolr_channels_subquery_shared_or_local());
+    // Filter by not passed events.
+    $query->addFilter('ds_field_date', '[' . apachesolr_date_iso(time()) . ' TO *]');
+    // Add field params to query.
+    $query->addParam('fl', 'dm_field_date');
+    $query->addParam('fl', 'dm_field_date_end');
+    if (arg(1) == 'grid') {
+      $query->addParam('fl', 'sm_thumb_list_content_grid');
+    }
+    // Order by date of event, if no free text search.
+    $query->setAvailableSort('ds_field_date', 'asc');
+    $query->setSolrsort('ds_field_date', 'asc');
+  }
+}
+
+/**
+ * Implements hook_preprocess_search_result()
+ */
+function kkms_search_preprocess_search_result(&$variables) {
+  drupal_add_js(drupal_get_path('module', 'kkms_search') . '/kkms_search.js', array('weight' => -100, 'group' => JS_LIBRARY));
+
+  $links = Array();
+  $result_fields = array();
+  if (isset($variables['result'], $variables['result']['fields'])) {
+    $result_fields = $variables['result']['fields'];
+  }
+  $suggestions = theme_get_suggestions(arg(), 'search_result');
+  $variables['theme_hook_suggestions'] = array_merge($variables['theme_hook_suggestions'], $suggestions);
+
+  if (isset($result_fields['im_shared_tax_common'])) {
+    foreach ($result_fields['im_shared_tax_common'] as $key => $tid) {
+      $term = taxonomy_term_load(kk_client_request_get_client_tid($tid));
+      if ($term) {
+        $links[] = l($term->name, "taxonomy/term/{$term->tid}");
+      }
+    }
+  }
+  $im_field_tags_local = 'im_local_tax_' . apachesolr_site_hash() . '_tags_local';
+  if (isset($result_fields[$im_field_tags_local])) {
+    foreach ($result_fields[$im_field_tags_local] as $key => $tid) {
+      $term = taxonomy_term_load($tid);
+      if ($term) {
+        $links[] = l($term->name, "taxonomy/term/{$tid}");
+      }
+    }
+  }
+  $variables['term_categories'] = $links;
+  if (isset($variables['info_split'], $variables['info_split']['date'])) {
+    $variables['info'] = $variables['info_split']['date'];
+  }
+  if (isset($variables['result']['node']->created)) {
+    $variables['created'] = format_date($variables['result']['node']->created, 'kkms_date');
+  }
+  if (isset($variables['result']['snippets']['label'])) {
+    $variables['title'] = filter_xss($variables['result']['snippets']['label'][0]);
+  }
+  if ($result_fields && !empty($result_fields['sm_field_teaser'])) {
+    $variables['field_teaser'] = check_plain($result_fields['sm_field_teaser'][0]);
+  }
+  if ($result_fields && !empty($result_fields['dm_field_date'])) {
+    $variables['field_date_start'] = format_date(strtotime($result_fields['dm_field_date'][0]), 'kkms_date');
+  }
+  if ($result_fields && !empty($result_fields['dm_field_date_end'])) {
+    $variables['field_date_start_end'] = format_date(strtotime($result_fields['dm_field_date_end'][0]), 'kkms_date');
+  }
+  if ($result_fields && !empty($result_fields['im_shared_tax_place'])) {
+    $term = taxonomy_term_load(kk_client_request_get_client_tid(array_shift($result_fields['im_shared_tax_place'])));
+    if ($term) {
+      $variables['field_place_category'] = $term->name;
+    }
+  }
+  if (isset($result_fields['im_shared_tax_event'])) {
+    foreach ($result_fields['im_shared_tax_event'] as $key => $tid) {
+      $term = taxonomy_term_load(kk_client_request_get_client_tid($tid));
+      if ($term) {
+        $variables['field_event_type'][] = l($term->name, "taxonomy/term/{$term->tid}");
+      }
+    }
+  }
+  if (!empty($result_fields['sm_thumb_list_content_grid'])) {
+    $variables['grid_thumb'] = array_shift($result_fields['sm_thumb_list_content_grid']);
+  }
+  if (isset($variables['info_split']['date'])) {
+    $date_timestamp =  strtotime(str_replace('-', '', $variables['info_split']['date']));
+    if ($date_timestamp) {
+      $variables['info_split']['date'] = format_date($date_timestamp, 'kkms_date');
+    }
+  }
+  if (isset($variables['result']['node']->bundle_name)) {
+    $variables['result_type'] = $variables['result']['node']->bundle_name;
+  }
+}
+/**
+ * Implements hook_form_alter().
+ */
+function kkms_search_form_alter(&$form, &$form_state, $form_id) {
+  //hide label of search form
+
+  if ($form_id=='apachesolr_search_custom_page_search_form') {
+    $form['basic']['keys']['#title'] = '';
+  }
+}
+
+/**
+ * Implements HOOK_date_formats for working_hours
+ *
+ * @return array
+ */
+function kkms_search_date_formats() {
+  $result[] = array(
+    'type' => 'kkms_date',
+    'format' => 'd. M. Y',
+    'locales' => array(),
+  );
+  return $result;
+}
+
+/**
+ * Implements HOOK_date_format_types to add the date formats used in the module.
+ *
+ * @return type
+ */
+function kkms_search_date_format_types() {
+  $result = array();
+  $result['kkms_date'] = t('KKMS Date Format');
+  return $result;
+}
+
+function kkms_search_preprocess_link(&$variables) {
+  $path = $variables['path'];
+  if (arg(0, $path) == 'taxonomy' && arg(1, $path) == 'term' && is_numeric(arg(2, $path)) && !arg(3, $path)) {
+    $term = taxonomy_term_load(arg(2, $path));
+    if ($term->vocabulary_machine_name == 'tags_local') {
+      $variables['path'] = 'search/site';
+      $im_local_tax = 'local_' . apachesolr_site_hash();
+      $variables['options']['query'] = array('f' => array("sm_search_terms:{$im_local_tax}_{$term->tid}"));
+    }
+    elseif ($term->vocabulary_machine_name == 'common') {
+      $variables['path'] = 'search/site';
+      $server_tid = kk_client_request_get_server_tid($term->tid);
+      if ($server_tid) {
+        $variables['options']['query'] = array('f' => array("sm_search_terms:shared_{$server_tid}"));
+      }
+    }
+    elseif (kk_client_request_get_server_vid($term->vid)) {
+      $variables['path'] = 'search/site';
+      $server_tid = kk_client_request_get_server_tid($term->tid);
+      if ($server_tid) {
+        $variables['options']['query'] = array('f' => array("im_shared_tax_{$term->vocabulary_machine_name}:{$server_tid}"));
+      }
+    }
+  }
+
+  if (preg_match('@^email/node/[\d]+/field_email$@', $variables['path'])) {
+    $variables['options']['query'] = drupal_get_destination();
+  }
+}
+
+/**
+ * Implements hook_facetapi_filters().
+ */
+function kkms_search_facetapi_filters() {
+  return array(
+    'hide_not_local_terms' => array(
+      'handler' => array(
+        'label' => t('Do not display not local terms'),
+        'class' => 'FacetapiFilterNotLocalTerms',
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_ctools_plugin_post_alter().
+ */
+function kkms_search_ctools_plugin_post_alter(&$plugin, &$info) {
+  if ($info['type'] === 'query_types' && $plugin['name'] === 'apachesolr_date') {
+    // Replace the date query type plugin with our own, that uses only date.
+    $plugin['name'] = 'kkms_date_month';
+    $plugin['module'] = 'kkms_search';
+    $plugin['path'] = drupal_get_path('module', 'kkms_search');
+    // This is probably the only needed change. The rest is for clarity.
+    $plugin['handler']['class'] = 'KKMSFacetapiDateMonth';
+  }
+}
+
+
+function kkms_search_apachesolr_process_results(array $results, DrupalSolrQueryInterface $query) {
+  $types = node_type_get_names();
+  foreach ($results as $id => $result) {
+    if(isset($results[$id]['fields'], $results[$id]['fields']['bundle'], $results[$id]['fields']['bundle_name'], $types[$results[$id]['fields']['bundle']])) {
+       $results[$id]['fields']['bundle_name'] =  $types[$results[$id]['fields']['bundle']];
+       if(isset($results[$id]['node'])) {
+         $results[$id]['node']->bundle_name = $results[$id]['fields']['bundle_name'];
+       }
+    }
+  }
+}
+
+function kkms_search_views_pre_render($view) {
+  $results = &$view->result;
+  if(empty($results) || $view->base_table != 'apachesolr__solr') {
+    return; 
+  }
+  $types = node_type_get_names();
+  foreach ($results as $id => $result) {
+    if(isset($results[$id]->bundle, $results[$id]->bundle_name, $types[$results[$id]->bundle])) {
+       $results[$id]->bundle_name =  $types[$results[$id]->bundle];
+    }
+  }
+}

@@ -1,0 +1,208 @@
+/** TODO: Should maybe moved to entity-scss. */
+.list-wrapper .view-header,
+.table-list-wrapper .view-header{
+  @extend %title-block;
+  text-transform: uppercase;
+  margin-bottom: em(38,24);
+}
+
+/** TODO: Should maybe moved to entity-scss. */
+.list-wrapper>.item-list,
+.table-list-wrapper .item-list{
+  width: 100%;
+  margin-top: em(28,18);
+}
+
+.table-list{
+  width: 100%;
+
+  tr{
+    border-top: $col-gray-25 1px solid;
+    border-bottom: $col-gray-25 1px solid;
+    &:hover{
+      background-color: $col-gray-10;
+    }
+  }
+
+  td{
+    vertical-align: middle;
+    min-height: em(54,18);
+    padding: em(10,18);
+  }
+
+  /** TODO: Add custom class or move to entity-scss file. */
+  .views-field-title{
+    font-weight: bold;
+
+    @include ie8_font_fix('b');
+  }
+
+  .bl-img{
+    margin-bottom: 0;
+
+    img{
+      width: auto;
+    }
+  }
+
+  .ic-email,
+  .ic-phone{
+    white-space: nowrap;
+  }
+}
+
+
+
+/**
+ul-list
+*/
+
+.institutions-list-wrapper,
+.persons-list-wrapper{
+
+  .item-list{
+    width: 100%;
+    ol,
+    ul{
+      width: 100%;
+      clear: both;
+    }
+    
+    /** TODO: Should maybe moved to entity-scss. */
+    .pager{
+      display: table;
+      margin: 0 auto;
+      width: -webkit-fit-content;
+      width: -moz-fit-content;
+      width: fit-content;
+    }
+    
+    .list-item{
+      overflow: hidden;
+      border-bottom: 1px solid $col-gray-40;
+      vertical-align: top;
+      padding: em(15,18) em(10,18);
+      min-height: 5em;
+      clear: both;
+      &.views-row-first{
+        border-top: 1px solid $col-gray-40;
+      }
+      &:hover{
+        background-color: $col-gray-10;
+      }
+    }
+
+
+    .bl-img,
+    .views-field-field-image-single,
+    .views-field-title,
+    .field-name-field-address,
+    .views-field-field-address,
+    .field-address,
+    .views-field-field-email,
+    .ic-email,
+    .views-field-field-telephone,
+    .ic-phone{
+      display: inline-block;
+      vertical-align: top;
+      // When there are empty values, we need this to fill the column
+      &:after{
+        content: '.';
+        visibility: hidden;
+      }
+    }
+
+    .views-field-field-image-single,
+    .bl-img{
+      margin-bottom: 0;
+      img{
+        width: auto;
+      }
+    }
+
+    .views-field-title{
+      font-weight: bold;
+      @include ie8_font_fix('b');
+    }
+    
+    @include at-breakpoint($mq-bp-tablet-minus) {
+      .views-field-field-image-single,
+      .bl-img{
+        @include span-columns(5,24);
+      }
+      
+      .views-field-field-address {
+        margin-top: $padding/2;
+      }
+
+      .views-field-title,
+      .views-field-field-address,
+      .field-name-field-address,
+      .field-address,
+      .views-field-field-email,
+      .ic-email,
+      .views-field-field-telephone,
+      .ic-phone{
+        @include span-columns(19,24);
+      }
+      
+      .views-field-field-image-single,
+      .bl-img {
+        & ~ .views-field-title,
+        & ~ .views-field-field-address,
+        & ~ .field-name-field-address,
+        & ~ .field-address,
+        & ~ .views-field-field-email,
+        & ~ .ic-email,
+        & ~ .views-field-field-telephone,
+        & ~ .ic-phone {
+          @include omega;
+        }        
+      }
+    }  
+    
+    @include at-breakpoint($mq-bp-tablet) {
+      .views-field-field-image-single,
+      .bl-img{
+        @include span-columns(3,24);
+      }
+      
+      .views-field-title,
+      .views-field-field-address,
+      .field-name-field-address,
+      .field-address,
+      .views-field-field-email,
+      .ic-email,
+      .views-field-field-telephone,
+      .ic-phone{
+        @include span-columns(21,24);
+      }      
+    }
+    
+    @include at-breakpoint($mq-bp-desktop) {
+      .views-field-title{
+        @include span-columns(7,24);
+      }
+      
+      .views-field-field-image-single,
+      .bl-img{
+        @include span-columns(1,24);
+      }
+      
+      .views-field-field-address,
+      .field-name-field-address,
+      .field-address,
+      .views-field-field-email,
+      .ic-email{
+        @include span-columns(6,24);
+      }
+      
+      .views-field-field-telephone,
+      .ic-phone{
+        @include span-columns(4,24);
+        @include omega;
+        float: left;
+      }
+    }
+  }
+}

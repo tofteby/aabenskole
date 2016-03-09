@@ -1,0 +1,330 @@
+<?php
+
+/**
+ * @file
+ * KKMS Search Page alterations
+ */
+
+define('KOS_SEARCH_DATE_FORMAT', 'l j. F Y');
+
+/**
+ * Add image uri field to apache solr index.
+ */
+function kos_search_apachesolr_index_document_build($document, $node, $namespace) {
+
+  if (isset($node->field_image['und']['0']['uri'])) {
+    $document->addField('ss_field_image_uri', $node->field_image['und']['0']['uri']);
+    $document->addField('ss_field_link_url', $node->field_link['und']['0']['display_url']);
+    $document->addField('ss_field_link_title', $node->field_link['und']['0']['title']);
+
+    $tz = new DateTimeZone(isset($field['timezone']) ? $field['timezone'] : 'UTC');
+    $date = date_create($node->field_date['und']['0']['value'], $tz);
+    $index_value = apachesolr_date_iso($date->format('U'));
+    $document->addField('ds_event_start_date', $index_value);
+
+  }
+
+}
+
+/**
+ * Implements hook_page_alter().
+ */
+function kos_search_page_alter(&$page) {
+  drupal_add_js(drupal_get_path('module', 'kos_search') . '/kos_search.js', array('weight' => -100, 'group' => JS_LIBRARY));
+  if (isset($page['events_topbar_search']) && isset($page['content']['system_main']['search_form'])) {
+
+    $page['events_topbar_search']['top'] = array('search_form' => $page['content']['system_main']['search_form']);
+    unset($page['content']['system_main']['search_form']);
+
+  }
+}
+
+/**
+ * Implements hook_apachesolr_query_alter().
+ *
+ * Adds certain fields to queries.
+ */
+function kos_search_apachesolr_query_alter(DrupalSolrQueryInterface $query) {
+  if (arg(0) == 'search' && arg(1) == 'events') {
+    global $language;
+    $query->addFilter('hash', apachesolr_site_hash());
+    $query->addFilter('ss_language', $language->language);
+
+    $term_fields = _kos_search_get_term_fields();
+    foreach ($term_fields as $field => $name) {
+      $query->addParam('fl', $field);
+    }
+    $query->addParam('fl', 'ss_field_image_uri');
+    $query->addParam('fl', 'ss_field_link_url');
+    $query->addParam('fl', 'ss_field_link_title');
+
+    $query->addParam('fl', 'dm_field_date');
+    $query->addParam('fl', 'dm_field_date_end');
+    $query->addParam('fl', 'sm_vid_School_event_price');
+    $query->addParam('fl', 'sm_field_teaser');
+
+    $query->setAvailableSort('ds_event_start_date', 'desc');
+    $query->setSolrsort('ds_event_start_date', 'desc');
+
+  }
+}
+
+/**
+ * Implements hook_preprocess_search_result().
+ */
+function kos_search_preprocess_search_result(&$variables) {
+  $term_fields = _kos_search_get_term_fields();
+
+  if (arg(0) == 'search' && arg(1) == 'events') {
+    $search_keyword = arg(2);
+
+    // If empty keyword set the teaser as snippet to show.
+    if (empty($search_keyword)) {
+      $variables['snippet'] = $variables['result']['fields']['sm_field_teaser']['0'];
+    }
+  }
+
+  foreach ($variables['result']['fields'] as $field_id => $values) {
+    if (array_key_exists($field_id, $term_fields)) {
+      $values = array_unique($values);
+      foreach ($values as $key => $value) {
+        $term = taxonomy_term_load($value);
+        $variables[$field_id][$key]['name'] = $term->name;
+        $variables[$field_id][$key]['term_id'] = $value;
+      }
+    }
+  }
+  if (isset($variables['result'], $variables['result']['fields'])) {
+    $result_fields = $variables['result']['fields'];
+  }
+
+  if (isset($variables['result']['fields']['ss_field_image_uri'])) {
+    $variables['image_field'] = theme('image_style',
+                                      array(
+                                        'style_name' => 'search_page',
+                                        'path' => $variables['result']['fields']['ss_field_image_uri'])
+                                      );
+  }
+
+  if ($result_fields && !empty($result_fields['dm_field_date'])) {
+    $variables['event_date_start'] = format_date(strtotime($result_fields['dm_field_date'][0]), 'custom', KOS_SEARCH_DATE_FORMAT);
+  }
+
+  if ($result_fields && !empty($result_fields['dm_field_date_end'])) {
+    $variables['event_date_end'] = format_date(strtotime($result_fields['dm_field_date_end'][0]), 'custom', KOS_SEARCH_DATE_FORMAT);
+  }
+}
+
+/**
+ * Helper function returning all term fields to display in search results.
+ *
+ * @return array
+ *   Key is field id, value is field title
+ */
+function _kos_search_get_term_fields() {
+  return array(
+    'im_field_topic' => array(
+      'title' => t('Topic'),
+      'vocabulary' => 'topics',
+    ),
+    'im_field_subjects' => array(
+      'title' => t('Subjects'),
+      'vocabulary' => 'subjects',
+    ),
+    'im_field_audiences' => array(
+      'title' => t('Target'),
+      'vocabulary' => 'audiences',
+    ),
+  );
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ *
+ * Adding custom search pane definitions
+ */
+function kos_search_entity_info_alter(&$entity_info) {
+  $bundles = &$entity_info['fieldable_panels_pane']['bundles'];
+  // Remove the default pane type, defined in fieldable_panels_panes module.
+  $pane_definitions = array(
+    'banner_event_form_pane' => t('Banner event form pane'),
+    'events_gallery_pane' => t('Events gallery pane'),
+  );
+
+  $prefix = 'admin/structure/fieldable-panels-panes/manage/';
+  foreach ($pane_definitions as $bundle_name => $label) {
+    $bundles[$bundle_name] = array(
+      'label' => $label,
+      'pane category' => t('Custom'),
+      // TRUE to show this as a top level icon.
+      'pane top level' => TRUE,
+      'admin' => array(
+        'path' => $prefix . '%fieldable_panels_panes_type',
+        'bundle argument' => 4,
+        'real path' => $prefix . str_replace('_', '-', $bundle_name),
+        'access arguments' => array('administer fieldable panels panes'),
+      ),
+    );
+  }
+}
+
+/**
+ * Implements hook_preprocess_fieldable_panels_pane().
+ */
+function kos_search_preprocess_fieldable_panels_pane(&$vars) {
+  if ($vars['elements']['#bundle'] == 'banner_event_form_pane') {
+    // Form settings.
+    $vars['search_form_color'] = $vars['elements']['#fieldable_panels_pane']->field_form_color['und'][0]['jquery_colorpicker'];
+    $vars['search_form'] = drupal_get_form('kos_search_frontpage_events_search_form');
+
+    $vars['search_form']['events_search_titles']['#markup'] = "
+      <div class='events-form-title'>
+        <h2 class='events-search-title'>{$vars['elements']['#fieldable_panels_pane']->title}</h2>
+        <h3 class='events-search-subtitle'>{$vars['elements']['#fieldable_panels_pane']->field_sub_title['und'][0]['safe_value']}</h3>
+      </div>
+    ";
+
+    // Sent selected color to javascript.
+    $js_settings = array();
+    $js_settings['search_button_color'] = $vars['elements']['#fieldable_panels_pane']->field_search_button_color['und'][0]['jquery_colorpicker'];
+    drupal_add_js(array('kos_search' => $js_settings), 'setting');
+
+    $vars['display_form'] = $vars['elements']['#fieldable_panels_pane']->field_show_form['und'][0]['value'];
+  }
+
+  if ($vars['elements']['#bundle'] == 'events_gallery_pane') {
+
+    $image_info = field_info_instance('fieldable_panels_pane', 'field_image_single', 'events_gallery_pane');
+    $image = array(
+      'style_name' => $image_info['display']['full']['settings']['image_style'],
+      'path' => $vars['field_image_single']['0']['uri'],
+      'alt' => $vars['field_image_single'][0]['field_file_image_alt_text']['und'][0]['safe_value'],
+      'title' => $vars['field_image_single'][0]['field_file_image_title_text']['und'][0]['safe_value'],
+    );
+    $vars['field_image'] = theme('image_style', $image);
+  }
+}
+
+/**
+ * Implements hook_preprocess_panels_pane().
+ *
+ * Remove admin edit/delete links for panel panes to force
+ * using only the ipe ones
+ */
+function kos_search_preprocess_panels_pane(&$vars) {
+  if ($vars['display']->context['panelizer']->data->panelizer['full']->pipeline == 'ipe') {
+    $vars['admin_links'] = array();
+  }
+}
+
+/**
+ * Definition of frontpage search form.
+ *
+ * The form could be displayed as part of the banner_event_form_pane
+ * @see kos_search_preprocess_fieldable_panels_pane
+ */
+function kos_search_frontpage_events_search_form($form_state) {
+  $empty = array('' => t('Select'));
+  $form = array();
+  $form['events_search_titles'] = array(
+    '#type' => 'markup',
+    '#value' => "",
+  );
+  $form['keyword'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Search'),
+  );
+  $form['category'] = array(
+    '#type' => 'select',
+    '#title' => t('Target audience'),
+    '#options' => $empty + taxonomy_allowed_values(field_info_field('field_audiences')),
+  );
+  $form['subject'] = array(
+    '#type' => 'select',
+    '#title' => t('Subject'),
+    '#options' => $empty + taxonomy_allowed_values(field_info_field('field_subjects')),
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Search'),
+  );
+  // Append js to submit the form directly without bootstapping drupal again.
+  $form['#attached']['js'][] = drupal_get_path('module', 'kos_search') . '/kos_search_events_form.js';
+  return $form;
+}
+
+/**
+ * Front page search form submit handler.
+ * @todo
+ *  Make this in JS to skip the drupal's bootstrap on every search from the
+ *  front-page.
+ */
+function kos_search_frontpage_events_search_form_submit($form, &$form_state) {
+  $text = rawurlencode($form_state['values']['keyword']);
+  $field_map = array(
+    'im_field_subjects' => 'subject',
+    'im_field_audiences' => 'category',
+  );
+
+  $params = array();
+  foreach ($field_map as $facet_name => $form_name) {
+    if (($value = $form_state['values'][$form_name])) {
+      $params[] = "$facet_name:$value";
+    }
+  }
+  if ($params) {
+    $params = array('f' => $params);
+  }
+
+  $form_state['redirect'] = array("search/events/{$text}",array(
+      'query' => $params,
+    ));
+}
+
+/**
+ * Implements hook_preprocess_link().
+ *
+ * Preprocess term links to point to search page.
+ */
+function kos_search_preprocess_link(&$variables) {
+  $path = $variables['path'];
+  if (arg(0, $path) == 'taxonomy' && arg(1, $path) == 'term' && is_numeric(arg(2, $path)) && !arg(3, $path)) {
+    $term = taxonomy_term_load(arg(2, $path));
+
+    $fields = _kos_search_get_term_fields();
+
+    // Add price field to array.
+    $fields['im_field_school_event_price'] = array(
+      'title' => t('Price'),
+      'vocabulary' => 'school_event_price',
+    );
+    foreach ($fields as $solr_field => $field_data) {
+      if ($term->vocabulary_machine_name == $field_data['vocabulary']) {
+        $variables['path'] = 'search/events';
+        $variables['options']['query'] = array('f' => array("{$solr_field}:{$term->tid}"));
+      }
+    }
+  }
+}
+
+/**
+ * Helper method to call in update hook, when the KOS_SEARCH_DATE_FORMAT
+ * constant is changed. Deletes the old date format and adds a new one instead.
+ * Prevents issues when called sequentailly and adding the same format twice.
+ */
+function _kos_search_update_date_format() {
+  if (($old_format = variable_get('date_format_kos_events_date')) != KOS_SEARCH_DATE_FORMAT) {
+    $table = 'date_formats';
+    db_delete($table)
+      ->condition('format', $old_format)
+      ->execute();
+    db_insert($table)
+      ->fields(array(
+        'format' => KOS_SEARCH_DATE_FORMAT,
+        'type' => 'custom',
+        'locked' => 0,
+      ))
+      ->execute();
+    variable_set('date_format_kos_events_date', KOS_SEARCH_DATE_FORMAT);
+  }
+}

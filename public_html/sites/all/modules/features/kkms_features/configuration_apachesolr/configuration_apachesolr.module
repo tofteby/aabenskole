@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the configuration_apachesolr feature.
+ */
+
+include_once 'configuration_apachesolr.features.inc';

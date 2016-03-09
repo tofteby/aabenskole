@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Pull content feed features feature.
+ */
+
+include_once 'pull_content_feed_features.features.inc';

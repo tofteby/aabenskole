@@ -1,0 +1,12 @@
+
+taxon_taxonomy 7.x-1.1, until 28-10-2013
+----------------------------------------
+- KKNI-1396 Updated CHANGELOG to 7.x-1.1.
+- KKNI-1396 Added CHANGELOG.
+- KKNI Updated the hack to be with consistent formatting.
+- KKNI-929 Added public realpath to taxonomy_name.
+- KKNI-273 Fixed js script.
+- KKNI-273 Changed , with ; in term multivalues field.
+- KNNI-259 Made hack to return only term name without kle_id.
+- KKNI-156 Moved administration to a specific location.
+- KKNI-156 Replaced the taxon_taxonomy module with the working version from GitHub.

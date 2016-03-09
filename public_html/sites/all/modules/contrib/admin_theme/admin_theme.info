@@ -1,0 +1,14 @@
+name = Administration theme
+description = Enable the administration theme on more pages than possible with Drupal's default administration page.
+core = 7.x
+package = Administration
+files[] = admin_theme.module
+files[] = admin_theme.install
+configure = admin/appearance
+
+; Information added by drush on 2014-06-26
+version = "7.x-1.0+2-dev"
+core = "7.x"
+project = "admin_theme"
+datestamp = "1403780372"
+

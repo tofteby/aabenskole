@@ -1,0 +1,15 @@
+name = Multiform test
+description = Handle module for testing Multiform
+core = 7.x
+
+dependencies[] = multiform
+hidden = TRUE
+
+files[] = multiform_test.module
+
+; Information added by drush on 2014-06-26
+version = "7.x-1.0+2-dev"
+core = "7.x"
+project = "multiform"
+datestamp = "1403780044"
+

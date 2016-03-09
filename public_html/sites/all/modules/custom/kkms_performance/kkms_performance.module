@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * Implements hook_exit().
+ */
+function kkms_performance_exit() {
+  global $user;
+  if(!$user->uid) {
+   ini_set('session.cookie_lifetime', 30);
+  }
+}
+
+function kkms_performance_expire_cache_alter(&$urls, $object_type, $object, &$absolute_urls_passed) {
+  global $base_url, $base_path;
+  if($object_type == 'menu_link' && $object['depth'] == 1) {
+    $urls[] = "{$base_url}{$base_path}|wildcard";
+  }
+  if(in_array('<front>', $urls)) {
+    $languages = language_list();
+    foreach ($languages as $lang) {
+      if($lang) {
+        $urls[] = "{$base_url}{$base_path}$lang->prefix";
+      }
+    }
+  }
+
+  if($object_type == 'node') {
+    $urls[] = "{$base_url}{$base_path}shared-content|wildcard";
+    $references = array();
+    $field_info = field_info_fields();
+  
+    foreach ($field_info as $name => $field) {
+        if ($field['type'] == 'entityreference' && $field['settings']['target_type'] == 'node') {
+          $ids = db_select('field_data_' . $field['field_name'], 'f')
+            ->fields('f',array('entity_id'))
+            ->condition($field['field_name'] . '_target_id', $object->nid)
+            ->execute()
+            ->fetchAll();
+          foreach ($ids as $id) {
+             $urls['parent-reference-' . $id->entity_id] = 'node/' . $id->entity_id;
+          }
+        }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_alter()
+ */
+function kkms_performance_form_alter(&$form, &$form_state, $form_id) {
+  $forms = array(
+    'block_admin_display_form',
+    'block_admin_configure',
+  );
+  if(in_array($form_id, $forms)) {
+    cache_clear_all('*', 'cache_page', TRUE);
+  }
+}
+

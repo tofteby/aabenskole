@@ -1,0 +1,73 @@
+.node-type-section-page{
+  #block-kkms-social-kkms-social-share-block{
+    display: none;
+  }
+}
+
+.node-section-page {
+  h1 {
+    @extend .title-page;
+    @extend .bl-title;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    max-width: 22.125em;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.node.node-section-page {
+  h1 {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.panels-ipe-linkbar{
+  li{
+    display: inline-block;
+  }
+}
+
+/** 
+* Twitter block height fix 
+*/
+
+[class*="twitter-timeline"]{
+    height: 300px;
+}
+
+/** 
+* Instagram, teeter, facebook text uppercase
+*/
+.pane-instagram-block-instagram-block,
+.pane-fb-social-kkms-feed,
+.pane-twitter-block-2 {
+    &.lt-ie9 {   
+        margin-right: 0;
+    }
+    .pane-title {
+        text-transform: uppercase;
+    }
+} 
+
+.pane-instagram-block-instagram-block {
+  overflow: hidden;
+}
+
+.ctools-modal-content {
+  .media-item {
+    img {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      font-size: 1em;
+    }
+  }
+  
+  a.button {
+    font-size: 1.2em;
+    margin-right: 0.7em;
+  }
+}

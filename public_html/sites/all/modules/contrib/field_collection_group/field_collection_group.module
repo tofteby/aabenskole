@@ -1,0 +1,72 @@
+<?php
+
+/**
+ * @file
+ * Field formatters for field collections.
+ *
+ * @TODO - Configurable labels, possibly with token support.
+ */
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function field_collection_group_field_formatter_info() {
+  $info = array();
+  foreach (collection_group_formats() as $class) {
+    $format = new $class;
+    $info[$class] = $format->formatter_info();
+  }
+  return $info;
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function field_collection_group_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $format = new $display['type'];
+  return $format->formatter_settings($field, $settings);
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function field_collection_group_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $format = new $display['type'];
+  $summary = $format->settings_summary($settings);
+
+  return implode('<br>', $summary);
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function field_collection_group_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $settings = $display['settings'];
+
+  // Generate the field collections render elements.
+  $format = new $display['type'];
+  $elements = $format->formatter_view($items, $settings);
+  if ($elements) {
+    // Wrap the render elements in a single item and group them.
+    $group_class = $format->group_class();
+    $group_instance = new $group_class($settings);
+    return $group_instance->group($elements);
+  }
+
+  return array();
+}
+
+function collection_group_formats() {
+  return array(
+    'collection_format_horizontal',
+    'collection_format_vertical',
+    'collection_format_accordion',
+    'collection_format_fieldset',
+  );
+}

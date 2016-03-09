@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the KOS Views Local Content feature.
+ */
+
+include_once 'kos_views_local_content.features.inc';

@@ -1,0 +1,125 @@
+button{
+  border-style: none;
+}
+
+.form-submit{
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+
+  text-transform: uppercase;
+  padding: em(9,16);
+  margin-right: em(9,16);
+  font-size: em(16,18);
+  border-style: none;
+  border: 1px solid $col-primary;
+  @include border-radius(0);
+  background-color: $col-primary;
+  color: $col-content;
+  white-space: normal;
+  -webkit-appearance: none;
+   
+  &:hover{
+    background-color: $col-button-hover;
+    cursor: pointer;
+  }
+}
+
+.form-item{
+  margin-bottom: em(18,18);
+  label{
+    display: block;
+    margin-bottom: em(5,18);
+    font-size: em(16,18);
+    .form-required{
+      color: red; /* TODO: Must be a variable in order to support different color schemes*/
+    }
+  }
+  .required{
+    &.error{
+      border: 1px solid red;
+    }
+  }
+}
+
+.form-file{
+  font-size: em(16,18);
+}
+.form-managed-file{
+  .form-file{
+    margin-right: 2em;
+  }
+}
+
+.form-textarea,
+.form-text{
+  font-size: em(16,18);
+  border: 1px solid $col-gray-55;
+  font-weight: bold;
+  font-style: italic;
+  color: $col-gray-70;
+  padding: em(9,16);
+  width: 100%;
+  -webkit-appearance: none;
+  @include border-radius(0);
+
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+
+  @include ie8_font_fix('bi');
+
+  &:focus{
+    background-color: $col-gray-25;
+    outline: none;
+    box-shadow: 0;
+  }
+}
+
+.form-checkbox{
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+
+.form-type-checkbox{
+  label{
+    display: inline-block;
+    width: 90%;
+    vertical-align: top;
+    word-wrap: break-word;
+  }
+}
+
+.form-type-select{
+  .form-select{
+    font-size: em(16,18);
+  }
+
+}
+
+.form-radios{
+  label{
+    display: inline;
+    vertical-align: top;
+    margin-top: 2px;
+    word-wrap: break-word;
+  }
+}
+
+
+// Overrides core styles
+.filter-wrapper{
+  padding: 0;
+}
+
+fieldset.filter-wrapper{
+  padding: $baseline 0;
+}
+.text-format-wrapper .form-item{
+  margin-bottom: em(18,18);
+}
+
+html.js input.form-autocomplete{
+  background-position: 100% 0.5em;
+}

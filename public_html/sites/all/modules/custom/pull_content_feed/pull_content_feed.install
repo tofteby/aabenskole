@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the pull_content_feed module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function pull_content_feed_install() {
+  variable_set('pull_content_feed_types', array('institution', 'place'));
+  variable_set('pull_content_feed_client', 'pull_content_feed');
+  variable_set('pull_content_feed_datatime_updated', 0);
+  variable_set('pull_content_feed_datatime_deleted', 0);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function pull_content_feed_uninstall() {
+  variable_del('pull_content_feed_types');
+  variable_del('pull_content_feed_client');
+  variable_del('pull_content_feed_datatime_updated');
+  variable_del('pull_content_feed_datatime_deleted');
+}
+

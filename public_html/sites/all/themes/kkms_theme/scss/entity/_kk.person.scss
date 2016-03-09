@@ -1,0 +1,179 @@
+/**
+ * Styling of person content type.
+ *
+ */
+
+
+// Full view of person content type.
+
+.node-person.node-full{
+  .pane-field-group{
+    @extend .bl-element;
+    margin: 0;
+    padding: 0 !important;
+    overflow: hidden;
+    vertical-align: top;
+    margin-bottom: $space;
+
+    .group-contact-box{
+      overflow: hidden;
+      vertical-align: top;
+
+      .field-name-field-image-single{
+        margin: 0;
+        padding: $space/2 $space/2 0;
+        
+        @include at-breakpoint($mq-bp-tablet-plus) { 
+          @include span-columns-light(7,24);
+          float: left;
+          margin: 3em 0 0;
+          padding: $space 0 $space/2 $space/2;          
+        }
+        @include at-breakpoint($mq-bp-desktop) { 
+          @include omega;
+          margin: 0;
+          padding: 0;
+        }
+      }
+      .group-contacts{
+        padding: 0 $space/2;
+        
+        @include at-breakpoint($mq-bp-tablet-plus) {
+          @include span-columns-light(17,24);
+          padding: 0 0 0 $space;
+        }   
+        
+        @extend %block-e;
+        vertical-align: top;
+
+        legend{
+          @extend .title-block;
+          margin-bottom: em(18,18);
+        }
+        .group-main{
+          display: inline-block;
+          vertical-align: top;
+          min-width: 50%;
+          @include at-breakpoint($mq-bp-desktop) { 
+            margin-right: $space;
+          }          
+
+          // TODO: Should have a class .name
+          h2{
+            font-weight: bold;
+            margin-bottom: 0;
+            text-transform: none;
+            
+            @include ie8_font_fix('b');
+          }
+
+          .field-name-field-organisation,
+          .field-name-field-job-title{
+            font-weight: bold;
+            font-style: italic;
+            color: $col-gray-70;
+            font-size: em(16,18);
+            margin-bottom: em(5,18);
+            
+            @include ie8_font_fix('bi');
+          }
+          .field-name-field-organisation{
+            margin-bottom: em(9,18);
+          }
+
+        }
+        .group-contact{
+          vertical-align: top;
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
+
+
+.ic-email,
+.ic-phone{
+  white-space: nowrap;
+  margin-bottom: em(5,18);
+  > div{
+    padding-left: em(9,18);
+  }
+  div{
+    display: inline;
+  }
+}
+
+
+
+// TODO: The description div should have a class.
+.pane-node-field-contact{
+  >div{
+    &:nth-of-type(1){
+      margin-bottom: em(24,18);
+    }
+  }
+}
+
+.field-name-field-contact{
+  margin-bottom: em(24,18);
+  .field-items{
+    .field-item{
+      margin-bottom: em(32,18);
+    }
+  }
+
+  .group-main,
+  .group-contact{
+    vertical-align: top;
+    display: inline-block;
+  }
+
+  .group-main{
+    width: 50%;
+    
+    @include at-breakpoint($mq-bp-mobile) { 
+      width: 100%;
+    }
+  
+    h3{
+      font-size: em(20,18);
+      font-weight: bold;
+      margin-bottom: em(5,18);
+      text-transform: none;
+      
+      @include ie8_font_fix('b');
+
+    }
+    .field-name-field-job-title{
+      font-size: em(16,18);
+      font-style: italic;
+      font-weight: bold;
+      color: $col-gray-70;
+      margin-bottom: em(8,16);
+      
+      @include ie8_font_fix('bi');
+    }
+  }
+  .group-contact{
+    width: auto;
+    max-width: 45%;
+    overflow: hidden;
+    margin-left: 5%;
+    
+    @include at-breakpoint($mq-bp-mobile) { 
+      width: 100%;
+      max-width: 100%;
+      margin: $padding 0 0;
+    }
+  }
+}
+
+
+
+
+.field-name-field-contact{
+  .field-label{
+    margin-bottom: em(18,18);
+  }
+}

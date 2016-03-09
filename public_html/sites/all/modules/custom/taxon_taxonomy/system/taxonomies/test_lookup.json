@@ -1,0 +1,7 @@
+{"system":{"defaults":{"numberResultsReturned":2}},
+"classes":{"denmark":{"classes":{"01":{"weight":5,"required":0,"requireTerm":"","excludeOnTerm":"","requireClass":"","excludeOnClass":"","classTitle":"EU countries","hidden":0,"exclusive":0,"thresholdWeight":5,"thresholdCount":1,"thresholdCountUnique":1}},
+"prefix":"","suffix":""},
+"spain":{"classes":{"01":{"weight":5,"required":0,"requireTerm":"","excludeOnTerm":"","requireClass":"","excludeOnClass":"","classTitle":"EU countries","hidden":0,"exclusive":0,"thresholdWeight":5,"thresholdCount":1,"thresholdCountUnique":1}},
+"prefix":"","suffix":""},
+"uk":{"classes":{"01":{"weight":5,"required":0,"requireTerm":"","excludeOnTerm":"","requireClass":"","excludeOnClass":"","classTitle":"EU countries","hidden":0,"exclusive":0,"thresholdWeight":5,"thresholdCount":1,"thresholdCountUnique":1}},
+"prefix":"","suffix":""}}}

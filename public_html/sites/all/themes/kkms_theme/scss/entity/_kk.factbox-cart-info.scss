@@ -1,0 +1,44 @@
+.node-factbox-card-info {
+  overflow: hidden;
+  
+  .tx-content{
+    clear: right;
+  }
+
+  .field-name-field-card-info {
+    vertical-align: top;    
+    margin-top: $space/2;
+    margin-bottom: $space/2;
+
+    @include at-breakpoint($mq-bp-desktop) { 
+      @include span-columns(5,10);
+
+      &.even {
+        @include omega;
+      }
+    }
+
+    > h3 {
+      text-transform: none;
+      font-weight: 600;
+      font-size: $text-heading;
+      margin-bottom: em(9,18);
+    }
+    .item-list {
+      vertical-align: top;
+      h3{
+        font-size: em(15,18);
+        font-style: italic;
+        font-weight: bold;
+        text-transform: none;
+        color: $col-gray-70;
+        margin-bottom: 0;
+        
+        @include ie8_font_fix('bi');
+      }
+      li{
+        margin-bottom: em(9,18);
+      }
+    }
+  }
+}

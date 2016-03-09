@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the KOS Configuration Field Panes feature.
+ */
+
+include_once 'kos_configuration_field_panes.features.inc';

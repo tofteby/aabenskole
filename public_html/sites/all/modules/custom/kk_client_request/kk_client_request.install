@@ -1,0 +1,130 @@
+<?php
+
+/**
+ * @file
+ * Installs needed tables.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function kk_client_request_schema() {
+  $schema['kk_client_request_term'] = array(
+    'description' => 'Store client-server information for terms.',
+    'fields' => array(
+      'client_vid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'server_tid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'client_tid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'timestamp' => array(
+        'description' => 'A Unix timestamp indicating when this vocabulary was updated.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'unique keys' => array(
+      'tid' => array('server_tid', 'client_tid'),
+    ),
+    'primary key' => array('client_tid'),
+  );
+
+  $schema['kk_client_request_vocabulary'] = array(
+    'description' => 'Store client-server information for vocabularies.',
+    'fields' => array(
+      'server_vid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'client_vid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'timestamp' => array(
+        'description' => 'A Unix timestamp indicating when this vocabulary was updated.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'unique_keys' => array(
+      'vid' => array('server_vid', 'client_vid'),
+    ),
+    'primary key' => array('client_vid'),
+  );
+
+  $schema['kk_client_voc_term_update_timestamp'] = array(
+    'description' => 'Store vocabulary update/delete timestamp on term change.',
+    'fields' => array(
+      'vid' => array(
+        'description' => 'A Unix timestamp indicating when this vocabulary was updated.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'timestamp' => array(
+        'description' => 'A Unix timestamp indicating when this vocabulary was updated.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'status' => array(
+        'description' => 'Deleted(D) or Updated(U) vocabulary.',
+        'type' => 'char',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('vid'),
+  );
+
+  return $schema;
+}
+
+/**
+ * HOOK_update_N - Needed to clear the cron queues used in the module.
+ */
+function kk_client_request_update_7001() {
+  $queues = array(
+    'kk_client_request_generate_json_file',
+    'kk_client_request_import_install',
+  );
+  foreach($queues as $queue_name) {
+    $queue = DrupalQueue::get($queue_name);
+    while (($item = $queue->claimItem())) {
+      $queue->deleteItem($item);
+    }
+  }
+}
+
+/**
+ * HOOK_update_N
+ *
+ * Needed to force term sinchronization of all terms on the next cron/manual
+ * synchronization action.
+ */
+function kk_client_request_update_7002() {
+  $fields = array(
+    'timestamp' => 1000000, // Some timestamp in the distant past.
+  );
+  db_update('kk_client_voc_term_update_timestamp')->fields($fields)->execute();
+}

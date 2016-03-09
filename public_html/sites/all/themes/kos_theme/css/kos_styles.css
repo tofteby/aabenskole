@@ -1,0 +1,1169 @@
+/* line 6, ../scss/page/_kk.page.scss */
+.bl-element, .bl-grid-space .views-row, .view-school-events-list .views-row {
+  margin: 28px 0; }
+
+/* line 10, ../scss/page/_kk.page.scss */
+.bl-element, .bl-grid-space .views-row, .view-school-events-list .views-row {
+  padding: 28px;
+  background: white; }
+  @media (max-width: 479px) {
+    /* line 10, ../scss/page/_kk.page.scss */
+    .bl-element, .bl-grid-space .views-row, .view-school-events-list .views-row {
+      padding: 14px; } }
+
+/* line 19, ../scss/page/_kk.page.scss */
+.title-block, .bl-element h1, .bl-grid-space .views-row h1, .view-school-events-list .views-row h1,
+.bl-element h2,
+.bl-grid-space .views-row h2,
+.view-school-events-list .views-row h2,
+.bl-element h3,
+.bl-grid-space .views-row h3,
+.view-school-events-list .views-row h3,
+.bl-element .field-label,
+.bl-grid-space .views-row .field-label,
+.view-school-events-list .views-row .field-label {
+  font-size: 1.33333em;
+  line-height: 1.15em; }
+
+/* line 24, ../scss/page/_kk.page.scss */
+.title-block, .bl-element h1, .bl-grid-space .views-row h1, .view-school-events-list .views-row h1,
+.bl-element h2,
+.bl-grid-space .views-row h2,
+.view-school-events-list .views-row h2,
+.bl-element h3,
+.bl-grid-space .views-row h3,
+.view-school-events-list .views-row h3,
+.bl-element .field-label,
+.bl-grid-space .views-row .field-label,
+.view-school-events-list .views-row .field-label {
+  text-transform: uppercase; }
+
+/* line 30, ../scss/page/_kk.page.scss */
+.bl-element, .bl-grid-space .views-row, .view-school-events-list .views-row {
+  -webkit-box-shadow: 3px 3px 0 rgba(68, 68, 68, 0.15), 0px 0px 1px rgba(68, 68, 68, 0.15);
+  -moz-box-shadow: 3px 3px 0 rgba(68, 68, 68, 0.15), 0px 0px 1px rgba(68, 68, 68, 0.15);
+  box-shadow: 3px 3px 0 rgba(68, 68, 68, 0.15), 0px 0px 1px rgba(68, 68, 68, 0.15);
+  border: 1px solid #ebebeb; }
+  /* line 39, ../scss/page/_kk.page.scss */
+  .bl-element h1, .bl-grid-space .views-row h1, .view-school-events-list .views-row h1,
+  .bl-element h2,
+  .bl-grid-space .views-row h2,
+  .view-school-events-list .views-row h2,
+  .bl-element h3,
+  .bl-grid-space .views-row h3,
+  .view-school-events-list .views-row h3,
+  .bl-element .field-label,
+  .bl-grid-space .views-row .field-label,
+  .view-school-events-list .views-row .field-label {
+    margin-bottom: 0.5em; }
+
+/* line 46, ../scss/page/_kk.page.scss */
+.bl-grid-space, .view-school-events-list {
+  *zoom: 1;
+  max-width: 59em;
+  _width: 59em;
+  padding-left: 1em;
+  padding-right: 1em;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 1em;
+  vertical-align: top;
+  clear: right; }
+  /* line 38, ../../../../../../../../../../../var/lib/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
+  .bl-grid-space:after, .view-school-events-list:after {
+    content: "";
+    display: table;
+    clear: both; }
+  /* line 51, ../scss/page/_kk.page.scss */
+  .bl-grid-space .view-header, .view-school-events-list .view-header {
+    font-size: 1.11111em;
+    text-transform: uppercase; }
+  /* line 56, ../scss/page/_kk.page.scss */
+  .bl-grid-space h2, .view-school-events-list h2 {
+    font-size: 1.5em;
+    margin-bottom: 0.5em; }
+  /* line 60, ../scss/page/_kk.page.scss */
+  .bl-grid-space .view-content, .view-school-events-list .view-content {
+    vertical-align: top;
+    *zoom: 1; }
+    /* line 38, ../../../../../../../../../../../var/lib/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
+    .bl-grid-space .view-content:after, .view-school-events-list .view-content:after {
+      content: "";
+      display: table;
+      clear: both; }
+  /* line 65, ../scss/page/_kk.page.scss */
+  .bl-grid-space .views-row, .view-school-events-list .views-row {
+    margin-bottom: 12px;
+    padding: 1em;
+    height: auto; }
+    @media (min-width: 480px) and (max-width: 767px) {
+      /* line 65, ../scss/page/_kk.page.scss */
+      .bl-grid-space .views-row, .view-school-events-list .views-row {
+        width: 48.27586%;
+        float: left;
+        margin-right: 3.44828%; }
+        /* line 69, ../scss/page/_kk.page.scss */
+        .bl-grid-space .views-row.views-row-even, .view-school-events-list .views-row.views-row-even {
+          float: right;
+          margin-right: 0; }
+        /* line 73, ../scss/page/_kk.page.scss */
+        .bl-grid-space .views-row.views-row-odd, .view-school-events-list .views-row.views-row-odd {
+          clear: both; } }
+    @media (min-width: 768px) {
+      /* line 65, ../scss/page/_kk.page.scss */
+      .bl-grid-space .views-row, .view-school-events-list .views-row {
+        width: 31.03448%;
+        float: left;
+        margin-right: 3.44828%; }
+        /* line 80, ../scss/page/_kk.page.scss */
+        .bl-grid-space .views-row.third, .view-school-events-list .views-row.third {
+          float: right;
+          margin-right: 0; }
+        /* line 84, ../scss/page/_kk.page.scss */
+        .bl-grid-space .views-row.first, .view-school-events-list .views-row.first {
+          clear: both; } }
+  /* line 95, ../scss/page/_kk.page.scss */
+  .bl-grid-space .pager, .view-school-events-list .pager {
+    margin-top: 12px; }
+
+/* line 100, ../scss/page/_kk.page.scss */
+.form-text, .chosen-container .chosen-choices li.search-field input.default {
+  font-size: 0.88889em;
+  border: 1px solid #cbd0d3;
+  font-weight: bold;
+  font-style: italic;
+  color: #626262;
+  padding: 0.5625em;
+  width: 100%;
+  -webkit-appearance: none;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box; }
+  /* line 218, ../scss/mixins/_kk.mixin.style.scss */
+  .lt-ie9 .form-text, .lt-ie9 .chosen-container .chosen-choices li.search-field input.default, .chosen-container .chosen-choices li.search-field .lt-ie9 input.default {
+    font-family: "Gill Sans W01_i7", "Gill Sans", serif;
+    font-weight: normal;
+    font-style: normal; }
+  /* line 117, ../scss/page/_kk.page.scss */
+  .form-text:focus, .chosen-container .chosen-choices li.search-field input.default:focus {
+    background-color: #ebebeb;
+    outline: none;
+    box-shadow: 0; }
+
+@font-face {
+  font-family: 'icomoon';
+  src: url("../fonts/icomoon.eot?-sja7xb");
+  src: url("../fonts/icomoon.eot?#iefix-sja7xb") format("embedded-opentype"), url("../fonts/icomoon.woff?-sja7xb") format("woff"), url("../fonts/icomoon.ttf?-sja7xb") format("truetype"), url("../fonts/icomoon.svg?-sja7xb#icomoon") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'icon-new';
+  src: url("../fonts/icon-new.eot?-sja7xb");
+  src: url("../fonts/icon-new.eot?#iefix-sja7xb") format("embedded-opentype"), url("../fonts/icon-new.woff?-sja7xb") format("woff"), url("../fonts/icon-new.ttf?-sja7xb") format("truetype"), url("../fonts/icon-new.svg?-sja7xb#icon-new") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+/* line 49, ../scss/kos_styles.scss */
+.link,
+.price,
+.icon-link {
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+/* line 61, ../scss/kos_styles.scss */
+.price,
+.date {
+  font-family: 'icon-new'; }
+
+/* line 67, ../scss/kos_styles.scss */
+.reg-sidebar .field-content,
+.link,
+.icon-link {
+  font-family: 'icomoon'; }
+
+/* line 75, ../scss/kos_styles.scss */
+.reg-sidebar .field-content:before,
+.link:before,
+.price:before,
+.date:before,
+.icon-link:before {
+  display: inline-block;
+  padding-right: 5%; }
+
+/* line 80, ../scss/kos_styles.scss */
+.field-name-field-link:before {
+  padding: 0; }
+
+/* line 86, ../scss/kos_styles.scss */
+.reg-sidebar .field-content:before,
+.link:before,
+.icon-link:before {
+  content: "\e60b"; }
+
+/* line 90, ../scss/kos_styles.scss */
+.price:before {
+  content: "\e600"; }
+
+/* line 94, ../scss/kos_styles.scss */
+.date:before {
+  content: "\e601"; }
+
+/* line 101, ../scss/kos_styles.scss */
+.bl-footer {
+  margin-bottom: 5em; }
+
+/* line 106, ../scss/kos_styles.scss */
+.chosen-container {
+  position: relative !important;
+  overflow: visible;
+  max-width: 100%; }
+
+/* line 111, ../scss/kos_styles.scss */
+.chosen-container .chosen-drop {
+  position: absolute !important; }
+
+/* line 115, ../scss/kos_styles.scss */
+.chosen-container {
+  font-size: 0.88889em;
+  max-width: 100%; }
+  @media (max-width: 767px) {
+    /* line 115, ../scss/kos_styles.scss */
+    .chosen-container {
+      max-width: 100%;
+      width: 100% !important; } }
+  /* line 126, ../scss/kos_styles.scss */
+  .chosen-container .chosen-choices,
+  .chosen-container .chosen-drop {
+    background: white;
+    padding: 0;
+    border: 1px solid #cbd0d3; }
+  /* line 133, ../scss/kos_styles.scss */
+  .chosen-container .chosen-choices li.search-field {
+    margin: 0; }
+    /* line 136, ../scss/kos_styles.scss */
+    .chosen-container .chosen-choices li.search-field input.default {
+      font-family: "Gill Sans W01", "Gill Sans", serif;
+      text-transform: uppercase;
+      border: 1px solid white !important;
+      min-width: 300px;
+      min-height: 2.2em !important;
+      font-size: 0.789em !important; }
+      @media (max-width: 479px) {
+        /* line 136, ../scss/kos_styles.scss */
+        .chosen-container .chosen-choices li.search-field input.default {
+          width: 100%;
+          min-width: 300px;
+          min-height: 2.2em !important; } }
+  /* line 152, ../scss/kos_styles.scss */
+  .chosen-container .chosen-choices li.search-choice {
+    border: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -ms-border-radius: 0;
+    -o-border-radius: 0;
+    border-radius: 0;
+    background: none #e0e0e0;
+    box-shadow: none;
+    margin: 5px;
+    line-height: 1em;
+    padding: 0.3em 2.5em 0.3em 1em;
+    text-transform: uppercase; }
+  /* line 164, ../scss/kos_styles.scss */
+  .chosen-container .chosen-drop .chosen-results {
+    margin: 0; }
+    /* line 167, ../scss/kos_styles.scss */
+    .chosen-container .chosen-drop .chosen-results .result-selected,
+    .chosen-container .chosen-drop .chosen-results .active-result {
+      border: 0;
+      box-shadow: none;
+      padding: 0.6em 2.5em 0.6em 1em;
+      text-transform: uppercase;
+      margin: 0; }
+      /* line 173, ../scss/kos_styles.scss */
+      .chosen-container .chosen-drop .chosen-results .result-selected.highlighted,
+      .chosen-container .chosen-drop .chosen-results .active-result.highlighted {
+        background: none #ebebeb;
+        color: #444444; }
+
+/* line 183, ../scss/kos_styles.scss */
+.chosen-container-active .chosen-choices {
+  box-shadow: none; }
+
+/* line 192, ../scss/kos_styles.scss */
+.colorpicker {
+  z-index: 10000 !important; }
+
+/* line 195, ../scss/kos_styles.scss */
+div.ctools-modal-content {
+  z-index: 100 !important; }
+
+/* line 199, ../scss/kos_styles.scss */
+div.ctools-modal-content .modal-content {
+  overflow-x: hidden !important; }
+
+/* line 206, ../scss/kos_styles.scss */
+.flexslider .flex-control-nav {
+  position: absolute;
+  bottom: 0;
+  right: 4%;
+  width: auto; }
+
+/* line 213, ../scss/kos_styles.scss */
+.flexslider .flex-control-nav .flex-active {
+  background-color: #FFFFFF !important; }
+
+/* line 217, ../scss/kos_styles.scss */
+.flexslider .flex-pauseplay {
+  bottom: 5px;
+  font-size: 12px;
+  position: absolute;
+  right: 3.8%; }
+
+/* line 224, ../scss/kos_styles.scss */
+.flexslider .flex-pauseplay a, .flexslider .flex-pauseplay a.flex-pause, .flexslider .flex-pauseplay a.flex-play {
+  background: none !important;
+  left: 100%;
+  height: 20px;
+  padding: 0;
+  text-align: center;
+  width: 13px; }
+
+/* line 233, ../scss/kos_styles.scss */
+.flexslider .flex-pauseplay a:before, .flexslider .flex-pauseplay a.flex-pause:before, .flexslider .flex-pauseplay a.flex-play:before {
+  background: none !important;
+  color: inherit !important; }
+
+/* line 238, ../scss/kos_styles.scss */
+.flex-pauseplay a:before {
+  font-size: 17px; }
+
+/* line 244, ../scss/kos_styles.scss */
+.node-type-section-page .sec.sec-content .reg-inner-regions,
+.node-type-section-page .sec.sec-content .panel-pane {
+  padding: 0 !important; }
+
+/* line 248, ../scss/kos_styles.scss */
+.bl-tags li, .bl-tags .field-item {
+  display: inline-block !important; }
+
+/* line 252, ../scss/kos_styles.scss */
+.bl-tags li:before, .bl-tags .field-item:before {
+  border-left: none !important;
+  content: " " !important;
+  margin: 0 0.5em 0 0;
+  padding: 0;
+  width: 1px; }
+
+/* line 259, ../scss/kos_styles.scss */
+.bl-tags li:after, .bl-tags .field-item:after {
+  content: "," !important;
+  margin: 0 0.5em 0 0;
+  padding: 0;
+  width: 1px; }
+
+/* line 265, ../scss/kos_styles.scss */
+.bl-tags li.last:after {
+  content: "" !important; }
+
+/* line 272, ../scss/kos_styles.scss */
+.node-school-event a:hover {
+  text-decoration: underline; }
+/* line 276, ../scss/kos_styles.scss */
+.node-school-event .content-all {
+  -webkit-box-shadow: 3px 3px 0 rgba(68, 68, 68, 0.15), 0px 0px 1px rgba(68, 68, 68, 0.15);
+  -moz-box-shadow: 3px 3px 0 rgba(68, 68, 68, 0.15), 0px 0px 1px rgba(68, 68, 68, 0.15);
+  box-shadow: 3px 3px 0 rgba(68, 68, 68, 0.15), 0px 0px 1px rgba(68, 68, 68, 0.15);
+  border: 1px solid #ebebeb;
+  margin-bottom: 3%; }
+  /* line 280, ../scss/kos_styles.scss */
+  .node-school-event .content-all .content-left {
+    border-right: 1px solid #ebebeb; }
+    /* line 283, ../scss/kos_styles.scss */
+    .node-school-event .content-all .content-left .bl-tags li {
+      display: inline !important; }
+    /* line 286, ../scss/kos_styles.scss */
+    .node-school-event .content-all .content-left .inside {
+      margin-left: 0.8em; }
+      /* line 288, ../scss/kos_styles.scss */
+      .node-school-event .content-all .content-left .inside .ic-tag:before {
+        content: ""; }
+      /* line 293, ../scss/kos_styles.scss */
+      .node-school-event .content-all .content-left .inside .pane-node-terms .pane-title,
+      .node-school-event .content-all .content-left .inside .pane-node-terms .links {
+        display: inline;
+        font-style: normal;
+        font-weight: normal;
+        font-family: "Gill Sans W01";
+        font-size: 1em; }
+      /* line 300, ../scss/kos_styles.scss */
+      .node-school-event .content-all .content-left .inside .pane-node-terms .pane-title {
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 0.85em;
+        color: #626262; }
+        /* line 218, ../scss/mixins/_kk.mixin.style.scss */
+        .lt-ie9 .node-school-event .content-all .content-left .inside .pane-node-terms .pane-title {
+          font-family: "Gill Sans W01_n7", "Gill Sans", serif;
+          font-weight: normal; }
+        /* line 306, ../scss/kos_styles.scss */
+        .node-school-event .content-all .content-left .inside .pane-node-terms .pane-title:after {
+          content: ":"; }
+  /* line 313, ../scss/kos_styles.scss */
+  .node-school-event .content-all .content-right {
+    border-left: 1px solid #ebebeb;
+    margin-left: -1px;
+    padding-right: 0.8%;
+    overflow: hidden; }
+    /* line 318, ../scss/kos_styles.scss */
+    .node-school-event .content-all .content-right .inside {
+      margin: 0.9em 0 0 0.8em; }
+      /* line 321, ../scss/kos_styles.scss */
+      .node-school-event .content-all .content-right .inside .ic-tag:before {
+        content: ""; }
+      /* line 326, ../scss/kos_styles.scss */
+      .node-school-event .content-all .content-right .inside .block-node-terms .title {
+        font-weight: bold;
+        font-size: 0.73em;
+        text-transform: uppercase;
+        color: #626262;
+        font-family: "Gill Sans W01"; }
+        /* line 218, ../scss/mixins/_kk.mixin.style.scss */
+        .lt-ie9 .node-school-event .content-all .content-right .inside .block-node-terms .title {
+          font-family: "Gill Sans W01_n7", "Gill Sans", serif;
+          font-weight: normal; }
+        /* line 333, ../scss/kos_styles.scss */
+        .node-school-event .content-all .content-right .inside .block-node-terms .title:after {
+          content: ":"; }
+      /* line 337, ../scss/kos_styles.scss */
+      .node-school-event .content-all .content-right .inside .block-node-terms .links {
+        position: relative;
+        font-weight: normal;
+        display: block;
+        left: 18.5%;
+        margin-top: -7%;
+        font-family: "Gill Sans W01";
+        font-size: 0.85em; }
+      /* line 349, ../scss/kos_styles.scss */
+      .node-school-event .content-all .content-right .inside .block-entity-field .field-type-text,
+      .node-school-event .content-all .content-right .inside .block-entity-field .field-type-datetime span {
+        font-family: "Gill Sans W01" !important;
+        font-size: 0.85em !important; }
+      /* line 353, ../scss/kos_styles.scss */
+      .node-school-event .content-all .content-right .inside .block-entity-field .title:after {
+        content: ":"; }
+      /* line 356, ../scss/kos_styles.scss */
+      .node-school-event .content-all .content-right .inside .block-entity-field .title {
+        font-family: "Gill Sans W01";
+        font-weight: bold;
+        float: left;
+        margin-right: 5%; }
+        /* line 218, ../scss/mixins/_kk.mixin.style.scss */
+        .lt-ie9 .node-school-event .content-all .content-right .inside .block-entity-field .title {
+          font-family: "Gill Sans W01_n7", "Gill Sans", serif;
+          font-weight: normal; }
+      /* line 366, ../scss/kos_styles.scss */
+      .node-school-event .content-all .content-right .inside .block-entity-field .field-type-datetime,
+      .node-school-event .content-all .content-right .inside .block-entity-field .field-name-field-school-event-place,
+      .node-school-event .content-all .content-right .inside .block-entity-field .field-name-field-school-event-price,
+      .node-school-event .content-all .content-right .inside .block-entity-field .field-type-link-field {
+        margin-left: 18.5%; }
+      /* line 369, ../scss/kos_styles.scss */
+      .node-school-event .content-all .content-right .inside .block-entity-field .field-name-field-school-event-place {
+        font-size: 0.85em; }
+      /* line 372, ../scss/kos_styles.scss */
+      .node-school-event .content-all .content-right .inside .block-entity-field .field-type-link-field {
+        font-size: 0.85em;
+        font-family: "Gill Sans W01";
+        margin-left: 18.5%;
+        padding-bottom: 1em; }
+  /* line 382, ../scss/kos_styles.scss */
+  .node-school-event .content-all .entity-field-taxonomy,
+  .node-school-event .content-all .entity-field-taxonomy div {
+    display: inline; }
+  /* line 385, ../scss/kos_styles.scss */
+  .node-school-event .content-all .entity-field-taxonomy {
+    padding: 3px; }
+  /* line 389, ../scss/kos_styles.scss */
+  .node-school-event .content-all .field-type-taxonomy-term-reference a {
+    font-size: 1em; }
+  /* line 392, ../scss/kos_styles.scss */
+  .node-school-event .content-all .entity-field-taxonomy div {
+    font-weight: normal;
+    font-style: normal; }
+    /* line 395, ../scss/kos_styles.scss */
+    .node-school-event .content-all .entity-field-taxonomy div:after {
+      content: ","; }
+    /* line 398, ../scss/kos_styles.scss */
+    .node-school-event .content-all .entity-field-taxonomy div:last-child:after {
+      content: ""; }
+@media (min-width: 480px) and (max-width: 767px) {
+  /* line 249, ../scss/mixins/_kk.mixin.style.scss */
+  .node-school-event .panels_school_content_type .wrapper-layout .content-wrap {
+    width: 100%; }
+  /* line 252, ../scss/mixins/_kk.mixin.style.scss */
+  .node-school-event .panels_school_content_type .wrapper-layout .reg-sidebar {
+    float: none;
+    padding: 0;
+    width: 100%; } }
+@media (max-width: 479px) {
+  /* line 249, ../scss/mixins/_kk.mixin.style.scss */
+  .node-school-event .panels_school_content_type .wrapper-layout .content-wrap {
+    width: 100%; }
+  /* line 252, ../scss/mixins/_kk.mixin.style.scss */
+  .node-school-event .panels_school_content_type .wrapper-layout .reg-sidebar {
+    float: none;
+    padding: 0;
+    width: 100%; }
+  /* line 408, ../scss/kos_styles.scss */
+  .node-school-event .content-right .inside .block-node-terms .links li {
+    margin-left: 20.5%;
+    margin-top: -20%; } }
+/* line 414, ../scss/kos_styles.scss */
+.node-school-event .reg-sidebar {
+  padding: 0 2em; }
+  /* line 416, ../scss/kos_styles.scss */
+  .node-school-event .reg-sidebar .pane-title {
+    font-size: 1.5em;
+    font-family: "Gill Sans W01";
+    margin-bottom: 14px; }
+  /* line 422, ../scss/kos_styles.scss */
+  .node-school-event .reg-sidebar .view-content .views-row {
+    margin-bottom: 7px;
+    font-size: 0.9em; }
+    /* line 425, ../scss/kos_styles.scss */
+    .node-school-event .reg-sidebar .view-content .views-row .field-content a {
+      font-family: "Gill Sans W01"; }
+
+/* line 443, ../scss/kos_styles.scss */
+.page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-image {
+  width: 18.36735%;
+  float: left;
+  margin-right: 2.04082%;
+  display: inline; }
+/* line 446, ../scss/kos_styles.scss */
+.page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .content {
+  width: 28.57143%;
+  float: left;
+  margin-right: 2.04082%;
+  display: inline;
+  overflow: hidden;
+  position: relative; }
+  /* line 450, ../scss/kos_styles.scss */
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .content .title {
+    max-height: 48px;
+    overflow: hidden; }
+  /* line 454, ../scss/kos_styles.scss */
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .content .search-snippet {
+    max-height: 97px;
+    font-size: 15px;
+    line-height: 19px; }
+/* line 461, ../scss/kos_styles.scss */
+.page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-left {
+  width: 28.57143%;
+  float: left;
+  margin-right: 2.04082%;
+  display: inline; }
+/* line 465, ../scss/kos_styles.scss */
+.page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-categories .field-item {
+  display: inline-block;
+  padding: 0 0.14444em;
+  word-break: break-all;
+  font-size: 14px; }
+  /* line 470, ../scss/kos_styles.scss */
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-categories .field-item:after {
+    content: ","; }
+  /* line 473, ../scss/kos_styles.scss */
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-categories .field-item:last-child:after {
+    content: ""; }
+/* line 478, ../scss/kos_styles.scss */
+.page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right {
+  width: 18.36735%;
+  float: left;
+  margin-right: 2.04082%;
+  display: inline;
+  float: right;
+  margin-right: 0;
+  *margin-left: -1em;
+  display: inline; }
+  /* line 483, ../scss/kos_styles.scss */
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .date,
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .price,
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .icon-link {
+    font-size: 14px;
+    display: block;
+    margin-bottom: 3%;
+    font-style: normal; }
+  /* line 490, ../scss/kos_styles.scss */
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .date,
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .price {
+    position: relative; }
+  /* line 493, ../scss/kos_styles.scss */
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .end-date {
+    margin-left: 12%;
+    display: block; }
+  /* line 497, ../scss/kos_styles.scss */
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .begin-date {
+    display: block;
+    margin-left: 12%;
+    margin-top: -1.6em; }
+  /* line 502, ../scss/kos_styles.scss */
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .price-text {
+    display: block;
+    line-height: 1.3em;
+    margin-left: 23px;
+    margin-top: -8%;
+    position: relative; }
+  /* line 512, ../scss/kos_styles.scss */
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .begin-date,
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .price-text,
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .end-date,
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .link-search {
+    font-family: "Gill Sans W01","Gill Sans",serif; }
+@media (max-width: 767px) {
+  /* line 519, ../scss/kos_styles.scss */
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-image,
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right {
+    width: 65.51724%;
+    float: left;
+    margin-right: 3.44828%; }
+    /* line 523, ../scss/kos_styles.scss */
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-image .end-date,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-image .begin-date,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .end-date,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .begin-date {
+      display: inline-block;
+      margin: 0; }
+    /* line 527, ../scss/kos_styles.scss */
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-image .end-date,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .end-date {
+      margin-left: 8%; }
+    /* line 530, ../scss/kos_styles.scss */
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-image .price-text,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .price-text {
+      margin-left: 8%;
+      margin-top: -3%; }
+  /* line 536, ../scss/kos_styles.scss */
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .content,
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-left {
+    width: 100%;
+    float: left;
+    margin-right: 3.44828%;
+    margin: 2% 0; }
+  /* line 541, ../scss/kos_styles.scss */
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .content,
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-left {
+    float: right;
+    margin-right: 0; } }
+@media (max-width: 479px) {
+  /* line 549, ../scss/kos_styles.scss */
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-image,
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right,
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .content,
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-left {
+    width: 100%;
+    float: left;
+    margin-right: 2.04082%;
+    margin-top: 14px;
+    float: right;
+    margin-right: 0; }
+    /* line 555, ../scss/kos_styles.scss */
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-image .end-date,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-image .begin-date,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .end-date,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .begin-date,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .content .end-date,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .content .begin-date,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-left .end-date,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-left .begin-date {
+      margin-left: 0%;
+      font-family: "Gill Sans W01","Gill Sans",serif; }
+    /* line 560, ../scss/kos_styles.scss */
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-image .end-date,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-image .price-text,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .end-date,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .price-text,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .content .end-date,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .content .price-text,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-left .end-date,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-left .price-text {
+      margin-left: 10%; }
+    /* line 563, ../scss/kos_styles.scss */
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-image .price-text,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-right .price-text,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .content .price-text,
+    .page-search-events .sec-inner .apachesolr_search-results .search-result .search-snippet-info .search-fields-events-left .price-text {
+      margin-top: -5%; } }
+
+/* line 577, ../scss/kos_styles.scss */
+.apachesolr-browse-blocks .block-facetapi,
+.sec-inner .block-facetapi {
+  display: inline-block;
+  float: left;
+  margin: 2% 2% 2% 0;
+  width: 23%; }
+
+@media (min-width: 480px) and (max-width: 767px) {
+  /* line 585, ../scss/kos_styles.scss */
+  .sec-inner .block-facetapi {
+    width: 100%;
+    float: left;
+    margin-right: 3.44828%; }
+
+  /* line 588, ../scss/kos_styles.scss */
+  .sec-inner .block-facetapi {
+    float: right;
+    margin-right: 0; } }
+@media (max-width: 479px) {
+  /* line 594, ../scss/kos_styles.scss */
+  .sec-inner .block-facetapi {
+    float: none;
+    width: 100%; } }
+/* line 606, ../scss/kos_styles.scss */
+.page-search-site .sec-inner .date {
+  display: none;
+  font-family: "Gill Sans W01","Gill Sans",serif; }
+/* line 610, ../scss/kos_styles.scss */
+.page-search-site .sec-inner .icon-link {
+  margin-top: 1em;
+  display: block;
+  font-size: 14px;
+  font-style: normal; }
+  /* line 615, ../scss/kos_styles.scss */
+  .page-search-site .sec-inner .icon-link:before {
+    padding-right: 1%; }
+  /* line 618, ../scss/kos_styles.scss */
+  .page-search-site .sec-inner .icon-link .link-search {
+    font-family: "Gill Sans W01","Gill Sans",serif; }
+
+/* line 627, ../scss/kos_styles.scss */
+.events-banner-pane {
+  position: relative; }
+  /* line 629, ../scss/kos_styles.scss */
+  .events-banner-pane .flexslider .slides img {
+    max-height: 350px; }
+
+/* line 635, ../scss/kos_styles.scss */
+.banner-pane-search-form {
+  width: 40%;
+  min-height: 200px;
+  position: absolute;
+  overflow: hidden;
+  bottom: 13%;
+  left: 5.5%;
+  z-index: 100; }
+  /* line 643, ../scss/kos_styles.scss */
+  .banner-pane-search-form .events-form-title {
+    display: block;
+    min-height: 50px; }
+    /* line 646, ../scss/kos_styles.scss */
+    .banner-pane-search-form .events-form-title .events-search-title {
+      text-transform: uppercase;
+      font-family: "Gill Sans W01";
+      font-weight: bold;
+      margin: 2% 0 0 2.5%; }
+    /* line 652, ../scss/kos_styles.scss */
+    .banner-pane-search-form .events-form-title .events-search-subtitle {
+      margin-left: 2.5%; }
+  /* line 656, ../scss/kos_styles.scss */
+  .banner-pane-search-form .form-item-keyword {
+    position: relative;
+    width: 95%;
+    margin: 2% auto 0; }
+    /* line 660, ../scss/kos_styles.scss */
+    .banner-pane-search-form .form-item-keyword label {
+      display: none; }
+    /* line 663, ../scss/kos_styles.scss */
+    .banner-pane-search-form .form-item-keyword input {
+      max-height: 34px;
+      padding: 1.6%; }
+    /* line 667, ../scss/kos_styles.scss */
+    .banner-pane-search-form .form-item-keyword .magnifier {
+      background-color: rgba(0, 0, 0, 0);
+      background-image: url("/sites/all/themes/kos_theme/images/icon-search.png");
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: 21px 21px;
+      height: 21px;
+      margin: 0;
+      position: absolute;
+      right: 8px;
+      top: 6px;
+      text-indent: -9999px;
+      width: 21px; }
+  /* line 682, ../scss/kos_styles.scss */
+  .banner-pane-search-form .form-type-select {
+    margin: 4% 0% 5% 0%;
+    min-height: 114px;
+    width: 46%; }
+    /* line 686, ../scss/kos_styles.scss */
+    .banner-pane-search-form .form-type-select .form-select {
+      width: 100%;
+      padding: 6px 0; }
+  /* line 691, ../scss/kos_styles.scss */
+  .banner-pane-search-form .form-item-category {
+    float: right;
+    margin-right: 2.5%; }
+  /* line 695, ../scss/kos_styles.scss */
+  .banner-pane-search-form .form-item-subject {
+    float: left;
+    margin-left: 2.5%; }
+  /* line 699, ../scss/kos_styles.scss */
+  .banner-pane-search-form #kos-search-frontpage-events-search-form {
+    position: relative; }
+    /* line 701, ../scss/kos_styles.scss */
+    .banner-pane-search-form #kos-search-frontpage-events-search-form .arrow-box {
+      overflow: hidden;
+      position: absolute;
+      right: 0;
+      bottom: -131px; }
+      /* line 706, ../scss/kos_styles.scss */
+      .banner-pane-search-form #kos-search-frontpage-events-search-form .arrow-box .form-submit {
+        padding: 0.5625em 2.5em 0.3625em 1.4em;
+        position: relative;
+        right: 2%; }
+      /* line 711, ../scss/kos_styles.scss */
+      .banner-pane-search-form #kos-search-frontpage-events-search-form .arrow-box .ic-arrow-right {
+        bottom: 12%;
+        color: #FFFFFF;
+        font-size: 13px;
+        overflow: hidden;
+        position: absolute;
+        right: 23%; }
+        /* line 719, ../scss/kos_styles.scss */
+        .banner-pane-search-form #kos-search-frontpage-events-search-form .arrow-box .ic-arrow-right:hover:before, .banner-pane-search-form #kos-search-frontpage-events-search-form .arrow-box .ic-arrow-right:before {
+          color: #fff; }
+  @media (min-width: 480px) and (max-width: 767px) {
+    /* line 635, ../scss/kos_styles.scss */
+    .banner-pane-search-form {
+      position: relative;
+      width: 100%;
+      left: 0%; }
+      /* line 731, ../scss/kos_styles.scss */
+      .banner-pane-search-form #kos-search-frontpage-events-search-form .arrow-box {
+        position: absolute;
+        right: 1%;
+        bottom: -155px; } }
+  @media (max-width: 479px) {
+    /* line 635, ../scss/kos_styles.scss */
+    .banner-pane-search-form {
+      position: relative;
+      width: 100%;
+      left: 0%; }
+      /* line 743, ../scss/kos_styles.scss */
+      .banner-pane-search-form #kos-search-frontpage-events-search-form .arrow-box {
+        position: absolute;
+        right: 0%;
+        bottom: -135px; } }
+
+/* line 752, ../scss/kos_styles.scss */
+.view-school-events-list {
+  padding-left: 0;
+  padding-right: 0; }
+  /* line 756, ../scss/kos_styles.scss */
+  .view-school-events-list .view-header {
+    padding-top: 2em;
+    color: #4a4a4a; }
+    /* line 759, ../scss/kos_styles.scss */
+    .view-school-events-list .view-header a {
+      color: #b3b3b3 !important; }
+  /* line 763, ../scss/kos_styles.scss */
+  .view-school-events-list .view-content .views-row {
+    padding: 0 0 1em 0;
+    border: #ebebeb 1px solid;
+    margin-bottom: 1.8em;
+    font-family: "Gill Sans W01","Gill Sans",serif; }
+    /* line 768, ../scss/kos_styles.scss */
+    .view-school-events-list .view-content .views-row .field-name-field-image {
+      margin-bottom: 0.6em; }
+      /* line 770, ../scss/kos_styles.scss */
+      .view-school-events-list .view-content .views-row .field-name-field-image img {
+        width: 100%; }
+    /* line 778, ../scss/kos_styles.scss */
+    .view-school-events-list .view-content .views-row .views-field-title,
+    .view-school-events-list .view-content .views-row .field-name-field-teaser,
+    .view-school-events-list .view-content .views-row .field-name-field-school-event-price,
+    .view-school-events-list .view-content .views-row .views-field,
+    .view-school-events-list .view-content .views-row .school-event-link {
+      margin-bottom: 0.5em;
+      padding: 0 7%;
+      font-family: "Gill Sans W01","Gill Sans",serif; }
+    /* line 783, ../scss/kos_styles.scss */
+    .view-school-events-list .view-content .views-row .views-field .field-content a {
+      font-size: 0.75em; }
+      /* line 785, ../scss/kos_styles.scss */
+      .view-school-events-list .view-content .views-row .views-field .field-content a:hover {
+        text-decoration: underline; }
+    /* line 789, ../scss/kos_styles.scss */
+    .view-school-events-list .view-content .views-row .views-field-title .field-content a {
+      color: #545454;
+      font-size: 1em; }
+    /* line 793, ../scss/kos_styles.scss */
+    .view-school-events-list .view-content .views-row .field-name-field-teaser {
+      color: #535353;
+      font-size: 1em; }
+    /* line 797, ../scss/kos_styles.scss */
+    .view-school-events-list .view-content .views-row .field-type-datetime {
+      font-size: 0.7em;
+      color: #939393;
+      padding: 0 7%;
+      text-transform: uppercase; }
+    /* line 804, ../scss/kos_styles.scss */
+    .view-school-events-list .view-content .views-row .views-label,
+    .view-school-events-list .view-content .views-row .field-name-field-school-event-price {
+      color: #939393;
+      font-size: 0.8em;
+      font-weight: bold; }
+    /* line 810, ../scss/kos_styles.scss */
+    .view-school-events-list .view-content .views-row .field-content,
+    .view-school-events-list .view-content .views-row .field-name-field-school-event-price {
+      display: inline; }
+      /* line 812, ../scss/kos_styles.scss */
+      .view-school-events-list .view-content .views-row .field-content a,
+      .view-school-events-list .view-content .views-row .field-name-field-school-event-price a {
+        color: #939393; }
+    /* line 816, ../scss/kos_styles.scss */
+    .view-school-events-list .view-content .views-row .school-event-link a {
+      color: #F15E4A;
+      margin-top: 1.35em;
+      display: block;
+      font-size: 0.8em;
+      font-family: "Gill Sans W01","Gill Sans",serif;
+      font-weight: bold; }
+
+/* line 828, ../scss/kos_styles.scss */
+.panel-col-top .pane-bundle-banner-event-form-pane {
+  max-width: 59em !important;
+  margin: 0 auto; }
+
+/* line 832, ../scss/kos_styles.scss */
+.center-wrapper {
+  max-width: 59em;
+  margin: 0 auto; }
+  /* line 835, ../scss/kos_styles.scss */
+  .center-wrapper .panel-panel {
+    width: 31% !important; }
+    /* line 837, ../scss/kos_styles.scss */
+    .center-wrapper .panel-panel .inside {
+      margin: 0; }
+  /* line 841, ../scss/kos_styles.scss */
+  .center-wrapper .panel-col {
+    margin: 0% 3.5%; }
+  /* line 846, ../scss/kos_styles.scss */
+  .center-wrapper .panel-col-first,
+  .center-wrapper .panel-col,
+  .center-wrapper .panel-col-last {
+    position: relative;
+    display: block; }
+    /* line 850, ../scss/kos_styles.scss */
+    .center-wrapper .panel-col-first .pane-title,
+    .center-wrapper .panel-col .pane-title,
+    .center-wrapper .panel-col-last .pane-title {
+      position: absolute;
+      top: 13%;
+      left: 10%;
+      text-transform: uppercase;
+      color: #fff;
+      line-height: 22px;
+      font-size: 1em;
+      max-height: 22px;
+      overflow: hidden;
+      z-index: 100;
+      display: block; }
+    /* line 863, ../scss/kos_styles.scss */
+    .center-wrapper .panel-col-first .description,
+    .center-wrapper .panel-col .description,
+    .center-wrapper .panel-col-last .description {
+      top: 24%;
+      left: 5%;
+      line-height: 22px;
+      max-height: 55px;
+      opacity: 0.8;
+      overflow: hidden;
+      padding: 2% 5%;
+      position: absolute;
+      width: 100%;
+      z-index: 100;
+      color: red; }
+      /* line 876, ../scss/kos_styles.scss */
+      .center-wrapper .panel-col-first .description .title,
+      .center-wrapper .panel-col .description .title,
+      .center-wrapper .panel-col-last .description .title {
+        display: block;
+        height: 48px;
+        overflow: hidden;
+        position: relative;
+        width: 75%;
+        color: #fff; }
+    /* line 885, ../scss/kos_styles.scss */
+    .center-wrapper .panel-col-first a,
+    .center-wrapper .panel-col a,
+    .center-wrapper .panel-col-last a {
+      position: relative;
+      overflow: hidden;
+      color: #fff; }
+      /* line 889, ../scss/kos_styles.scss */
+      .center-wrapper .panel-col-first a img,
+      .center-wrapper .panel-col a img,
+      .center-wrapper .panel-col-last a img {
+        z-index: 10;
+        width: 100%;
+        -webkit-box-shadow: 3px 3px 0 rgba(68, 68, 68, 0.15), 0px 0px 1px rgba(68, 68, 68, 0.15);
+        -moz-box-shadow: 3px 3px 0 rgba(68, 68, 68, 0.15), 0px 0px 1px rgba(68, 68, 68, 0.15);
+        box-shadow: 3px 3px 0 rgba(68, 68, 68, 0.15), 0px 0px 1px rgba(68, 68, 68, 0.15);
+        border: #ebebeb 1px solid; }
+  @media (max-width: 479px) {
+    /* line 902, ../scss/kos_styles.scss */
+    .center-wrapper .panel-col-first,
+    .center-wrapper .panel-col,
+    .center-wrapper .panel-col-last {
+      float: none;
+      width: 100% !important;
+      margin-bottom: 4%;
+      margin-left: 0; } }
+
+/* line 918, ../scss/kos_styles.scss */
+.reg-middle-3-col .events-banner-pane,
+.reg-middle-3-col .pane-bundle-events-gallery-pane {
+  margin: 0%;
+  overflow: hidden;
+  position: relative;
+  display: block;
+  -webkit-box-shadow: 3px 3px 0 rgba(68, 68, 68, 0.15), 0px 0px 1px rgba(68, 68, 68, 0.15);
+  -moz-box-shadow: 3px 3px 0 rgba(68, 68, 68, 0.15), 0px 0px 1px rgba(68, 68, 68, 0.15);
+  box-shadow: 3px 3px 0 rgba(68, 68, 68, 0.15), 0px 0px 1px rgba(68, 68, 68, 0.15);
+  border: 1px solid #ebebeb; }
+  /* line 926, ../scss/kos_styles.scss */
+  .reg-middle-3-col .events-banner-pane .pane-title,
+  .reg-middle-3-col .pane-bundle-events-gallery-pane .pane-title {
+    position: absolute;
+    top: 13%;
+    left: 10%;
+    text-transform: uppercase;
+    color: #fff;
+    line-height: 22px;
+    font-size: 1em;
+    max-height: 22px;
+    overflow: hidden;
+    z-index: 100;
+    display: block; }
+  /* line 939, ../scss/kos_styles.scss */
+  .reg-middle-3-col .events-banner-pane .description,
+  .reg-middle-3-col .pane-bundle-events-gallery-pane .description {
+    top: 24%;
+    left: 5%;
+    line-height: 22px;
+    max-height: 55px;
+    opacity: 0.8;
+    overflow: hidden;
+    padding: 2% 5%;
+    position: absolute;
+    width: 100%;
+    z-index: 100;
+    color: red; }
+    /* line 952, ../scss/kos_styles.scss */
+    .reg-middle-3-col .events-banner-pane .description .title,
+    .reg-middle-3-col .pane-bundle-events-gallery-pane .description .title {
+      display: block;
+      height: 48px;
+      overflow: hidden;
+      position: relative;
+      width: 75%;
+      color: #fff; }
+  /* line 961, ../scss/kos_styles.scss */
+  .reg-middle-3-col .events-banner-pane a,
+  .reg-middle-3-col .pane-bundle-events-gallery-pane a {
+    position: relative;
+    overflow: hidden;
+    color: #fff; }
+  /* line 966, ../scss/kos_styles.scss */
+  .reg-middle-3-col .events-banner-pane img,
+  .reg-middle-3-col .pane-bundle-events-gallery-pane img {
+    z-index: 10;
+    width: 100%; }
+
+@media (max-width: 479px) {
+  /* line 976, ../scss/kos_styles.scss */
+  .flexslider .flex-control-nav {
+    right: 11%; }
+  /* line 981, ../scss/kos_styles.scss */
+  .flexslider .flex-pauseplay a,
+  .flexslider .flex-pauseplay a.flex-pause,
+  .flexslider .flex-pauseplay a.flex-play {
+    left: 94%; } }
+/* line 990, ../scss/kos_styles.scss */
+.fieldset-wrapper .sticky-enabled .field-label {
+  float: left; }
+/* line 994, ../scss/kos_styles.scss */
+.fieldset-wrapper .media-thumbnail .media-filename {
+  position: relative;
+  top: 6px; }
+/* line 999, ../scss/kos_styles.scss */
+.fieldset-wrapper .launcher {
+  margin-right: 1em; }
+/* line 1002, ../scss/kos_styles.scss */
+.fieldset-wrapper a.tabledrag-handle .handle {
+  height: 24px; }
+/* line 1005, ../scss/kos_styles.scss */
+.fieldset-wrapper .description {
+  margin: 1em 0; }
+
+/* line 1011, ../scss/kos_styles.scss */
+.views-table {
+  margin-top: 2em;
+  border: 1px solid #ccc;
+  position: relative; }
+  /* line 1015, ../scss/kos_styles.scss */
+  .views-table th {
+    text-align: left;
+    font-size: 1em;
+    border-bottom: 1px solid #ccc;
+    font-weight: bold; }
+  /* line 1024, ../scss/kos_styles.scss */
+  .views-table .views-field-title,
+  .views-table .views-field-created,
+  .views-table .views-field-status,
+  .views-table .views-field-edit-node {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #ccc; }
+  /* line 1029, ../scss/kos_styles.scss */
+  .views-table .views-field-title {
+    width: 50%;
+    padding-left: 20px; }
+  /* line 1033, ../scss/kos_styles.scss */
+  .views-table .views-field-created {
+    width: 32%;
+    position: relative; }
+    /* line 1036, ../scss/kos_styles.scss */
+    .views-table .views-field-created img {
+      position: absolute;
+      right: 409px;
+      top: 5px; }
+  /* line 1044, ../scss/kos_styles.scss */
+  .views-table .views-field-status,
+  .views-table .views-field-edit-node,
+  .views-table .views-field-created {
+    text-align: center; }
+  /* line 1047, ../scss/kos_styles.scss */
+  .views-table .views-field-status {
+    width: 20%; }
+
+/* line 1055, ../scss/kos_styles.scss */
+.form-item-retain-filters {
+  display: block !important; }
+
+/* line 1059, ../scss/kos_styles.scss */
+.bl-footer.block-menu {
+  margin-bottom: 5em; }

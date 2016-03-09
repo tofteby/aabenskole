@@ -1,0 +1,10 @@
+name = KOS Configuration Image Styles
+core = 7.x
+package = Configuration
+dependencies[] = image
+features[features_api][] = api:2
+features[image][] = event_gallery_pane
+features[image][] = flexslider_home_page
+features[image][] = flexslider_kos
+features[image][] = school_event_node_view
+features[image][] = search_page

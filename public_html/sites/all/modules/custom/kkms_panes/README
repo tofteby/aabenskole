@@ -1,0 +1,2 @@
+Custom module to handle all panes-related customisation.
+Basic usage is to define the custom fieladable panes bundles that will be used within the project.

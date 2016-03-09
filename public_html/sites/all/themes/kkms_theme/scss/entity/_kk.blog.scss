@@ -1,0 +1,163 @@
+/**
+ * Styling of blog content type.
+ *
+ * TODO:
+ * - Adding custom classes to some of the fields will produce better CSS.
+ */
+
+.blog-list-wrapper .view-header{
+  @extend %text-label;
+  text-transform: uppercase;
+  margin-bottom: em(48,13);
+}
+
+/** TODO: If all the pagers are placed in center, this can be moved to _kk.pager.scss */
+.blog-list-wrapper {
+  > .item-list{
+    width: 100%;
+    .pager{
+      display: table;
+      margin: 0 auto;
+      width: -webkit-fit-content;
+      width: -moz-fit-content;
+      width: fit-content;
+    }
+  }
+}
+
+.blog-list-wrapper .views-row {
+
+  border: $col-gray-25 1px solid;
+  margin-bottom: em(34,18);
+  @include add-shadow;
+
+  /** TODO: Add a custom class to the list of tags. */
+  .views-field-term-node-tid{
+    clear: both;
+    margin-left: em(38,15);
+    margin-right: em(38,15);
+    margin-bottom: em(30,15);
+  }
+
+  .views-field-title{
+    border-bottom: $col-gray-25 1px solid;
+    padding: em(38,18) em(34,18) em(30,18) em(34,18);
+    margin-bottom: em(22,18);
+    clear: both;
+    a{
+      @extend %title-page;
+    }
+  }
+
+  /* Read more link */
+  .views-field-view-node{
+    clear:both;
+    background-color: $col-primary;
+    margin: 0 em(34,18) em(24,18) em(34,18);
+    clear: both;
+    display: table;
+    .field-content{
+      display: block;
+      a{
+        display: block;
+        padding: em(12,18) em(20,18);
+        color: $col-content;
+        text-transform: uppercase;
+        &:after{
+          @extend %icon;
+          @extend .ic-arrow-right:before;
+          padding-left: 1em;
+          display: inline-block;
+          vertical-align: middle;
+          margin-top: -.2em;
+        }
+        &:hover{
+          background-color: $col-button-hover;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .bl-img,
+  .tx-content{
+    margin: em(24,18) em(34,18);
+    clear: both;
+  }
+
+  .tx-teaser{
+    margin: em(24,24) em(34,24);
+    clear: both;
+  }
+
+  .created,
+  .name,
+  .comment-count{
+    margin-bottom: 0;
+    margin-left: em(38,15);
+  }
+  
+  .comment-count{
+    margin-bottom: em(24,18);
+  }
+
+  .comment-count .field-content{
+    color: $col-primary;
+    font-weight: bold;
+    font-style: italic;
+
+    @include ie8_font_fix('bi');
+  }
+  
+  @include at-breakpoint($mq-bp-tablet-plus) {
+    .created,
+    .name,
+    .comment-count{
+      float: left;
+      margin-right: em(-25,15);
+    }
+    .created .field-content,
+    .name .field-content{
+      border-right: $col-gray-25 1px solid;
+      color: $col-gray-70;
+      padding-right: em(14,18);
+    }
+    .comment-count{
+      margin-right: 0;
+    }
+  }
+}
+
+
+
+/**
+ * Full page view of blog.
+ */
+div.node-blog.node-full{
+
+  .reg-content{
+    clear: left;
+  }
+
+  .title-page{
+    margin-bottom: em(12,48);
+  }
+
+  .pane-node-created,
+  .pane-node-author,
+  .pane-node-comments-count{
+    @extend %byline;
+    float: left;
+  }
+
+  .pane-node-author,
+  .pane-node-comments-count{
+    border-left: $col-gray-25 1px solid;
+    padding-left: em(14,18);
+    margin-left: em(13,18);
+  }
+
+  .pane-node-comments{
+    clear: left;
+  }
+}

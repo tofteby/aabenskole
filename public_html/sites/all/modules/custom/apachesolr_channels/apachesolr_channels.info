@@ -1,0 +1,33 @@
+name = Apachesolr channels
+description = Channels management, solr integration and indexing adjustments.
+package = Propeople
+core = 7.x
+dependencies[] = "apachesolr_multisitesearch"
+dependencies[] = "apachesolr_views"
+dependencies[] = "kk_client_request"
+dependencies[] = "views_content"
+dependencies[] = "image"
+
+; Menu callbacks
+files[] = apachesolr_channels.views.inc
+files[] = apachesolr_channels.admin.inc
+files[] = apachesolr_channels.pages.inc
+; Filter handlers
+files[] = handlers/shared_term_views_handler_filter.inc
+files[] = handlers/local_term_views_handler_filter.inc
+files[] = handlers/this_site_views_handler_filter.inc
+files[] = handlers/owner_site_views_handler_filter.inc
+files[] = handlers/apachesolr_channels_bundle_filter.inc
+; Fields handlers
+files[] = handlers/shared_term_views_handler_field.inc
+files[] = handlers/apachesolr_channels_views_handler_field.inc
+files[] = handlers/apachesolr_channels_url_field.inc
+files[] = handlers/apachesolr_channels_html_field.inc
+files[] = handlers/apachesolr_channels_views_handler_field_date.inc
+files[] = handlers/apachesolr_channels_views_handler_field_language.inc
+files[] = handlers/apachesolr_channels_views_handler_field_site.inc
+; Display plugins
+files[] = plugins/apachesolr_channels_plugin_display_panel_pane.inc
+; Other
+files[] = includes/Channels.php
+files[] = includes/ChannelsNodeRegistry.php

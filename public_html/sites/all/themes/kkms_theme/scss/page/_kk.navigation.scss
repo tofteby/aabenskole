@@ -1,0 +1,202 @@
+.logo-page {
+  display: block;
+  float: left;
+  position: relative;
+  z-index: 1;
+  
+  @include at-breakpoint($mq-bp-tablet-minus) {
+    height: 45px;
+    
+    img {
+      height: 100%;
+    }
+  }
+}
+
+.mobile-trigger {
+  @include at-breakpoint($mq-bp-desktop) { 
+    display: none;
+  }
+  position: relative;
+  z-index: 1;
+  float: left;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  padding: $padding/4 0;
+  text-align: center;
+  font-size: $text-menu-icon;
+  cursor: pointer;
+  
+  &.active {
+    @extend [class^="ic-"]:hover;
+  }
+  &.not-active {
+    color: red;
+    margin-top: -1px;
+    padding-top: 1px;
+  }
+}
+
+.menu-main {
+  a {
+    @extend %title-footer;
+    @extend %main-menu-link;
+    display: block;
+    padding: em(5,16) $grid-padding;
+
+    &:hover,
+    &:active,
+    &.active,
+    &.active-trail {
+      background: $col-primary;
+      color: $col-content;
+    }
+  }
+  
+  @include at-breakpoint($mq-bp-desktop) { 
+    @include span-columns(17,24);
+    margin-left: -$grid-padding;
+    
+    li {
+      float: left;
+    }
+    
+    a {
+      display: inline-block;
+      padding: em(10,16) $grid-padding;
+    }
+  }
+  
+  @include at-breakpoint($mq-bp-tablet-minus) {
+    display: none;
+    padding: $padding 0;
+    
+    &.active {
+      display: block;
+      clear: both;
+    }
+  }
+}
+
+#search-block-form {
+  width: 100%;
+  position: relative;
+
+  .form-text {
+    @extend %title-footer;
+    @extend %main-menu-link;
+    line-height: 1em;
+    border: 1px solid $col-gray-10;
+    color: $col-gray-70;
+    font-size: 1em;
+    padding: 4px 40px 4px 8px;
+    margin: 0;
+    display: block;
+    width: 100%;
+  }
+
+  .form-actions{
+    position: absolute;
+    right: 8px;
+    top: 5px;
+    z-index: 100;
+    padding:0;
+    margin:0;
+
+    .form-submit {
+      background-image: url("#{$theme_path}/images/icon-search.png");
+      background-size: 21px 21px;
+      background-color: rgba(0, 0, 0, 0);
+      background-position: center;
+      background-repeat: no-repeat;
+      background-color: transparent;
+      border: 0 none;
+      @include border-radius(0);
+      margin: 0;
+      width: 21px;
+      height: 21px;
+      position: relative;
+      text-indent: -9999px;
+    }
+  }
+
+}
+
+.menu-serv-wrapper {
+  @extend .sec-inner;
+}
+.menu-serv-inner-wrapper {
+  float: right;
+}
+
+@include at-breakpoint($mq-bp-desktop) {
+  .menu-serv-outer-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+  }
+}
+
+.menu-serv {
+  float: left;
+  margin: 10px 0 0;
+  padding: 0;
+  font-size: $text-label;
+  text-transform: uppercase;
+  line-height: em(30,13);
+  background: $col-content;
+
+  a {
+    padding: 0 em(10,13);
+    @extend %link-grey;
+  }
+  
+  @include at-breakpoint($mq-bp-desktop) { 
+    padding: 0 em(20,13);
+    margin: 0 0 0 em(12,13);
+    
+    li {
+      display: inline-block;
+    }
+  }
+}
+
+@include at-breakpoint($mq-bp-tablet-minus) {
+  .change-language-wrapper {
+    position: absolute;
+    z-index: 103;
+    top: 0;
+    right: 0;
+  }
+  #block-locale-language {    
+    li {
+      display: none;
+      text-align: right;
+      width: 100px;
+      overflow: hidden;
+      
+      &.active {
+        display: block;
+      }
+    }
+    
+    &.change-language {
+      margin-top: 9px;
+      border: 1px solid $col-gray-70;
+      border-right: none;
+      display: block;
+      overflow: hidden;
+
+      li {
+        display: block;
+        width: 99px;
+        
+        a.active {
+          color: $col-primary;
+        }
+      }
+    }
+  }
+}

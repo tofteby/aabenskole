@@ -1,0 +1,6 @@
+name = Helper module for the workbench modules suite.
+description = Provides some tweaks to the workbench-related module.
+package = Workbench
+core = 7.x
+
+dependencies[] = workbench_media 

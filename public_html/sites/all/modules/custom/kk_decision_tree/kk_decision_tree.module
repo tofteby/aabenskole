@@ -1,0 +1,112 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function kk_decision_tree_menu() {
+
+  $items['kk-decision-tree/pane/ajax'] = array(
+    'title' => 'Pane ajax callback',
+    'page callback' => '_kk_decision_tree_pane_ajax',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+function _kk_decision_tree_pane_ajax() {
+  $data = array();
+
+  if (!isset($_GET['tree_url'])) {
+    return drupal_json_output($data);
+  }
+
+  $tree_url = trim(parse_url($_GET['tree_url'], PHP_URL_PATH), '/');
+  if (module_exists('locale')) {
+    // Sometimes this file will be require_once-d by the locale module before
+    // this point, and sometimes not. We require_once it ourselves to be sure.
+    require_once DRUPAL_ROOT . '/includes/language.inc';
+    list(, $tree_url) = language_url_split_prefix($tree_url, language_list());
+  }
+
+  list($type, $nid) = arg(NULL, drupal_get_normal_path($tree_url));
+  if ($type != 'node' || !is_numeric($nid)) {
+    return drupal_json_output($data);
+  }
+
+  $node = node_load($nid);
+  if (!$node || $node->status != NODE_PUBLISHED) {
+    return drupal_json_output($data);
+  }
+
+  $data['node_view'] = drupal_render(node_view($node, 'panels_pane'));
+
+  return drupal_json_output($data);
+}
+
+function dt_map_extra_field_node_type() {
+  // Decision tree = "Guide". Possible to add other content types as well.
+  // Possible to have hardcoded/configurable mapping, with falback to Content type Name.
+  $options = array('context' => 'Node content type for end-users');
+  $types = array('decision_tree_item' => t('Guide', array(), $options));
+  return $types;
+}
+
+/**
+ * Implements hook_field_extra_fields().
+ */
+function kk_decision_tree_field_extra_fields() {
+  $extra = array();
+  foreach (node_type_get_names() as $type => $name) {
+    if (nodehierarchy_node_can_be_parent($type)) {
+      $extra['node'][$type]['display']['nodehierarchy_parent_node_link'] = array(
+        'label' => t('Node Hierarchy parent link'),
+        'description' => t('Links to the parent node.'),
+        'weight' => -10,
+      );
+    }
+  }
+  foreach (dt_map_extra_field_node_type() as $type => $name) {
+    $extra['node'][$type]['display']['node_content_type'] = array(
+      'label' => t('Node content type'),
+      'description' => t('Node content type to be displayed to end-users.'),
+      'weight' => -5,
+    );
+  }
+  return $extra;
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function kk_decision_tree_node_view($node, $view_mode = 'full') {
+  if ($node->nodehierarchy_menu_links) {
+    nodehierarchy_views_embed_children($node);
+    $pnid = reset(nodehierarchy_get_node_parent_nids($node->nid));
+    if ($pnid) {
+      $node->content['nodehierarchy_parent_node_link'] = array(
+        '#markup' => l(t('Back'), 'node/' . $pnid,  array('attributes' => array('class' => 'kk-decision-tree-back'))),
+        '#weight' => -10,
+      );
+    }
+  }
+  $map = dt_map_extra_field_node_type();
+  if (array_key_exists($node->type, $map)) {
+    $node->content['node_content_type'] = array(
+      '#markup' => '<div class="extra-node-content-type">' . $map[$node->type] . '</div>',
+      '#weight' => -5,
+    );
+  }
+}
+
+function kk_decision_tree_fieldable_panels_pane_view($pane, $view_mode = 'full', $langcode = NULL) {
+  if ($pane->bundle == 'decision_tree_pane') {
+    drupal_add_library('system', 'drupal.ajax');
+    drupal_add_js(drupal_get_path('module', 'kk_decision_tree') . '/kk_decision_tree.js');
+    if (isset($pane->content['field_fp_decision_tree_item'])) {
+      $pane->content['field_fp_decision_tree_item']['#prefix'] = '<div class="kk-decision-tree-box">';
+      $pane->content['field_fp_decision_tree_item']['#suffix'] = '</div>';
+    }
+  }
+}

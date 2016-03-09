@@ -1,0 +1,4 @@
+name = KKMS social
+description = Provides social media integration
+core = 7.x
+

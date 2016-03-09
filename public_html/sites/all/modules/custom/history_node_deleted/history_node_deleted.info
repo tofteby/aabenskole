@@ -1,0 +1,4 @@
+name = History node deleted
+description = Track history of deleted nodes
+core = 7.x
+

@@ -1,0 +1,126 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the Apachesolr channels module.
+ */
+
+/**
+ * Implements hook_field_schema().
+ */
+function apachesolr_channels_field_schema($field) {
+  return array(
+    'columns' => array(
+      'site' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_schema().
+ */
+function apachesolr_channels_schema() {
+  $schema['channels_registry'] = array(
+    'description' => 'The table holding registry info per node.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The foreign key to node.nid',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'cid' => array(
+        'description' => 'The channel id',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('nid', 'cid'),
+    'indexes' => array(
+      'cid' => array('cid'),
+    ),
+    'foreign keys' => array(
+      'channels_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+    ),
+  );
+  return $schema;
+}
+
+/**
+ * Add a table to store channels registry for shared (local) content.
+ */
+function apachesolr_channels_update_7001() {
+  $schema['channels_registry'] = array(
+    'description' => 'The table holding registry info per node.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The foreign key to node.nid',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'cid' => array(
+        'description' => 'The channel id',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('nid', 'cid'),
+    'indexes' => array(
+      'cid' => array('cid'),
+    ),
+    'foreign keys' => array(
+      'channels_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+    ),
+  );
+  db_create_table('channels_registry', $schema['channels_registry']);
+}
+
+/**
+ * This update hook is here as a quick workaround for merging profile
+ * translations to trunk, and triggering translations update, without
+ * merging anything else. This module is not the correct place for an
+ * update hook that imports translations.
+ */
+function apachesolr_channels_update_7002() {
+  $profile = drupal_get_profile();
+  require_once DRUPAL_ROOT . "/profiles/$profile/$profile.install";
+  // Import translations.
+  _kkms_import_translations(LOCALE_IMPORT_OVERWRITE);
+}
+
+/**
+ * This update hook is here as a quick workaround for merging profile
+ * translations to trunk, and triggering translations update, without
+ * merging anything else. This module is not the correct place for an
+ * update hook that imports translations.
+ */
+function apachesolr_channels_update_7003() {
+  $profile = drupal_get_profile();
+  require_once DRUPAL_ROOT . "/profiles/$profile/$profile.install";
+  // Submit theme settings.
+  kkms_profile_submit_theme_settings();
+}
+
+/**
+ * This update hook is here as a quick workaround for merging profile
+ * translations to trunk, and triggering translations update, without
+ * merging anything else. This module is not the correct place for an
+ * update hook that imports translations.
+ */
+function apachesolr_channels_update_7004() {
+  foreach (image_styles() as $style) {
+    image_style_flush($style);
+  }
+}

@@ -1,0 +1,13 @@
+name = Services Client Custom Conditions
+description = Allow custom conditions to determine which remote connection a node is sent to.
+package = "Services"
+core = 7.x
+dependencies[] = services_client
+
+
+; Information added by drush on 2014-06-26
+version = "7.x-1.0-beta1+27-dev"
+core = "7.x"
+project = "services_client"
+datestamp = "1403780081"
+

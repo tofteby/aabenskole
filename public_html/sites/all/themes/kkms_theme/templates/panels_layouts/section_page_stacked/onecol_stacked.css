@@ -1,0 +1,15 @@
+.panels-dnd .reg-top-menu-left,
+.panels-dnd .reg-top-menu-right {
+  float: left;
+}
+.panels-dnd .reg-top-menu-left {
+  width: 64%;
+  margin-right: 3%;
+}
+.panels-dnd .reg-top-menu-right {
+  width: 33%;
+}
+.panels-dnd section > div {
+  overflow: hidden;
+  margin-bottom: 1em;
+}

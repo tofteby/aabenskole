@@ -1,0 +1,184 @@
+<?php
+
+/**
+ * @file
+ * Installation file for storing errors from services client.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function services_client_error_schema() {
+  $schema['services_client_error'] = array(
+    'description' => 'Collects errors of data pushes',
+    'fields' => array(
+      'eid' => array(
+        'desription'  => 'Error id',
+        'type'        => 'serial',
+        'unsigned'    => TRUE,
+        'not null'    => TRUE,
+        'no export'   => TRUE,
+      ),
+      'created' => array(
+        'description' => 'Error time',
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 0,
+        'unsigned'    => TRUE,
+      ),
+      'entity_type' => array(
+        'description' => 'Processed entity type',
+        'type'        => 'varchar',
+        'length'      => 255,
+        'not null'    => TRUE,
+        'default'     => '',
+      ),
+      'entity_id' => array(
+        'description' => 'Entity Id',
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 0,
+        'unsigned'    => TRUE,
+      ),
+      'hook' => array(
+        'description' => 'Stores the hook name where failure occured.',
+        'type'        => 'varchar',
+        'length'      => 255,
+        'not null'    => TRUE,
+        'default'     => '',
+      ),
+      'connection' => array(
+        'description' => 'Stores the connection name where failure occured.',
+        'type'        => 'varchar',
+        'length'      => 255,
+        'not null'    => TRUE,
+        'default'     => '',
+      ),
+      'task' => array(
+        'description' => 'Stores the task name where failure occured.',
+        'type'        => 'varchar',
+        'length'      => 255,
+        'not null'    => TRUE,
+        'default'     => '',
+      ),
+      'token' => array(
+        'description' => 'Stores the token that can be used to trigger re-try.',
+        'type'        => 'varchar',
+        'length'      => 100,
+        'not null'    => TRUE,
+        'default'     => '',
+      ),
+      'error_code' => array(
+        'description' => 'Error code',
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 0,
+        'unsigned'    => TRUE,
+      ),
+      'error_message' => array(
+        'description' => 'Error message',
+        'type'        => 'varchar',
+        'length'      => 255,
+        'not null'    => TRUE,
+        'default'     => '',
+      ),
+      'data' => array(
+        'description' => 'Stores data that failed to send',
+        'type'        => 'text',
+        'serialize'   => TRUE,
+      ),
+      'retries' => array(
+        'description' => 'Number of retries',
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 0,
+        'unsigned'    => TRUE,
+      ),
+      'status' => array(
+        'description' => 'Stores result of retry operation(s).',
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 0,
+        'unsigned'    => TRUE,
+      ),
+    ),
+    'primary key' => array('eid'),
+    'indexes' => array(
+      'token' => array('token'),
+      'status' => array('status'),
+    ),
+  );
+
+  $schema['services_client_error_log'] = array(
+    'description' => 'Actions log for error',
+    'fields' => array(
+      'lid' => array(
+        'desription'  => 'Log id',
+        'type'        => 'serial',
+        'unsigned'    => TRUE,
+        'not null'    => TRUE,
+        'no export'   => TRUE,
+      ),
+      'eid' => array(
+        'description' => 'Error id',
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 0,
+        'unsigned'    => TRUE,
+      ),
+      'created' => array(
+        'description' => 'Log item time',
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 0,
+        'unsigned'    => TRUE,
+      ),
+      'message' => array(
+        'description' => 'Log message.',
+        'type'        => 'varchar',
+        'length'      => 255,
+        'not null'    => TRUE,
+        'default'     => '',
+      ),
+      'status_change' => array(
+        'description' => 'New status code',
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 0,
+        'unsigned'    => TRUE,
+      ),
+      'uid' => array(
+        'description' => 'User id reference',
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 0,
+        'unsigned'    => TRUE,
+      ),
+      'error_code' => array(
+        'description' => 'Error code',
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 0,
+        'unsigned'    => TRUE,
+      ),
+      'error_message' => array(
+        'description' => 'Error message',
+        'type'        => 'varchar',
+        'length'      => 255,
+        'not null'    => TRUE,
+        'default'     => '',
+      ),
+      'data' => array(
+        'description' => 'Stores data that failed to send',
+        'type'        => 'text',
+        'serialize'   => TRUE,
+      )
+    ),
+    'primary key' => array('lid'),
+    'indexes' => array(
+      'eid' => array('eid'),
+    ),
+  );
+
+  return $schema;
+}

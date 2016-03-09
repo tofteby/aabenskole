@@ -1,0 +1,8 @@
+name = Pull content feed features
+core = 7.x
+package = Configuration
+dependencies[] = ctools
+dependencies[] = services_client_connection
+features[ctools][] = services_client_connection:default_services_client_connection:1
+features[features_api][] = api:2
+features[services_client_connection][] = pull_content_feed

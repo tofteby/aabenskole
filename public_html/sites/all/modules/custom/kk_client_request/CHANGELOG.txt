@@ -1,0 +1,111 @@
+
+kk_client_request 7.x-1.3, 28-10-2013/09-10-2013
+------------------------------------------------
+- KKNI-1396 Updated CHANGELOG to 7.x-1.3.
+- KKNI-1396 Code review clean ups.
+- KKNI-1404 Fixed bug. There was a typo in the call of one of the functions during the update of the terms which was preventing the function to be executed.
+- KKNI-1396 Added update hook to clear the queues used in CMT sync.
+
+
+kk_client_request 7.x-1.2, until 28-10-2013
+-------------------------------------------
+- KKNI-1396 Updated CHANGELOG to 7.x-1.2.
+- KKNI-1396 Added CHANGELOG.
+- KKNI Changed error to warning to prevent install fail.
+- KKNI Added missing dependecy.
+- KKMN-81 KKMS tax integration - fix dependencies.
+- KKNI Improved formatting. Notices fixes.
+- KKNI Code refactoring for readability and tweaks.
+- KKNI Added changes to support the new taxonomy_vocabulary retrieve_specific_terms service interface. Some refactoring.
+- KKNI Updated the client to support the new interface of update and specific update actions.
+- KKNI Refactoring in hierarchy support in kk_client_request_update_client_term and kk_client_request_create_client_term methods. Improved formatting.
+- KKNI Small refactoring.
+- KKNI Equivalen refactoring.
+- KKNI Added try/catch for taxon taxonomy json file.
+- KKNI-1012 Removed unnecessary file.
+- KKNI-1012 Fixed cron synchronizations.
+- KKNI-1012 Added option to generate json through install site.
+- KKNI-1012 Added json cron to new branch.
+- KKNI-1012 Removed json from dev branch.
+- KKNI-1012 Added cron queue for json file.
+- KKNI-648 Code review clean ups.
+- KKNI-648 Fixed errors.
+- KKNI-648 Added new access functionality.
+- KKNI-930 Code review clean ups.
+- KKNI-930 Added operation for workbench access reset tree.
+- KKNI-930 Added batch operation for reset workbench access tree.
+- KKNI-930 Clear workbench access cache.
+- KKNI-696 Code review clean ups.
+- KKNI-696 Quick fix for generating KLE JSON.
+- KKNI-696 Finished the partial update of terms.
+- KKNI-696 Latest changes.
+- KKNI-696 Support for partial update section all terms.
+- KKNI-696 Fixed bug in importing selected term ids.
+- KKNI-696 Changes on the update step of the form.
+- KKNI-648 Changed the way the access to the vocabularies is granted. Now it is correctly allowing instead of denying.
+- KKNI-795 Fixed bug with the manual import on other languages than English. Add support for the Autotagging.
+- KKNI-795 Applied latest changes for the update of terms.
+- KKNI-795 Fixed unnecesary call of batch execution.
+- KKNI-795 Removed unnecesary operations on install import.
+- KKNI-795 Fixed undefined variable field_name.
+- KKNI-795 Fixed wrong check for prior field.
+- KKNI-795 Fixed undefined variable.
+- KKNI-795 Fixes and optimization.
+- KKNI-795 Numerous fixes.
+- KKNI Replaced field_id.
+- KKNI-795 Fixed unnecessary run of batch on cron.
+- KKNI-795 Fixes.
+- KKNI-795 Fixed call to a member function getMessage().
+- KKNI-795 Altered the list of vocabularies to skip the check for local existance.
+- KKNI-696 Added theme_categories vocabulary to the list of vocabularies to skip the check for already existing.
+- KKNI-696 Fixed update of vocabularies and terms in manual mode batch operation.
+- KKNI-696 Set the cron timers lower so the maximum execution time is not hit.
+- KKNI-696 Added Tags vocabulary to the list of vocabularies to skip the check of already existing.
+- KKNI-696 Added Sites for important news vocabulary to the list of vocabularies to skip the check of alreay existing.
+- KKNI-696 Return functions in main module file since separation was breaking the import.
+- KKNI-696 Small fixes.
+- KKNI-696 Fixed wrong setup for import on install.
+- KKNI-696 Code review clean ups.
+- KKNI-696 Batch operations enabled.
+- KKNI-696 Reorganization of the module for better readability and to open the possibility to use batch.
+- KKNI-696 Extended the sync of terms to support partial terms selection on vocabulary create.
+- KKNI-701 Update create specific terms.
+- KKNI-701 Latest changes on the admin form.
+- KKNI-701 Changed form.
+- KKNI-718 Implemented better cron logic to make possible the import sync on install.
+- KKNI-674 Better cron queues.
+- KKNI-674 Small changes on the cron.
+- KKNI-674 Better language handling.
+- KKNI-674 Added better error handling and fix undefined variable.
+- KKNI-674 Added check for vocabularies that should not be checked for already existing.
+- KKNI-674 Changed the cron setting to be always enabled.
+- KKNI-674 Fixed fatal error on the kk client request module.
+- KKNI-648 Fixed access to term edit page.
+- KKNI-662 Revert to old changes.
+- KKNI-662 Changed value of property of timestamp field for kk_client_request_vocabulary table.
+- KKNI-662 Added options in administration for already created, but synchonized vocabularies.
+- KKNI-576 Moved functionality in helper function.
+- KKNI-576 Additional settings in administration.
+- KKNI-574 Implemented logic to disable access to edit or delete synced taxonomies on the local sites for all users except the User 1 and the ones explicitly having access.
+- KKNI-388 Small changes on the status messages.
+- KKNI-314 Code review clean ups.
+- KKNI-359 Fixes.
+- KKNI-285 Fixed cron functionality and more improvements on the overall functionality and fields synchronisation.
+- KKNI-286 Fixed wrong function call.
+- KKNI-286 Removed temporary the hook_cron.
+- KKNI-286 Fixed several problems with the fields synchronisation. Rewrote the whole functionality.
+- KKNI-286 Worked on the fields synchronisation. Fixes for initial sync of fields and code optimisation.
+- KKNI-287 Fixed error caused by wrong taken object for client connection.
+- KKNI-298 Added proper status messages to the multistep form and code optimisation.
+- KKNI-286 Updated functions with possibility to create term fields and to update them; synchronized vocabulary and term language if the module exists on the client.
+- KKNI-285 Changes in queue callback that update vocabularies and terms.
+- KKNI-277 Changes on cron queues - create and update vocabularies and not deleting the needed once but write in watchdog.
+- KKNI-277 Updated cron queue that should place terms to be deleted in watchdog.
+- KKNI-218 Handle term deletion.
+- KKNI-277 Changed delete vocabularies on cron; commit files in order to be able to pull the last changes.
+- KKNI-277 Cron queues for creating, updating and deleting vocabularies.
+- KKNI-218 Fixed wrong table column
+- KKNI-218 Improvements.
+- KKNI-218 Fixed typo.
+- KKNI-218 Fixed missing checks in the term and vocabulary hooks.
+- KKNI-218 Reinitialized broken repo.

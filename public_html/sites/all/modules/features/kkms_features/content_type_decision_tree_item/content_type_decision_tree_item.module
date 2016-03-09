@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Content type Decision tree item feature.
+ */
+
+include_once 'content_type_decision_tree_item.features.inc';

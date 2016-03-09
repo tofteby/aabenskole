@@ -1,0 +1,112 @@
+<?php
+
+/**
+ * @file
+ * Add tooltips to fields.
+ */
+
+/**
+ * Implements hook_field_info_alter().
+ */
+function kk_ui_help_field_info_alter(&$info) {
+  // Add the tooltips instance setting to all field types.
+  foreach ($info as $field_type => &$field_type_info) {
+    $field_type_info += array('instance_settings' => array());
+    $field_type_info['instance_settings'] += array(
+      'field_tooltips_enabled' => FALSE,
+      'field_tooltips_tooltip' => array(
+        'value' => '',
+        'format' => 'plain_text',
+      ),
+    );
+  }
+}
+
+/**
+ * Implements hook_i18n_object_info_alter().
+ */
+function kk_ui_help_i18n_object_info_alter(&$info) {
+  $info['field_instance']['class'] = 'field_tooltips_instance';
+  $info['field_instance']['string translation']['properties']['field_tooltips_tooltip'] = array(
+    'title' => t('Tooltip'),
+    'format' => 'format',
+  );
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Add tooltips instance settings on the 'edit field instance' form.
+ */
+function kk_ui_help_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id) {
+  $instance = $form['#instance'];
+
+  $form['instance']['settings']['field_tooltips_enabled'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable tooltip'),
+    '#default_value' => $instance['settings']['field_tooltips_enabled'],
+    // Display at the bottom of the form.
+    '#weight' => 50,
+  );
+  $form['instance']['settings']['field_tooltips_container'] = array(
+    '#type' => 'container',
+    // Display just below the 'field_tooltips_enabled' checkbox.
+    '#weight' => $form['instance']['settings']['field_tooltips_enabled']['#weight'] + .1,
+    '#states' => array(
+      'visible' => array('input[name="instance[settings][field_tooltips_enabled]"]' => array('checked' => TRUE)),
+    ),
+  );
+  $form['instance']['settings']['field_tooltips_container']['field_tooltips_tooltip'] = array(
+    '#type' => 'text_format',
+    '#title' => t('Tooltip'),
+    '#default_value' => $instance['settings']['field_tooltips_tooltip']['value'],
+    '#format' => $instance['settings']['field_tooltips_tooltip']['format'],
+    // The field edit form automatically saves instance settings according to
+    // their position in the form array. Manually remove the container to
+    // prevent it from being saved as part of the instance settings.
+    '#parents' => array('instance', 'settings', 'field_tooltips_tooltip'),
+  );
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function kk_ui_help_form_alter(&$form, &$form_state, $form_id) {
+  // Add tooltips to any form which has a known entity type and bundle.
+  if (!empty($form['#entity_type']) && !empty($form['#bundle'])) {
+    // Grab entity information from the form.
+    $entity_type = $form['#entity_type'];
+    $bundle = $form['#bundle'];
+
+    // Lookup field instance information for all of the entity's fields.
+    $instances = field_info_instances($entity_type, $bundle);
+
+    // Add tooltips to each of the form's fields where appropriate.
+    foreach ($instances as $field_name => $instance) {
+      if (isset($form[$field_name])) {
+        if (!empty($instance['settings']['field_tooltips_enabled']) && !empty($instance['settings']['field_tooltips_tooltip'])) {
+          // Translate field tooltip.
+          if (module_exists('i18n_field')) {
+            $instance['settings']['field_tooltips_tooltip']['value'] = i18n_field_translate_tooltip($instance, $instance['settings']['field_tooltips_tooltip']['value']);
+          }
+
+          // Add a class to the parent field form item. This will be used by
+          // the tooltip JS to target the child field form items.
+          $form[$field_name]['#attributes']['class'][] = 'field-tooltips';
+          $form[$field_name]['#attributes']['field_tooltip'] = check_markup($instance['settings']['field_tooltips_tooltip']['value'], $instance['settings']['field_tooltips_tooltip']['format']);
+        }
+      }
+    }
+
+    // Attach the tooltip library.
+    $form['#attached']['library'][] = array('system', 'ui.tooltip');
+    $form['#attached']['js'][] = drupal_get_path('module', 'kk_ui_help') . '/field_tooltips.js';
+  }
+}
+
+/**
+ * Translate field tooltip.
+ */
+function i18n_field_translate_tooltip($instance, $value, $langcode = NULL) {
+  return i18n_string_translate(array('field', $instance['field_name'], $instance['bundle'], 'field_tooltips_tooltip'), $value, array('langcode' => $langcode));
+}

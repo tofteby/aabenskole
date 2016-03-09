@@ -1,0 +1,9 @@
+name = Apachesolr date
+description = Apachesolr date exports custom entities for recurring dates
+core = 7.x
+package = Propeople
+dependencies[] = entity
+dependencies[] = apachesolr_search
+dependencies[] = date_repeat_field
+files[] = includes/EntityDateController.inc
+files[] = includes/SolrDateEntity.inc

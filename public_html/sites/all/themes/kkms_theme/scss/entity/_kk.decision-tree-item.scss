@@ -1,0 +1,146 @@
+/**
+ * Classes are used differently on full page view and panel view and therefore
+ * we have repeating some of the csss rules.
+ * TODO:
+ * - DEV should fix the issue above.
+ */
+
+.group-decision{
+  background-color: $col-gray-10;
+  .field-name-field-dt-question{
+    @extend %title-block;
+    padding: $space/2;
+    
+    @include at-breakpoint($mq-bp-tablet-plus) { 
+      padding: $space $space $space/2 $space;
+    }
+  }
+
+  .view-decision-tree-children{
+    padding-bottom: $space/2;
+    
+    @include at-breakpoint($mq-bp-tablet-plus) { 
+      padding-bottom: $space;
+    }
+    
+    .item-list{
+      display: block;
+      clear: both;
+      overflow: hidden;
+      ul{
+        margin: 0 0 0 $space / 2;
+        padding: 0;
+        
+        .views-row{
+          margin: 0 0 $space/2 0;
+          .views-field-title{
+            font-weight: normal;
+            vertical-align: top;
+            &:before{
+              @extend %icon;
+              @extend .ic-arrow-right:before;
+              display: inline-block;
+              font-size: em(14,18);
+              vertical-align: top;
+              margin-top: 4px;
+            }
+            .field-content{
+              display: inline-block;
+              word-wrap: break-word;
+              max-width: 90%;
+            }
+          }
+        }
+        
+        @include at-breakpoint($mq-bp-tablet-plus) { 
+          margin-left: $space;
+          
+          .views-row{
+            @include span-columns(12,24);
+            
+            &.views-row-even{
+              @include omega;
+              float: left;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+// Full node view
+.node-decision-tree-item{
+  h1{
+    @extend .title-page;
+    @extend .bl-title;
+  }
+
+  .kk-decision-tree-back{
+    @extend .bl-i;
+    @extend .tx-type;
+    color: $col-primary;
+    margin: 0 1em 0 $space/2;
+    
+    @include at-breakpoint($mq-bp-tablet-plus) { 
+      margin-left: $space;
+    }
+    
+    &:before{
+      @extend %icon;
+      @extend .ic-arrow-left:before;
+      display: none;
+      vertical-align: top;
+      margin-top: 4px;
+      margin-right: .5em;
+    }
+  }
+
+  .extra-node-content-type{
+    @extend .bl-i;
+    @extend .tx-type;
+  }
+  .group-main{
+    @extend %block-e;
+    @include add-shadow;
+    border: 1px solid $col-gray-25;
+  }
+  .field-name-body{
+    .field-label{
+      @extend %text-label;
+      margin: $space/2;
+    }
+    .field-items{
+      margin: $space/2;
+    }
+    
+    @include at-breakpoint($mq-bp-tablet-plus) { 
+      .field-label{
+        margin: $space $space $space/2 $space;
+      }
+      .field-items{
+        margin: $space/2 $space $space $space;
+      }
+    }
+  }
+}
+
+
+// Pane view
+.pane-bundle-decision-tree-pane{
+  .pane-title{
+    display: none; // Not sure if this should be hidden.
+  }
+  .node-decision-tree-item{
+    @extend %block-e;
+    @include add-shadow;
+    border: 1px solid $col-gray-25;
+    
+    .kk-decision-tree-back{
+      display: block;
+      margin-left: 2em;
+      padding-bottom: 2em;
+    }
+  }
+}

@@ -1,0 +1,651 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the standard installation profile.
+ */
+
+/**
+ * Implements hook_install().
+ *
+ * Perform actions to set up the site for this profile.
+ *
+ * @see system_install()
+ */
+function kos_profile_install() {
+  // Add text formats.
+  $full_html_format = array(
+    'format' => 'full_html',
+    'name' => 'Full HTML',
+    'weight' => 0,
+    'filters' => array(
+      // URL filter.
+      'filter_url' => array(
+        'weight' => 0,
+        'status' => 1,
+      ),
+      // Line break filter.
+      'filter_autop' => array(
+        'weight' => 1,
+        'status' => 1,
+      ),
+      // HTML corrector filter.
+      'filter_htmlcorrector' => array(
+        'weight' => 10,
+        'status' => 1,
+      ),
+    ),
+  );
+  $full_html_format = (object) $full_html_format;
+  filter_format_save($full_html_format);
+
+  $filtered_html_format = array(
+    'format' => 'filtered_html',
+    'name' => 'Filtered HTML',
+    'weight' => 1,
+    'filters' => array(
+      // URL filter.
+      'filter_url' => array(
+        'weight' => 0,
+        'status' => 1,
+      ),
+      // HTML filter.
+      'filter_html' => array(
+        'weight' => 1,
+        'status' => 1,
+      ),
+      // Line break filter.
+      'filter_autop' => array(
+        'weight' => 2,
+        'status' => 1,
+      ),
+      // HTML corrector filter.
+      'filter_htmlcorrector' => array(
+        'weight' => 10,
+        'status' => 1,
+      ),
+    ),
+  );
+  $filtered_html_format = (object) $filtered_html_format;
+  filter_format_save($filtered_html_format);
+
+  $unfiltered_html_format = array(
+    'format' => 'unfiltered_html',
+    'name' => 'Unfiltered HTML',
+    'weight' => 2,
+    'filters' => array(
+      // URL filter.
+      'filter_url' => array(
+        'weight' => 0,
+        'status' => 0,
+      ),
+      // Line break filter.
+      'filter_autop' => array(
+        'weight' => 1,
+        'status' => 0,
+      ),
+      // HTML corrector filter.
+      'filter_htmlcorrector' => array(
+        'weight' => 10,
+        'status' => 0,
+      ),
+    ),
+  );
+  $unfiltered_html_format = (object) $unfiltered_html_format;
+  filter_format_save($unfiltered_html_format);
+
+  variable_set('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
+  variable_set('error_level', ERROR_REPORTING_HIDE);
+  variable_set('dblog_row_limit', 10000);
+
+  // Enable default permissions for system roles.
+  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content', 'access comments'));
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access content', 'access comments', 'post comments', 'skip comment approval'));
+
+  // Create a default role for site administrators, with all available permissions assigned.
+  $admin_role = new stdClass();
+  $admin_role->name = 'System administrator';
+  $admin_role->weight = 2;
+  user_role_save($admin_role);
+  user_role_grant_permissions($admin_role->rid, array_keys(module_invoke_all('permission')));
+  // Set this as the administrator role.
+  variable_set('user_admin_role', $admin_role->rid);
+
+  // Add additional roles.
+  $additional_roles = array('Administrator', 'Editor', 'Content provider');
+  foreach ($additional_roles as $role) {
+    $new_role = new stdClass();
+    $new_role->name = $role;
+    user_role_save($new_role);
+  }
+
+  // Assign user 1 the "administrator" role.
+  db_insert('users_roles')
+      ->fields(array('uid' => 1, 'rid' => $admin_role->rid))
+      ->execute();
+
+  // Set WCAG accessibility settings for all content types.
+  kkms_accessibility_reset_multiple(array_keys(node_type_get_types()));
+  // Configure Workbench moderation.
+  kkms_profile_workbench_moderation_setup();
+
+  // Enable default and admin site themes.
+  variable_set('theme_default', 'kos_theme');
+  variable_set('admin_theme', 'kkms_admin');
+  variable_set('node_admin_theme', '1');
+  theme_enable(array('kos_theme', 'kkms_admin'));
+  // System module installs Bartik. Remove it.
+  theme_disable(array('bartik'));
+
+  // Submit Default theme settings. Generate SASS files, etc.
+  kkms_profile_submit_theme_settings();
+
+  // Create a Home link in the main menu.
+  $item = array(
+    'link_title' => st('Home'),
+    'link_path' => '<front>',
+    'menu_name' => 'main-menu',
+  );
+  menu_link_save($item);
+
+  // Update the menu router information.
+  menu_rebuild();
+
+  // Setup Piwik
+  if ($url_piwik = _kkms_profile_get_option('url_piwik', '')) {
+    variable_set('piwik_url_http', $url_piwik);
+  }
+
+  // Setup SOLR
+  if ($url_solr = _kkms_profile_get_option('url_solr', '')) {
+    _kkms_profile_configurate_default_apachesolr_environment($url_solr);
+  }
+  kkms_apchesolr_search_page_reset();
+
+  // Taxon taxonomy settings - it's important to be available on install
+  $uri = _kkms_profile_get_option('uri', '');
+  _kkms_profile_submit_taxon_taxonomy_settings_form($uri);
+}
+
+/////////////// Helper functions
+
+/**
+ * Get configuration option from: drush-option or variable or default.
+ */
+function _kkms_profile_get_option($option, $default = NULL) {
+  $result = function_exists('drush_get_option') ? drush_get_option($option, FALSE) : FALSE;
+  return $result !== FALSE ? $result : variable_get($option, $default);
+}
+
+/**
+ * Helper function that configurates apachesolr environment.
+ */
+function _kkms_profile_configurate_default_apachesolr_environment($url_solr) {
+  // Apachesolr settings
+  $env_id = apachesolr_default_environment();
+  $environment = apachesolr_environment_load($env_id);
+  $environment['name'] = 'KKMS Solr';
+  $environment['url'] = $url_solr;
+  $environment['index_bundles']['file'] = array(
+    'audio',
+    'document',
+    'image',
+    'video',
+  );
+  $environment['index_bundles']['node'] = array(
+    'area',
+    'article',
+    'blog',
+    'contact_page',
+    'decision_tree_item',
+    'school_event',
+    'forum',
+    'institution',
+    'news',
+    'person',
+    'place',
+    'section_page',
+    'service',
+  );
+  $environment['index_bundles']['solrdate'] = array('solrdate');
+
+  $environment['conf'] = array(
+    'apachesolr_read_only' => '0',
+    'multisitesearch' => 1,
+  );
+  apachesolr_environment_save($environment);
+}
+
+/**
+ * Default settings for search pages.
+ * Configure solr to show only facets that are enabled Topbar Search block.
+ */
+function kkms_apchesolr_search_page_reset() {
+  $result = db_select('apachesolr_search_page', 'asp')
+    ->fields('asp')
+    ->condition('page_id', 'core_search')
+    ->execute()
+    ->fetchAssoc();
+
+  $settings = unserialize($result['settings']);
+  $settings['apachesolr_search_browse'] = 'blocks';
+  db_update('apachesolr_search_page')
+    ->fields(array('settings' => serialize($settings),))
+    ->condition('page_id', 'core_search', '=')
+    ->execute();
+}
+
+/**
+ * Helper function that submits taxon taxnomy setting form.
+ */
+function _kkms_profile_submit_taxon_taxonomy_settings_form($uri) {
+  global $base_url;
+  $site_url = ($uri) ? 'http://' . $uri : $base_url;
+  if ($site_url) {
+    $form_state['values'] = array(
+      'taxon_taxonomy_taxonomy_name' => 'taxon.json',
+      'taxon_taxonomy_taxon_url' => $site_url . '/' . drupal_get_path('module', 'taxon_taxonomy') . '/web-service/taxon-ws.php'
+    );
+    drupal_form_submit('_taxon_taxonomy_admin_form', $form_state);
+  }
+}
+
+/**
+ * Drops multiple fields and then purges the field data. Use with caution.
+ * See field_read_instances().
+ *
+ * @param array $params
+ * @param array $include_additional
+ */
+function kkms_delete_fields_instances(array $params, $include_additional = array()) {
+  if ($instances = field_read_instances($params, $include_additional)) {
+    foreach ($instances as $instance) {
+      field_delete_instance($instance, TRUE);
+    }
+    field_purge_batch(20);
+  }
+}
+
+/**
+ * Delete field group. See kkms_load_field_groups().
+ * @param array $params
+ */
+function kkms_delete_field_groups(array $params) {
+  $groups = kkms_load_field_groups($params);
+  foreach ($groups as $group) {
+    field_group_group_export_delete($group);
+  }
+}
+
+/**
+ * Load field groups.
+ * @param array $params
+ *   Properties are conditions for the select. Can be omitted:
+ *   - identifier: "group_name|entity_type|bundle|mode"
+ *   - group_name
+ *   - entity_type
+ *   - bundle
+ *   - mode: "form" OR view mode - "full", "teaser", etc.
+ * @return array $groups
+ */
+function kkms_load_field_groups(array $params) {
+  ctools_include('export');
+  $groups = ctools_export_load_object('field_group', 'conditions', $params);
+  return $groups;
+}
+
+/**
+ * This method could exhaust your memory easily, so try not to call it
+ * too many times on one update hook.
+ */
+function kkms_replace_titles($entity_type, $bundle, $legacy_field, $replace_max = 999, $per_pass_max = 50) {
+  if (title_field_replacement_toggle($entity_type, $bundle, $legacy_field)) {
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', $entity_type);
+    $query->entityCondition('bundle', $bundle);
+    $results = $query->range(0, $replace_max)->execute();
+
+    if (!empty($results[$entity_type])) {
+      $ids = array_keys($results[$entity_type]);
+      do {
+        $replace_ids = array_slice($ids, 0, $per_pass_max);
+        title_field_replacement_init($entity_type, $bundle, $legacy_field, $replace_ids);
+        // May run out of memory. Try to clear some.
+        entity_get_controller($entity_type)->resetCache();
+        $ids = array_slice($ids, $per_pass_max);
+      } while ($ids);
+    }
+  }
+}
+
+/**
+ * Reset accessibility standard settings for a single node type.
+ * @param string $node_type
+ */
+function kkms_node_type_accessibility_settings_reset($node_type) {
+  $keys = array('type' => $node_type);
+  $standards = array(
+    'wcag_2_0_aaa' => 'wcag_2_0_aaa',
+  );
+  $record = array(
+    'type' => $node_type,
+    'method' => 'quail_api_method_immediate_database',
+    'format' => 'full_html',
+    'required' => 0,
+    'standards' => serialize($standards),
+  );
+  db_merge('node_accessibility_types')->key($keys)->fields($record)->execute();
+}
+
+/**
+ * Reset accessibility standard settings for multiple node types.
+ * @param array $node_types
+ */
+function kkms_accessibility_reset_multiple(array $node_types) {
+  foreach ($node_types as $node_type) {
+    kkms_node_type_accessibility_settings_reset($node_type);
+  }
+}
+
+/**
+ * Disable and uninstall modules. Use caution!
+ * Make sure there are no dependencies first!
+ */
+function kkms_profile_modules_uninstall(array $modules) {
+  include_once DRUPAL_ROOT . '/includes/install.inc';
+  module_disable($modules);
+  drupal_uninstall_modules($modules);
+}
+
+/**
+ * Whenever translations are updated as files, this function should be run in
+ * a hook_updated_x() implementation. Don't run this in hook_install()
+ *
+ * @param string $mode - controls how existing translation strings are handled.
+ *    LOCALE_IMPORT_KEEP - Keep existing translations. Default.
+ *    LOCALE_IMPORT_OVERWRITE - Overwrite existing translations.
+ */
+function _kos_import_translations($mode = LOCALE_IMPORT_KEEP) {
+  require_once DRUPAL_ROOT . '/includes/locale.inc';
+  // get all enabled language, without English
+  $language_list = language_list('enabled');
+  unset($language_list[1]['en']);
+
+  foreach ($language_list[1] as $langcode => $language) {
+    // scan installed translations for installed profile
+    $po_files_dir = DRUPAL_ROOT . '/profiles/' . drupal_get_profile() . '/translations';
+    $po_files = file_scan_directory($po_files_dir, '/(^|\.)' . $langcode . '\.po$/', array('recurse' => FALSE));
+
+    foreach ($po_files as $po_file) {
+      $pos = strpos($po_file->name, '.');
+      $group = (FALSE === $pos)? 'default': substr($po_file->name, 0, $pos);
+
+      // Now import strings into the language
+      if ($return = _locale_import_po($po_file, $langcode, $mode, $group) == FALSE) {
+        $variables = array('%filename' => $po_file->filename);
+        drupal_set_message(t('The translation import of %filename failed.', $variables), 'error');
+        watchdog('locale', 'The translation import of %filename failed.', $variables, WATCHDOG_ERROR);
+      }
+    }
+  }
+}
+
+/**
+ * Configure the settings for Workbench moderation.
+ */
+function kkms_profile_workbench_moderation_setup() {
+  if (module_exists('workbench_moderation')) {
+    // Remove the "Needs review" state.
+    $states = workbench_moderation_states();
+    if (isset($states['needs_review'])) {
+      workbench_moderation_state_delete($states['needs_review']);
+    }
+  }
+}
+
+/**
+ * Submit theme settings form. Use for converting SASS files to CSS.
+ *
+ * @param string $theme
+ *   (optional) The theme which we want to submit. Defaults to default theme.
+ *
+ * @param array $values
+ *   (optional) $form_state['values'] to use for the form submittion.
+ * @return array $form_state
+ */
+function kkms_profile_submit_theme_settings($theme = NULL, $values = array()) {
+  if (!$theme) {
+    $theme = variable_get('theme_default', 'kos_theme');
+  }
+  $form_state = array('values' => $values);
+  module_load_include('inc', 'system', 'system.admin');
+  drupal_form_submit('system_theme_settings', $form_state, $theme);
+  return $form_state;
+}
+
+/**
+ * Implements hook_update().
+ */
+function kos_profile_update_7003() {
+
+  theme_enable(array('kos_theme'));
+  variable_set('theme_default', 'kos_theme');
+  theme_disable(array('kkms_theme'));
+  drupal_theme_rebuild();
+}
+
+/**
+ * Implements hook_update().
+ */
+function kos_profile_update_7004() {
+  if(module_exists('content_type_section_page')) {
+
+    module_disable(array('content_type_section_page'), FALSE);
+    module_enable(array('kos_content_type_section_page'), FALSE);
+  }
+}
+
+/**
+ * Implements hook_update().
+ */
+function kos_profile_update_7007() {
+  if(module_exists('configuration_file_types')) {
+
+    module_disable(array('configuration_file_types'), FALSE);
+    module_enable(array('kos_configuration_file_types'), FALSE);
+  }
+}
+
+
+/**
+ * Implements hook_update().
+ */
+function kos_profile_update_7008() {
+  $params = array(
+    'entity_type' => 'node',
+    'bundle' => 'school_event',
+    'field_name' => array('field_keywords', 'field_school_event_category','field_target'),
+  );
+  kkms_delete_fields_instances($params);
+}
+
+/**
+ * Implements hook_update().
+ *
+ * Increase kkms_search module weight to be executed after kos_search.
+ */
+function kos_profile_update_7009() {
+  $weight = db_select('system', 's')
+    ->fields('s', array('weight'))
+    ->condition('name', 'kos_search', '=')
+    ->execute()
+    ->fetchField();
+  db_update('system')
+    ->fields(array('weight' => $weight +1))
+    ->condition('name', 'kkms_search', '=')
+    ->execute();
+
+  cache_clear_all();
+}
+
+/**
+ * Implements hook_update().
+ */
+function kos_profile_update_7010() {
+  $params = array(
+    'entity_type' => 'file',
+    'bundle' => 'image',
+    'field_name' => array('field_common', 'field_organisation'),
+  );
+  kkms_delete_fields_instances($params);
+}
+
+/**
+ * Implements hook_update().
+ */
+function kos_profile_update_7011() {
+  $old_feature = 'kkms_variables';
+  $new_feature = 'kos_variables';
+  if(module_exists($old_feature)) {
+    module_disable(array($old_feature), FALSE);
+    module_enable(array($new_feature), FALSE);
+  }
+}
+
+/**
+ * Remove the field_place entity reference field from school event as it is
+ * replaced by a text field.
+ */
+function kos_profile_update_7012() {
+  kkms_delete_fields_instances(array(
+    'entity_type' => 'node',
+    'bundle' => 'school_event',
+    'field_name' => array('field_place'),
+  ));
+}
+
+/**
+ * Remove the field_place_category entity reference field from school event
+ */
+function kos_profile_update_7013() {
+  kkms_delete_fields_instances(array(
+    'entity_type' => 'node',
+    'bundle' => 'school_event',
+    'field_name' => array('field_place_category'),
+  ));
+}
+
+/**
+ * Remove the `body` field from school event.
+ */
+function kos_profile_update_7014() {
+  kkms_delete_fields_instances(array(
+    'entity_type' => 'node',
+    'bundle' => 'school_event',
+    'field_name' => array('body'),
+  ));
+}
+
+/**
+ * Import translations
+ */
+function kos_profile_update_7017() {
+  _kos_import_translations(LOCALE_IMPORT_OVERWRITE);
+}
+
+/**
+ * Add date format for school event content type
+ */
+function kos_profile_update_7019(){
+  // Set the kk_date date format
+  module_load_include('module', 'kos_search', 'kos_search');
+  db_insert('date_format_type')
+   ->fields(array(
+     'type' => 'kos_events_date',   // Machine Name
+     'title' => 'KOS Events date',  // Display Name
+     'locked' => 0,                 // 1 = can't change through UI, 0 = can change
+    ))
+  ->execute();
+  _kos_search_update_date_format();
+}
+
+/**
+ * Switch content_type_article feature with kos_content_type article
+ */
+function kos_profile_update_7020() {
+  if(module_exists('content_type_article')) {
+
+    module_disable(array('content_type_article'), FALSE);
+    module_enable(array('kos_content_type_article'), FALSE);
+  }
+}
+
+/**
+ * Switch content_type_article feature with kos_content_type article
+ */
+function kos_profile_update_7021() {
+  kkms_delete_fields_instances(array(
+    'entity_type' => 'profile2',
+    'bundle' => 'main',
+    'field_name' => array('field_telephone'),
+  ));
+}
+
+
+/**
+ * Remove d. form KOS Events Date format
+ */
+function kos_profile_update_7022(){
+  // Set the kk_date date format
+  module_load_include('module', 'kos_search', 'kos_search');
+  _kos_search_update_date_format();
+}
+
+/**
+ * Switch configuration_blocks feature with kos_configuration_blocks
+ */
+function kos_profile_update_7023() {
+  if(module_exists('configuration_blocks')) {
+
+    module_disable(array('configuration_blocks'), FALSE);
+    module_enable(array('kos_configuration_blocks'), FALSE);
+  }
+}
+
+/**
+ * Remove hour and minute form KOS Events Date format
+ */
+function kos_profile_update_7024(){
+  // Set the kk_date date format
+  module_load_include('module', 'kos_search', 'kos_search');
+  _kos_search_update_date_format();
+}
+
+/**
+ * Import translations
+ */
+function kos_profile_update_7025() {
+  _kos_import_translations(LOCALE_IMPORT_KEEP);
+}
+
+
+/**
+ * Implements hook_update_N().
+ * Pregeneration of the images of style search_page and related caches.
+ */
+function kk_profile_update_7026() {
+  if (($style = image_style_load('search_page')) !== FALSE) {
+    image_style_flush($style);
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ * Pregeneration of the images of style school_event_node_view caches.
+ */
+function kk_profile_update_7027() {
+  if (($style = image_style_load('school_event_node_view')) !== FALSE) {
+    image_style_flush($style);
+  }
+}
+

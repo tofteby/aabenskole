@@ -1,0 +1,14 @@
+name = Taxonomy Orgainsation (KKorg)
+description = Feature module exports vocabulary and fields for Organisation (KKorg) taxonomy.
+core = 7.x
+package = Taxonomies
+dependencies[] = features
+dependencies[] = field_bases
+dependencies[] = link
+dependencies[] = taxonomy
+dependencies[] = text
+features[features_api][] = api:2
+features[field_instance][] = taxonomy_term-kkorg-field_apos_id
+features[field_instance][] = taxonomy_term-kkorg-field_kk_org_short_name
+features[field_instance][] = taxonomy_term-kkorg-field_local_page
+features[taxonomy][] = kkorg

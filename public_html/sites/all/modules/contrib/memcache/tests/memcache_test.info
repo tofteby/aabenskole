@@ -1,0 +1,13 @@
+name = Memcache test
+description = Support module for memcache testing.
+package = Testing
+core = 7.x
+hidden = TRUE
+
+
+; Information added by drush on 2014-06-26
+version = "7.x-1.1-beta1+0-dev"
+core = "7.x"
+project = "memcache"
+datestamp = "1403780700"
+

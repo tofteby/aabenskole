@@ -1,0 +1,98 @@
+.page div.horizontal-tabs{
+  border-width: 0;
+  .horizontal-tabs-panes{
+    @include add-shadow;
+    border-style: solid;
+    border-color: $col-gray-40;
+    border-width: 0 1px 1px 1px;
+
+    .field-name-field-link{
+      margin-top: $space;
+      font-weight: bold;
+      
+      @include ie8_font_fix('b');
+    }
+  }
+  fieldset.horizontal-tabs-pane{
+    padding: $space/2;
+    
+    @include at-breakpoint($mq-bp-tablet) {
+      padding: $space;
+    }
+    @include at-breakpoint($mq-bp-desktop) {
+      padding: $space*1.5;
+    }
+  }
+  ul.horizontal-tabs-list{
+    background-color: $col-content;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-style: solid;
+    border-color: $col-gray-55;
+    border-width: 0 0 1px 0;
+    .horizontal-tab-button{
+      background-color: transparent;
+      padding: 0;
+      margin: 0;
+      border: 0;
+      float: inherit;
+      display: inline-block;
+      margin-bottom: -1px;
+      text-align: center;
+      font-weight: bold;
+      margin-right: 3px;
+      border-right: 1px solid transparent;
+      border-left: 1px solid transparent;
+      @include ie8_font_fix('b');
+      a{
+        display: block;
+        &:hover,
+        &:focus{
+          background-color: transparent;
+        }
+      }
+      &.first{
+        border-left-width: 1px;
+      }
+      &:hover,
+      &:focus{
+        background-color: transparent;
+      }
+      &.selected{
+        z-index: 100;
+        background-color: $col-content;
+        $col-shadow: rgba($col-text, 0.15) !default;
+        box-shadow: 2px 0 0 $col-shadow;
+        padding:0;
+        border-style: solid;
+        border: 1px solid $col-gray-55;
+        border-bottom-color: $col-content;
+        a{
+          color: $col-primary;
+          strong{
+            color: $col-primary;
+          }
+        }
+        
+        &:hover,
+        &:focus{
+          background-color: $col-content;
+        }
+      }
+    }
+  }
+}
+
+
+.field-name-field-steps{
+  margin-bottom: $space;
+}
+
+.node-stepbox,
+.node-stepbox-tabs{
+  h1{
+    @extend .title-page;
+    @extend .bl-title;
+  }
+}

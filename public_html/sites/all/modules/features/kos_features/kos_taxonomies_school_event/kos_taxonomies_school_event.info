@@ -1,0 +1,15 @@
+name = KOS Taxonomies school event
+core = 7.x
+package = Taxonomies
+version = 7.x-1.0
+project = kos_taxonomies_school_event
+dependencies[] = features
+dependencies[] = taxonomy
+features[features_api][] = api:2
+features[taxonomy][] = audiences
+features[taxonomy][] = keywords
+features[taxonomy][] = school_event_category
+features[taxonomy][] = school_event_price
+features[taxonomy][] = subjects
+features[taxonomy][] = target
+features[taxonomy][] = topics

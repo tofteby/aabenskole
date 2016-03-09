@@ -1,0 +1,124 @@
+<?php
+
+/**
+ * Implements HOOK_views_default_views_alter in kkms_workbench_alter module.
+ * 
+ * @param &array $views 
+ *   List of code-defined views to be changed.
+ */
+function kkms_workbench_alter_views_default_views_alter(&$views) {
+  // Disable views stored in code within the workbench modules suite.
+  // All of them are cloned into features for easier managment.
+  foreach (_kkms_workbench_alter_get_original_content_views() as $view_name) {
+    if(isset($views[$view_name])) {
+      $views[$view_name]->disabled = TRUE;
+    }
+  }
+}
+
+/**
+ * Implements HOOK_menu_alter in kkms_workbench_alter module.
+ * 
+ * @param &array $items 
+ *   List of menu items to be changed.
+ */
+function kkms_workbench_alter_menu_alter(&$items) {
+  // Change worbench
+  $items['admin/workbench/create']['title'] = 'Add new content';
+}
+
+/**
+ * Generates a list of vuew names provided in the workbench modules suite.
+ * 
+ * @return array
+ */
+function _kkms_workbench_alter_get_original_content_views() {
+  return array(
+    'workbench_files',
+    'workbench_edited',
+    'workbench_moderation',
+    'workbench_current_user',
+    'workbench_recent_content',
+  );
+}
+
+/**
+ * Implementation of HOOK_workbench_content_alter for kkms_workbench_alter 
+ * module. Removes the default views that comes from WB (workbench suite) and 
+ * adds the custom ones provided in features.
+ * 
+ * @param &array $output
+ */
+function kkms_workbench_alter_workbench_content_alter(&$output) {
+  // Remove old views from content page.
+  foreach (_kkms_workbench_alter_get_original_content_views() as $name) {
+    if (isset($output[$name])) {
+      unset($output[$name]);
+    }
+  }
+  
+  // Apply custom views.
+  $custom_views = array(
+    array('workbench_edited_clone', 'block_1',),
+    array('workbench_recent_content_clone', 'block_1',),
+    array('workbench_moderation_content_clone', 'block_drafts',),
+    array('workbench_comments_listing', 'block',),
+  );
+  foreach($custom_views as $index => $view_data) {
+    list($name, $display) = $view_data;
+    $view_name = implode('_', $view_data);
+    
+    if (!isset($output[$view_name])) {
+      $output[$view_name] = array(
+        '#view' => $name,
+        '#view_display' => $display,
+        '#theme' => 'workbench_element',
+        '#attributes' => array(
+          'class' => array('clearfix'), 
+          'style' => array('clear: both;'),
+        ),
+      );
+    }
+  }
+}
+
+/**
+ * Implements HOOK_views_data_alter for kkms_workbench_alter module.
+ * 
+ * Changes the relation type between workbench_moderation_node_history table 
+ * and node, node_revision tables from INNER to the default LEFT, because the 
+ * first was filtering out the nonworkbench-enabled content types from views
+ * result set.
+ * 
+ * @param array $data
+ */
+function kkms_workbench_alter_views_data_alter(&$data) {
+  if (isset($data['workbench_moderation_node_history']['table']['join'])) {
+    $join = &$data['workbench_moderation_node_history']['table']['join'];
+    foreach(array('node', 'node_revision',) as $table_name) {
+      if(isset($join[$table_name]['type'])) {
+        $join[$table_name]['type'] = 'LEFT';
+      }
+    }
+  }
+}
+
+/**
+ * Implementation of hook_form_FORM_ID_alter().
+ * UX improvememt for node edit form - prevent autosubmit
+ */
+function kkms_workbench_alter_form_node_form_alter(&$form, &$form_state, $form_id) {
+  $form['prevent']['#type'] = 'container';
+  $form['prevent']['#weight'] = -99;
+  $form['prevent']['#attributes']['class'] = array('prevent-submit');
+  $style = 'display:block; position:absolute; z-index:-99; height:0; width:0; overflow:hidden;';
+  $form['prevent']['#attributes']['style'] = $style;
+  $js = drupal_get_path('module', 'kkms_workbench_alter') . '/prevent.js';
+  $form['prevent']['#attached']['js'] = array($js);
+  $form['prevent']['prevent_button']['#type'] = 'button';
+  $form['prevent']['prevent_button']['#value'] = 'Prevent';
+  // Hide "Delete" button from node forms in references dialog context.
+  if (isset($_GET['render']) && $_GET['render'] === 'references-dialog') {
+    unset($form['actions']['delete']);
+  }
+}

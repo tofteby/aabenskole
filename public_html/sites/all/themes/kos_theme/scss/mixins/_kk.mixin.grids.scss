@@ -1,0 +1,109 @@
+
+// ---------------------------------------------------------------------------
+// Columns
+
+// Create a grid element spanning any number of 'columns' in a grid 'context'.
+// $columns : The number of columns to span.
+// $context : [optional] The context (columns spanned by parent).
+//          : Context is required on any nested elements.
+//          : Context MUST NOT be declared on a root element.
+// $padding : [optional] Padding applied to the inside of individual grid columns.
+//          : Padding is only output if one or two values are specified (e.g. 1em or 10px 20px)
+//          : Padding values are applied only on the horizontal axis in from-to order
+// $from    : The start direction of your layout (e.g. 'left' for ltr languages)
+// $style   : The container style to use.
+@mixin span-columns-light(
+  $columns,
+  $context       : $total-columns,
+  $padding       : false,
+  $from          : $from-direction,
+  $style         : fix-static-misalignment()
+) {
+  $from     : unquote($from);
+  $to       : opposite-position($from);
+  $pos      : split-columns-value($columns,position);
+  $cols     : split-columns-value($columns,columns);
+  $pad-from : if($style == static, 0 * $gutter-width, relative-width(0 * $gutter-width, $context));
+  $pad-to   : if($style == static, 0 * $gutter-width, relative-width(0 * $gutter-width, $context));
+
+  @if $padding != false {
+    $pad-from : nth($padding, 1);
+
+    @if length($padding) > 1 {
+      $pad-to: nth($padding, 2);
+    } @else {
+      $pad-to: $pad-from;
+    }
+
+    $pad-from : if($style == static, $pad-from, relative-width($pad-from, $context));
+    $pad-to   : if($style == static, $pad-to, relative-width($pad-to, $context));
+
+    padding-#{$from}: $pad-from;
+    padding-#{$to}: $pad-to;
+  }
+
+  width: columns($cols, $context, $style) - if($border-box-sizing, 0, $pad-to + $pad-from);
+
+  @if ($pos == 'omega') {
+    @include omega($from);
+  } @else {
+    margin-#{$to}: gutter($context, $style);
+  }
+}
+
+
+// Grid mixins
+@mixin grid($key, $num, $context : $total-columns) {
+  $from     : unquote($from-direction);
+
+  [class*="#{$key}-"] {
+    float: $from;
+    @if $legacy-support-for-ie6 { display: inline; }
+  }
+
+  @for $i from 1 through $num {
+    .#{$key}-#{$i} {
+      @include span-columns-light($i, $context);
+    }
+  }
+}
+
+@mixin left($key, $num, $context : $total-columns) {
+  @for $i from 1 through $num {
+    .#{$key}-#{$i} {
+      @include pre($i, $context);
+    }
+  }
+}
+
+@mixin right($key, $num, $context : $total-columns) {
+  @for $i from 1 through $num {
+    .#{$key}-#{$i} {
+      @include post($i, $context);
+    }
+  }
+}
+
+@mixin above($key, $num) {
+  $baseline: 1.466666667em;
+
+  @if $num > 0 {
+    @for $i from 1 through $num {
+      .#{$key}-#{$i} {
+        margin-top: $baseline * 1 * $i;
+      }
+    }
+  }
+}
+
+@mixin below($key, $num) {
+  $baseline: 1.466666667em;
+
+  @if $num > 0 {
+    @for $i from 1 through $num {
+      .#{$key}-#{$i} {
+        margin-bottom: $baseline * 1 * $i;
+      }
+    }
+  }
+}

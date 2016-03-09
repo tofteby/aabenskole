@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the history_node_deleted module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function history_node_deleted_schema() {
+  $schema['history_node_deleted'] = array(
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The {node}.nid that was read.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'type' => array(
+        'description' => 'The {node_type}.type of this node.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'timestamp' => array(
+        'description' => 'The Unix timestamp at which the node is deleted.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'uuid' => array(
+        'type' => 'char',
+        'length' => 36,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The Universally Unique Identifier.',
+      ),
+    ),
+    'primary key' => array('nid'),
+    'indexes' => array(
+      'history_node_deleted_nid' => array('nid'),
+      'history_node_deleted_type' => array('type'),
+      'history_node_deleted_timestamp' => array('timestamp'),
+      'history_node_deleted_uuid' => array('uuid'),
+    
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Add uuid column
+ */
+function history_node_deleted_update_7100() {
+  $spec = array(
+    'type' => 'char',
+    'length' => 36,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => 'The Universally Unique Identifier.',
+  );
+  if(!db_field_exists('history_node_deleted', 'uuid')) {
+    db_add_field('history_node_deleted', 'uuid', $spec);
+    db_add_index('history_node_deleted', 'history_node_deleted_uuid', array('uuid'));
+  }
+}

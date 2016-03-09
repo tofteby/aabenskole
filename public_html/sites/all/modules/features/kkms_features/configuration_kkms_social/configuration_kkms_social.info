@@ -1,0 +1,12 @@
+name = Configuration kkms social
+description = Social groups integration and share related configuration settings.
+core = 7.x
+package = Configuration
+version = 7.x-1.0
+project = configuration_kkms_social
+dependencies[] = fe_block
+dependencies[] = follow
+dependencies[] = kkms_social
+features[fe_block_settings][] = follow-site
+features[fe_block_settings][] = kkms_social-kkms-social-share-block
+features[features_api][] = api:2

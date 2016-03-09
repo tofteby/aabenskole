@@ -1,0 +1,94 @@
+/**
+ * Styling of institution content type.
+ *
+ */
+.field-name-field-capacity,
+.field-name-field-information{
+
+  // TODO: Not sure if the coloumn styling is a good idea.
+  @include at-breakpoint($mq-bp-tablet-plus) {
+    .field-items{
+      -webkit-column-count: 2;
+      -webkit-column-gap: 20px;
+
+      -moz-column-count: 2;
+      -moz-column-gap: 20px;
+
+      column-count: 2;
+      column-gap: 20px;
+    }
+  }
+
+  .field-item{
+    margin-bottom: em(9,18);
+  }
+
+  .double-field-first{
+    font-weight: 600;
+  }
+  .double-field-second{
+  }
+
+}
+
+
+.node-institution.node-full{
+  .field-name-field-place{
+    @include span-columns(16,16);
+    @include add-shadow;
+    border: 1px solid $col-gray-25;
+    margin-bottom: $space;
+
+    .node-place{
+      border-top: 1px solid $col-gray-25;
+      .group-location,
+      .group-contact{
+        padding-top: 0.5em;
+        display: inline-block;
+        vertical-align: top;
+      }
+
+      .group-location{
+        width: 100%;
+      
+        @include at-breakpoint($mq-bp-tablet-plus) { 
+          @include span-columns(8,16);
+          border-right: 1px solid $col-gray-25;
+        }
+        
+        padding-top: 0.5em;
+        h3,
+        .field-name-field-address{
+        }
+
+        h3{
+          padding: 0 $space/2;
+          font-weight: bold;
+          @include ie8_font_fix('b');
+          &:before{
+            color: $col-gray-70;
+            padding-right: $space/3;
+            @extend %icon;
+            @extend .ic-location:before;
+          }
+        }
+        .field-name-field-address{
+          margin: 0 $space*1.5;
+          margin-bottom: em(18,18);
+        }
+
+      }
+      .group-contact{
+        @include at-breakpoint($mq-bp-tablet-plus) { 
+          @include span-columns(8,16);
+          @include omega;
+        } 
+        .field-name-field-email,
+        .field-name-field-telephone,
+        .field-name-field-links{
+          margin: .5em $space;
+        }
+      }
+    }
+  }
+}

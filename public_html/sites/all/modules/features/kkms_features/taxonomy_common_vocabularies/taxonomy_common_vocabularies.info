@@ -1,0 +1,8 @@
+name = Taxonomy common vocabularies
+description = Common taxonomy vocabularies used on the KK multisite system
+core = 7.x
+package = Taxonomies
+dependencies[] = features
+dependencies[] = taxonomy
+features[features_api][] = api:2
+features[taxonomy][] = common

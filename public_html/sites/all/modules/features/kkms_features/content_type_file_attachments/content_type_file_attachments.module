@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Content type File attachments feature.
+ */
+
+include_once 'content_type_file_attachments.features.inc';

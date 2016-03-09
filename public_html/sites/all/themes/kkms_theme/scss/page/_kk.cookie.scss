@@ -1,0 +1,43 @@
+#sliding-popup{
+  background-color: #fff2d1 !important;
+  padding: 1em 0;
+
+  .popup-content{
+    margin-left: auto;
+    margin-right: auto;
+    max-width: $content-width;
+    padding-left: 1em;
+    padding-right: 1em;
+    position: relative;
+    background-color: #fff2d1;
+    #popup-text{
+      @extend .tx-content;
+      h2,
+      p{
+        color: $col-text !important;
+      }
+      h2{
+        font-size: em(20,18);
+        text-transform: uppercase;
+        margin-bottom: 0.5em;
+        font-weight: normal;
+        
+        @include ie8_font_fix;
+      }
+      color: $col-text !important;
+      margin-bottom: em(18,18);
+    }
+  }
+  #popup-buttons{
+    button{
+      padding: em(12,18) em(16,18);
+      background-color: $col-gray-95;
+      color: $col-content;
+      text-transform: uppercase;
+      font-weight: bold;
+      cursor: pointer;
+      
+      @include ie8_font_fix('b');
+    }
+  }
+}

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the configuration_workbench feature.
+ */
+
+include_once 'configuration_workbench.features.inc';

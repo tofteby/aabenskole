@@ -1,0 +1,139 @@
+<?php
+
+/**
+ * Implements hook_form_FORM_ID_alter() for media_internet().
+ */
+function kkms_media_alter_form_media_internet_add_alter(&$form, &$form_state) {
+  // Remove providers information list for image, document and audio types.
+  if (!empty($form['#validators'])) {
+    $types = &$form['#validators']['media_file_validate_types'];
+    if (!empty($types)) {
+      foreach (array('image', 'document', 'audio') as $type) {
+        if (_kkms_media_alter_array_key_exist_recursive($type, $types)) {
+          unset($form['providers']);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Checks wether in a nested array hierarchy a specific $key exists. The search
+ * is based on DFS.
+ *
+ * @param string $key
+ * @param array $search
+ * @return boolean TRUE when a key is found, FASLE otherwise.
+ */
+function _kkms_media_alter_array_key_exist_recursive($key, $search) {
+  // Check imput
+  if (!is_array($search)) {
+    return FALSE;
+  }
+  // Check root level
+  if (array_key_exists($key, $search)) {
+    return TRUE;
+  }
+  // Check next levels.
+  foreach ($search as &$value) {
+    if (_kkms_media_alter_array_key_exist_recursive($key, $value)) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Alter default file types.
+ *
+ * @see hook_file_default_types()
+ */
+function kkms_media_alter_file_default_types_alter(&$types) {
+  $file_type_mimetypes = array(
+    'audio'=> array('audio/*'),
+    'video'=> array('video/*'),
+    'image'=> array('image/*'),
+    'document'=> array(
+      'text/*',
+      'application/*',
+    ),
+  );
+
+  // Perform the actual alter logick.
+  foreach ($file_type_mimetypes as $type => $mimetypes) {
+    $types[$type]->mimetypes = $mimetypes;
+  }
+}
+
+/**
+ * Implemends hook_form_FORM_ID_alter for file_entity_add_upload_multiple form.
+ *
+ * Adds a JS behavior that fixes the multisubmit issue in the popup.
+ *
+ * @param array $form
+ * @param type $form_state
+ */
+function kkms_media_alter_form_file_entity_add_upload_multiple_alter(&$form, &$form_state) {
+  $form['#attached']['js'][] = drupal_get_path('module', 'kkms_media_alter') . '/js/disable_next.js';
+}
+
+/**
+ * Implements hook_field_attach_load().
+ */
+function kkms_media_alter_field_attach_load($entity_type, $entities, $age, $options) {
+  // Loop over all the entities looking for entities with attached images.
+  foreach ($entities as $entity) {
+    list(, , $bundle) = entity_extract_ids($entity_type, $entity);
+    // Get every file and image field instance on this entity.
+    $entity_instances = field_info_instances($entity_type, $bundle);
+    $file_fields = array_filter(field_info_field_map(), 'kkms_media_alter_files_filter');
+    $image_fields = array_filter($file_fields, 'kkms_media_alter_images_filter');
+    // Try to remove missing or invalid files to prevent errors, warnings, etc.
+    foreach (array_intersect_key($entity_instances, $file_fields) as $field_name => $instance) {
+      if (!empty($entity->{$field_name})) {
+        foreach ($entity->{$field_name} as $langcode => $items) {
+          // Filter out missing files
+          $entity->{$field_name}[$langcode] = array_filter($items);
+        }
+        // Filter out empty language sets
+        $entity->{$field_name} = array_filter($entity->{$field_name});
+      }
+    }
+    // Make sure images have alt. That means a non-NULL alt.
+    foreach (array_intersect_key($entity_instances, $image_fields) as $field_name => $instance) {
+      if (!empty($entity->{$field_name})) {
+        foreach ($entity->{$field_name} as $langcode => $items) {
+          foreach ($items as $delta => $item) {
+            if (!empty($item['fid']) && empty($item['alt'])) {
+              // File entity will override empty() alt, so setting empty string is safe.
+              $entity->{$field_name}[$langcode][$delta]['alt'] = '';
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Filter callback - get image and file fields.
+ */
+function kkms_media_alter_files_filter($field) {
+  return $field['type'] == 'image' || $field['type'] == 'file';
+}
+
+/**
+ * Filter callback - get image fields.
+ */
+function kkms_media_alter_images_filter($field) {
+  return $field['type'] == 'image';
+}
+
+
+function kkms_media_alter_pathologic_alter(&$url_params, $parts, $settings) {
+
+  if (isset($settings['full_html']) && isset($parts['host']) && preg_match("~sites/({$parts['host']}|default)/files~", $url_params['path'], $matches)) {
+    $url_params['path'] = str_replace("sites/{$parts['host']}/files", "sites/{$settings['full_html']['base_url_host']}/files", $url_params['path']);
+    $url_params['path'] = str_replace("sites/default/files", "sites/{$settings['full_html']['base_url_host']}/files", $url_params['path']);
+  }
+}

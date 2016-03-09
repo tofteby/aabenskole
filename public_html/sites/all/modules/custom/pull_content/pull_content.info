@@ -1,0 +1,20 @@
+name = Pull content
+description = Allows import of content from other Drupla site
+core = 7.x
+version = "7.x-1.0"
+
+dependencies[] = services_client
+dependencies[] = apachesolr_views
+dependencies[] = services
+dependencies[] = apachesolr_multisitesearch
+dependencies[] = features
+dependencies[] = media
+dependencies[] = link
+dependencies[] = rest_server
+dependencies[] = services_node_view
+dependencies[] = uuid
+
+; Features dependency
+dependencies[] = configuration_pull_content
+
+files[] = include/PullContentServicesClientConnection.inc

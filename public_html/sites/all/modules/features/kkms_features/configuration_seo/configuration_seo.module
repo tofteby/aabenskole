@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Configuration SEO feature.
+ */
+
+include_once 'configuration_seo.features.inc';

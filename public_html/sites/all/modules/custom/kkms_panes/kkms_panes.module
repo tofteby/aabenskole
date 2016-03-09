@@ -1,0 +1,347 @@
+<?php
+
+/**
+ * Implementation of hook_entity_info_alter().
+ */
+function kkms_panes_entity_info_alter(&$entity_info) {
+  $bundles = &$entity_info['fieldable_panels_pane']['bundles'];
+  // Remove the default pane type, defined in fieldable_panels_panes module.
+  unset($bundles['fieldable_panels_pane']);
+
+  $pane_definitions = array(
+    'form_pane' => t('Form pane'),
+    'decision_tree_pane' => t('Decision tree pane'),
+    'slideshow_pane' => t('Slideshow pane'),
+    'link_box_pane' => t('Link box pane'),
+    'text_pane' => t('Text pane'),
+    'banner_pane' => t('Banner pane'),
+    'nodes_pane' => t('Nodes pane'),
+//    'table_pane' => t('Table pane'),
+//    'users_pane' => t('Users pane'),
+    'files_pane' => t('List of files pane'),
+    'nodequeue_pane' => t('Nodequeue pane'),
+    'service_spot_pane' => t('Service spot pane'),
+  );
+
+  $prefix = 'admin/structure/fieldable-panels-panes/manage/';
+  foreach ($pane_definitions as $bundle_name => $label) {
+    $bundles[$bundle_name] = array(
+      'label' => $label,
+      'pane category' => t('Custom'),
+      'pane top level' => TRUE, // TRUE to show this as a top level icon
+      'admin' => array(
+        'path' => $prefix . '%fieldable_panels_panes_type',
+        'bundle argument' => 4,
+        'real path' => $prefix . str_replace('_', '-', $bundle_name),
+        'access arguments' => array('administer fieldable panels panes'),
+      ),
+    );
+  }
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function kkms_panes_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'ctools' && $plugin_type == 'content_types') {
+    return 'plugins/' . $plugin_type;
+  }
+}
+
+function _kkms_panes_services_source_context($subtype, $conf, $args, $contexts) {
+  $context = reset($contexts);
+  if(empty($context) || $context->type != 'string') {
+    return;
+  }
+  $cache = &drupal_static(__FUNCTION__, array());
+  if(!isset($cache[$context->data])) {
+    $path_array = explode('/', $context->data);
+    $path = explode('-', array_pop($path_array));
+    if(!isset($path[1]) || !is_numeric($path[1])) {
+      return;
+    }
+    $nid = $path[1];
+    $site = solr_multisite_load($path[0]);
+    if(empty($site)) {
+      return;
+    }
+    
+  
+    $block = new stdClass();
+  
+    try {
+      try{
+        $client = _pull_content_connection_get($site);
+        $node = $client->getNodeView($nid);
+      }
+      catch (ServicesClientConnectionResponseException $e) {
+        $e->log();
+        return;
+      }
+    }
+    catch (ServicesClientConnectionException $e) {
+      $e->log();
+      return;
+    }
+    if(empty($node)) {
+      return;
+    }
+    
+    $cache[$context->data] = array();
+    $cache[$context->data]['nid'] = $nid;
+    $cache[$context->data]['node'] = $node;
+    $cache[$context->data]['alias'] = $node['node']['_path_alias'];
+    $cache[$context->data]['site'] = $site;
+    $cache[$context->data]['site_hash'] = $path[0];
+    $cache[$context->data]['path_array'] = $path_array;
+  }
+
+  return $cache[$context->data];
+}
+
+/**
+ * Implements hook_permission().
+ */
+function kkms_panes_permission() {
+   return array(
+    'kkms_panes_permission_access_source' => array(
+      'title' => t('Access node view source'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_form_alter() to alter the files_pane form.
+ * 
+ * @param type $form
+ * @param type $form_state
+ * @param type $form_id
+ * @return type
+ */
+function kkms_panes_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id !== 'fieldable_panels_panes_fieldable_panels_pane_content_type_edit_form') {
+    return;
+  }
+  if($form['#bundle'] !== 'files_pane') {
+    return;
+  }
+  
+  $field =&$form['field_pane_files'];
+  $field[$field['#language']]['#after_build'][] = '_kkms_panes_after_form_build';
+}
+
+/**
+ * Element post processor callback.
+ * Removes the "Edit" subelement.
+ * 
+ * @param array $element
+ * @return array
+ */
+function _kkms_panes_after_form_build($element) {
+  foreach(element_get_visible_children($element) as $index) {
+    if (is_numeric($index)) {
+      unset($element[$index]['edit']);
+    }
+  }
+  return $element;
+}
+
+/**
+ * Alter hook to manage the propper proximity context filter value format.
+ * This is used for the "Area" related views.
+ * 
+ * @param &array $result
+ * @param array $context
+ */
+function kkms_panes_field_attach_view_alter(&$result, $context) {
+  $field_name = 'field_geolocation';
+  if(!isset($result[$field_name])) {
+    return;
+  }
+  if(!_kkms_panes_field_attach_view_alter_valid_context($context)) {
+    return;
+  }
+  foreach($result[$field_name]['#items'] as $index => $value) {
+    $result[$field_name][$index]['#markup'] = "$value[lat], $value[lon]";
+  }
+}
+
+/**
+ * 
+ * @param type $context
+ * @return boolean
+ */
+function _kkms_panes_field_attach_view_alter_valid_context($context) {
+  // Token context used in area proximity filtering.
+  if($context['display'] === 'token') {
+    return TRUE;
+  }
+  // Node context used in 
+  if(is_array($context['display']) && isset($context['display']['views_view'])) {
+    $view = $context['display']['views_view'];
+    if($view instanceof view && $view->name == 'institutions_near_by') {
+      return TRUE;
+    }
+  }
+  // Every other
+  return FALSE;
+}
+
+/**
+ * Called in a php view handler (Eval).
+ */
+function _kkms_panes_get_related_place_location($view, $argument) {
+  $nid = $view->argument['nid']->value[0];
+  $node = node_load($nid);
+  
+  $is_empty_node_field = function($node, $field_name) {
+    return !$node || 
+           empty($node->$field_name) || 
+           empty($node->{$field_name}[LANGUAGE_NONE]);
+  };
+  
+  if ($is_empty_node_field($node, 'field_place')) {
+    return FALSE; // No $node loaded or empty field_place!
+  }
+  
+  $place_field = $node->field_place[LANGUAGE_NONE][0];
+  if(isset($place_field['entity'])) {
+    $place = $place_field['entity'];
+  }
+  elseif(!empty($place_field['target_id'])) {
+    // Fallback if the `entity` field property is not loaded.
+    $place = node_load($place_field['target_id']);
+  }
+  else {
+    return FALSE; // Can not determine $place instance
+  }
+  
+  if($is_empty_node_field($place, 'field_geolocation')) {
+    return FALSE;
+  }
+  
+  $field = $place->field_geolocation[LANGUAGE_NONE][0];
+  $result = "$field[lat], $field[lon]";
+  return $result;
+}
+
+/**
+ * Implements hook_views_pre_build.
+ * 
+ * @see _kkms_panes_get_related_place_location()
+ *
+ * @param &view $view
+ */
+function kkms_panes_views_pre_build(&$view) {
+  // Just implement the hook to trigger the inclusion of the file.
+  // Used to make _kkms_panes_get_related_place_location method visible to 
+  // the views contectual PHP implementations.
+}
+
+/**
+ * Implements hook_menu_block_blocks().
+ */
+function kkms_panes_menu_block_blocks() {
+  // The array key is the block delta used by menu block.
+  return array(
+    'second_level' => array(
+      'menu_name'   => 'main-menu',
+      'parent_mlid' => 0,
+      'title_link'  => 0,
+      'admin_title' => 'Second level menu block',
+      'level'       => 2,
+      'follow'      => '0',
+      'depth'       => 2,
+      'expanded'    => 0,
+      'sort'        => 0,
+    ),
+  );
+}
+
+/**
+ * Implements hook_views_default_views_alter(&$views) to add 'access content'
+ * permissions to views stored in code (not features).
+ *
+ * @param &array $views
+ */
+function kkms_panes_views_default_views_alter(&$views) {
+  $to_alter = array(
+    'fieldable_pane_entities' => array('default'),
+    'fieldable_pane_entity_revisions' => array('default'),
+    'nodehierarchy_children_list' => array('default'),
+    'nodehierarchy_children_teasers' => array('default'),
+  );
+  foreach($to_alter as $view_name => $displays) {
+    if (isset($views[$view_name])) {
+      foreach($displays as $display_name) {
+        if (isset($views[$view_name]->display[$display_name])) {
+          $views[$view_name]->display[$display_name]->display_options['access']['type'] = 'perm';
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_fieldable_panels_pane().
+ */
+function kkms_panes_preprocess_fieldable_panels_pane(&$vars) {
+  $elements = $vars['elements'];
+  if ($elements['#bundle'] == 'banner_pane') {
+    $vars['banner_url'] = NULL;
+    $link_values = reset($elements['#fieldable_panels_pane']->field_pane_link);
+    if ($link_values && $link_values[0]['url']) {
+      $vars['banner_url'] = $link_values[0]['url'];
+    }
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function kkms_panes_theme() {
+  return array(
+    'kkms_field_description' => array(
+      'render element' => 'element',
+    ),
+  );
+}
+
+/**
+ * Theme wrapper - add description to field.
+ */
+function theme_kkms_field_description($variables) {
+  $element = $variables['element'];
+  $output = '<div class="pane-description">' . $element['#field_description'] . '</div>';
+  $output .= $element['#children'];
+  return $output;
+}
+
+/**
+ * Implements hook_panels_pane_content_alter().
+ */
+function kkms_panes_panels_pane_content_alter($content, $pane, $args, $context, $renderer, $display) {
+  if (!empty($content->content) && $pane->type == 'entity_field') {
+    /**
+     * Adding description to some field panes
+     * It is below Title, and above Label, so make sure to use Title.
+     * Possible improvements:
+     * 1. Administration in Pane configuration OR per field type.
+     * 2. If needed in non-panel pages, this implementation should alter field directly.
+     */
+    switch ($pane->subtype) {
+      case 'node:field_contact':
+        $content->content['#theme_wrappers'][] = 'kkms_field_description';
+        $content->content['#field_description'] = t('You can contact to receive more information about this page.');
+        break;
+      case 'node:field_related_files':
+        $content->content['#theme_wrappers'][] = 'kkms_field_description';
+        $content->content['#field_description'] = t('Important documents for download');
+        break;
+      case 'node:field_links':
+        $content->content['#theme_wrappers'][] = 'kkms_field_description';
+        $content->content['#field_description'] = t('More information can be found on these links');
+        break;
+    }
+  }
+}

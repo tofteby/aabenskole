@@ -1,0 +1,21 @@
+@charset "UTF-8";
+
+// Import libraries
+@import "compass";
+@import "susy";
+
+
+.tx-content{
+  blockquote {
+    &:before {
+      font-size: 2em;
+    }
+  }
+}
+
+.form-type-password{
+  .form-text{
+    font-family: Arial, sans-serif;
+  }
+}
+

@@ -1,0 +1,67 @@
+// Weight specific names included for potential use in IE6 - 8.
+@font-face{
+  font-family:"Gill Sans W01_n4";
+  src:url("#{$theme_path}/fonts/2cebe80c-b289-4ae0-a3b0-baa82c6c6e10.eot");
+}
+
+@font-face{
+  font-family:"Gill Sans W01";
+  src:url("#{$theme_path}/fonts/2cebe80c-b289-4ae0-a3b0-baa82c6c6e10.eot");
+  src:url("#{$theme_path}/fonts/2cebe80c-b289-4ae0-a3b0-baa82c6c6e10.eot?#iefix") format("eot"),url("#{$theme_path}/fonts/2bc69477-90c2-4415-a51f-36e36eee3d5e.woff") format("woff"),url("#{$theme_path}/fonts/33447d8d-d920-48e7-b0a9-1d3dda80d6a6.ttf") format("truetype"),url("#{$theme_path}/fonts/e49c440c-7653-44ce-96d2-f775947ba9fe.svg#e49c440c-7653-44ce-96d2-f775947ba9fe") format("svg");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face{
+  font-family:"Gill Sans W01_n7";
+  src:url("#{$theme_path}/fonts/1a6dec8e-26f9-4243-8495-835709538f92.eot");
+}
+
+@font-face{
+  font-family:"Gill Sans W01";
+  src:url("#{$theme_path}/fonts/1a6dec8e-26f9-4243-8495-835709538f92.eot");
+  src:url("#{$theme_path}/fonts/1a6dec8e-26f9-4243-8495-835709538f92.eot?#iefix") format("eot"),
+    url("#{$theme_path}/fonts/f05272f9-83e3-4de6-8423-5d57f730c87b.woff") format("woff"),
+    url("#{$theme_path}/fonts/33f5d8d9-105f-4a49-9351-74ecae7f4a49.ttf") format("truetype"),
+    url("#{$theme_path}/fonts/b56150eb-5caa-4385-b907-373e97ddb2ff.svg#b56150eb-5caa-4385-b907-373e97ddb2ff") format("svg");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face{
+  font-family:"Gill Sans W01_i7";
+  src:url("#{$theme_path}/fonts/e2d1fd51-cc5e-4cfe-82f1-a6fb8b915569.eot");
+}
+
+@font-face{
+  font-family:"Gill Sans W01";
+  src:url("#{$theme_path}/fonts/e2d1fd51-cc5e-4cfe-82f1-a6fb8b915569.eot");
+  src:url("#{$theme_path}/fonts/e2d1fd51-cc5e-4cfe-82f1-a6fb8b915569.eot?#iefix") format("eot"),url("#{$theme_path}/fonts/13437aee-fc9a-4378-886e-cde8c611857b.woff") format("woff"),url("#{$theme_path}/fonts/401121a5-d55e-49f5-bd62-aed0f5d202a3.ttf") format("truetype"),url("#{$theme_path}/fonts/3c0ab3f9-8efc-47e4-8c22-7ae262aaa612.svg#3c0ab3f9-8efc-47e4-8c22-7ae262aaa612") format("svg");
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face{
+  font-family:"Gill Sans W01_i4";
+  src:url("#{$theme_path}/fonts/43bc65b5-0f61-40a9-9ec4-469038e8c1f2.eot");
+}
+
+@font-face{
+  font-family:"Gill Sans W01";
+  src:url("#{$theme_path}/fonts/43bc65b5-0f61-40a9-9ec4-469038e8c1f2.eot");
+  src:url("#{$theme_path}/fonts/43bc65b5-0f61-40a9-9ec4-469038e8c1f2.eot?#iefix") format("eot"),url("#{$theme_path}/fonts/8d3f1c3a-e26d-4dd7-ac5b-4b0bc68dccaa.woff") format("woff"),url("#{$theme_path}/fonts/3d012c73-3418-43c1-8252-3d65991a551a.ttf") format("truetype"),url("#{$theme_path}/fonts/9da974d2-f3f3-41d6-9c96-5e74add0b370.svg#9da974d2-f3f3-41d6-9c96-5e74add0b370") format("svg");
+  font-weight: 400;
+  font-style: italic;
+}
+
+// ICON fontface
+@font-face {
+  font-family: 'icomoon';
+  src:url('#{$theme_path}/fonts/icomoon.eot');
+  src:url('#{$theme_path}/fonts/icomoon.eot?#iefix') format('embedded-opentype'),
+    url('#{$theme_path}/fonts/icomoon.ttf') format('truetype'),
+    url('#{$theme_path}/fonts/icomoon.woff') format('woff'),
+    url('#{$theme_path}/fonts/icomoon.svg#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}

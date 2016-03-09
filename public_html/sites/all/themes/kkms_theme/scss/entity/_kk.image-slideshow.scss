@@ -1,0 +1,133 @@
+/**
+ *  Theming of slideshow.
+ *  - Most of the rules are overrides of the defaults outputtet by flexslider-module.
+ *  -
+ **/
+
+.flexslider {
+  border: 0;
+  padding: 0;
+  @include border-radius(0);
+  box-shadow: none;
+  border: 0;
+  margin: $space 0;
+ 
+  &:hover {
+    .flex-prev, .flex-next {
+      opacity: 1;
+      filter: alpha(opacity=100);
+    }
+  }
+
+.flex-pauseplay {
+    left: 0;
+    position: absolute;
+    bottom: 5px;  
+
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    a, a.flex-pause, a.flex-play {
+      text-align: left;
+      color: #fff;
+      height: 40px;
+      padding: 9px 12px;
+      width: 40px;
+      &:before{
+        //content: none;
+        color: #fff;
+        margin-bottom: 10px;
+      }
+    }    
+    .flex-pause, .flex-play {
+      background-color: $col-primary;
+      background-position: center;
+      //color: $col-content;
+      color: #fff;
+      //text-indent: -9999px;
+      &:hover{
+        background-color: $col-button-hover;
+      }
+    }    
+}
+
+
+  .flex-direction-nav {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    a, a.flex-prev, a.flex-next {
+      text-align: left;
+      &:before {
+        content: none;
+      }
+    }
+    .flex-prev, .flex-next {
+      background-color: $col-primary;
+      background-position: center;
+      color: $col-content;
+      text-indent: -9999px;
+      &:hover {
+        background-color: $col-button-hover;
+      }
+    }
+    .flex-prev {
+      background: $col-primary url("#{$theme_path}/images/icon-arrow-left.png") no-repeat center;
+      left: .5em;
+    }
+    .flex-next {
+      background: $col-primary url("#{$theme_path}/images/icon-arrow-right.png") no-repeat center;
+      right: .5em;
+    }
+  }
+
+  .flex-control-nav {
+    z-index: 2;
+    li{
+      a{
+        background-color: $col-gray-70;
+      }
+    }
+    bottom: em(18,18);
+    .flex-active {
+      background-color: $col-content;
+    }
+  }
+
+  .slides li:after {
+    content: ".";
+    position:absolute;
+    left:0;
+    bottom: 0;
+    z-index:-1000;
+  }
+
+}
+
+// Hides the title of the pane when slideshow is embedded in a pane.
+.pane-bundle-slideshow-pane{
+  .pane-title{
+    display: none; // Not sure if this should be hidden.
+  }
+}
+
+// Hides the title of the slideshow when the slideshow is embedded in a pane.
+.field-name-field-pane-slideshow{
+  h1,h2{
+    display: none; // Not sure if this should be hidden.
+  }
+}
+
+
+// The title when the slideshow is in full node view
+.node-image-slideshow{
+  h1{
+    display: none; // Not sure if this should be hidden.
+  }
+}
+
+.ios .flexslider .flex-direction-nav {
+  display: none;
+}

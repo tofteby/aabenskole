@@ -1,0 +1,32 @@
+@charset "UTF-8";
+
+// Import libraries
+@import "compass";
+@import "susy";
+
+
+.page-events-grid,
+.page-news-list,
+.page-events-list{
+  .pane-apachesolr-form{
+    label{
+      display: none;
+    }
+    .form-text{
+      padding: .5em;
+    }
+    .form-submit{
+      padding: 0 em(8,16);
+    }
+
+  }
+}
+
+
+.sec-header {
+  .sec-inner {
+    min-height: 0;
+  }
+}
+
+// Three column 

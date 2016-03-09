@@ -1,0 +1,12 @@
+name = Token tweaks
+description = Allows administrators to disable token types or tokens to improve performance using the token tree.
+core = 7.x
+dependencies[] = token
+
+
+; Information added by drush on 2014-06-26
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "token_tweaks"
+datestamp = "1403780688"
+

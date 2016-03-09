@@ -1,0 +1,58 @@
+.pane-node-comments{
+  margin-top: $baseline * 2;
+  .pane-title{
+    @extend .title-block;
+    margin: 0 0 em(24,24) em(29,24);
+  }
+}
+
+.pane-node-comment-form{
+  margin: $baseline 0 $baseline em(30,18);
+  
+  @include at-breakpoint($mq-bp-tablet-minus) { 
+    margin-left: em(15,18);
+  }
+  
+  .pane-title{
+    @extend .title-block;
+    margin-bottom: em(24,24);
+  }
+}
+
+.comment-form{
+  .form-actions{
+    width: auto;
+    .form-submit{
+    }
+  }
+}
+
+.comment{
+  @extend .bl-element;
+  .submitted{
+    @extend %byline;
+  }
+  .username{
+    @extend .title-block;
+    color: $col-text;
+    display: block;
+    clear: both;
+  }
+  .content{
+    margin-bottom: em(18,18);
+  }
+  .links{
+    @extend %text-label;
+    li{
+      display: inline-block;
+      margin-right: em(18,13);
+    }
+  }
+}
+
+@include at-breakpoint($mq-bp-tablet-minus) { 
+  .indented {
+    margin-left: $padding; /* LTR */
+  }
+}
+

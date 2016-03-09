@@ -1,0 +1,17 @@
+/**
+ * Styling of news content type.
+ *
+ * TODO:
+ */
+
+
+.node-news.node-full{
+  .title-page{
+    margin-bottom: em(12,48);
+  }
+  .pane-node-created{
+    @extend %byline;
+    color: $col-gray-70;
+    margin-bottom: em(12,18);
+ }
+}

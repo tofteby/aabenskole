@@ -1,0 +1,300 @@
+<?php
+
+/**
+ * @file
+ * Module file.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function kk_taxon_taxonomy_alter_help($path, $arguments) {
+  $output = '';
+
+  switch ($path) {
+    case "admin/help#kk_taxon_taxonomy_alter":
+      $output = t('Alter Taxon taxonomy module admin form.');
+      break;
+  }
+
+  return $output;
+}
+
+/**
+ * Implement hook_form_alter().
+ */
+function kk_taxon_taxonomy_alter_form_alter(&$form, &$form_state, $form_id) {
+  global $user;
+  global $base_url;
+
+  if (isset($form['#node_edit_form']) && $form['#node_edit_form'] && $user->uid) {
+    // Only include Taxon if the user is logged in.
+    drupal_add_js(drupal_get_path('module', 'kk_taxon_taxonomy_alter') . '/js/kk_taxon_taxonomy_alter.js', array(
+      'type' => 'file',
+      'preprocess' => FALSE,
+      'weight' => '10000',
+    ));
+    drupal_add_js(array('taxon_taxonomy_alter' => array(
+      'kk_taxon_taxonomy_use_autotag' => variable_get('kk_taxon_taxonomy_alter_use_autotagging', 0),
+      'kk_taxon_taxonomy_autotaggin_button_text' => variable_get('kk_taxon_taxonomy_alter_autotaggin_button_text', ''),
+    )), 'setting');
+  }
+
+  if ($form_id == '_taxon_taxonomy_admin_form') {
+    $form['submit']['#weight'] = 100;
+
+    $form['taxon_taxonomy_taxon_url']['#default_value'] = $base_url . '/' . drupal_get_path('module', 'taxon_taxonomy') . '/web-service/taxon-ws.php';
+
+    $form['taxon_taxonomy_taxon_url']['#maxlength'] = 255;
+
+    $form['taxon_taxonomy_taxonomy_name']['#default_value'] = drupal_basename(variable_get('taxon_taxonomy_taxonomy_name', 'taxon.json'));
+
+    $form['taxon_taxonomy_taxonomy_name']['#description'] = t('The name of the taxonomy to use when classifying. Please, do not forget the extension ".json"');
+
+    $form['taxon_taxonomy_field_name']['#value'] = variable_get('taxon_taxonomy_field_name', '#edit-field-autotag-suggestions-und');
+
+    $form['taxon_taxonomy_selected_image']['#value'] = variable_get('taxon_taxonomy_selected_image', "/sites/all/modules/taxon_taxonomy/images/selected.png");
+
+    $form['taxon_taxonomy_not_selected_image']['#value'] = variable_get('taxon_taxonomy_not_selected_image', '/sites/all/modules/taxon_taxonomy/images/not_selected.png');
+
+    $form['kk_taxon_taxonomy_alter_use_autotagging'] = array(
+      '#type' => 'checkbox',
+      '#default_value' => variable_get('kk_taxon_taxonomy_alter_use_autotagging', 0),
+      '#title' => t('Use auto tagging button'),
+    );
+
+    $form['kk_taxon_taxonomy_alter_autotaggin_button_text'] = array(
+      '#type' => 'textfield',
+      '#title' => t('The text on the Taxon button for autotagging'),
+      '#description' => t('The text on the Taxon button.'),
+      '#size' => 40,
+      '#maxlength' => 120,
+      '#default_value' => variable_get('kk_taxon_taxonomy_alter_autotaggin_button_text', ''),
+      '#dependency' => array('edit-kk-taxon-taxonomy-alter-use-autotagging' => array(1)),
+    );
+
+    $form['#attached']['js'][] = drupal_get_path('module', 'kk_taxon_taxonomy_alter') . '/js/kk_taxon_taxonomy_alter_form.js';
+
+    $form['#validate'][] = 'kk_taxon_taxonomy_alter_admin_form_validate';
+
+    $form['#submit'][] = 'kk_taxon_taxonomy_alter_admin_form_submit';
+  }
+}
+
+/**
+ * Validate handler for taxon taxonomy settings.
+ */
+function kk_taxon_taxonomy_alter_admin_form_validate($form, &$form_state) {
+  $taxonomy_name = $form_state['values']['taxon_taxonomy_taxonomy_name'];
+  $extension_check = explode('.', $taxonomy_name);
+
+  if (end($extension_check) != 'json') {
+    $message = t('Please, add ".json" extension to the name of the taxonomy.');
+    form_set_error('taxon_taxonomy_taxonomy_name', $message);
+  }
+}
+
+/**
+ * Submit handler for admin config form.
+ */
+function kk_taxon_taxonomy_alter_admin_form_submit($form, $form_state) {
+  $variable_names = array(
+    'kk_taxon_taxonomy_alter_use_autotagging',
+    'kk_taxon_taxonomy_alter_autotaggin_button_text',
+  );
+  foreach($variable_names as $name) {
+    variable_set($name, $form_state['values'][$name]);
+  }
+}
+
+/**
+ * Helper function that generate json file.
+ */
+function kk_taxon_taxonomy_alter_generate_json_file($vid) {
+    if (!$vid) {
+    throw new Exception(t('Please go to :admin and configure Vocabulary', array(
+      ':admin' => l('admin/config/services/kle-integration', 'admin/config/services/kle-integration'),
+    )));
+  }
+
+  if (!variable_get('kk_taxon_taxonomy_json_generate_on_cron', 1)) {
+    variable_set('kk_taxon_taxonomy_json_generate_on_cron', 1);
+    return TRUE;
+  }
+
+  require_once drupal_get_path('module', 'taxon_taxonomy') . '/system/includes/' . 'niceJSON.php';
+  // Check if view exists
+  $view = views_get_view('taxon_kle_taxonomy_json');
+  if($view) {
+    $url = url('taxon_kle_taxonomy_json/' . $vid, array('absolute' => TRUE));
+    $response = drupal_http_request($url, array('timeout' => 90.0));
+    if (isset($response->error)) {
+      throw new Exception(t('Taxon taxonomy alter module returns response error while trying to generate json file. Error: !error. Error code: !code', array(
+        '!error' => $response->error,
+        '!code' => $response->code,
+      )));
+    }
+
+    $json_file = implode('/', array(
+      drupal_realpath('public://'),
+      'taxon',
+      variable_get('taxon_taxonomy_taxonomy_name', 'taxon.json'),
+    ));
+
+    if (($taxonomy_data = json_decode($response->data)) === NULL) {
+      throw new Exception($json_file . ' is not a valid JSON\n');
+    }
+
+    $directory_name = drupal_dirname($json_file);
+    $options = FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS;
+    if (!file_prepare_directory($directory_name, $options)) {
+      throw new Exception(t('The directory !directory cannot be created.', array(
+        '!directory' => $directory_name,
+      )));
+    }
+
+    try {
+      $lookup_data = kk_taxon_taxonomy_alter_make_lookup_taxonomy($taxonomy_data);
+    }
+    catch (Exception $e) {
+      $message = check_plain($e->getMessage());
+      watchdog('KK Taxon Taxonomy Alter', $message, array(), WATCHDOG_ERROR);
+      drupal_set_message($message, 'error');
+
+      throw new Exception(t('KK Taxon Taxonomy Alter: count not generate JSON'));
+    }
+
+    if (($output = json_encode($lookup_data)) === FALSE) {
+      throw new Exception(t('JSON taxonomy file cannot be encoded'));
+    }
+
+    if (file_put_contents($json_file, $output) === FALSE) {
+      throw new Exception(t('Cannot write in json file.'));
+    }
+  }
+  return TRUE;
+}
+
+/**
+ * Helper function from taxon tools, which generates json for taxon, based on
+ * parsed response data in $taxonomy.
+ */
+function kk_taxon_taxonomy_alter_make_lookup_taxonomy($taxonomy) {
+  // Build structure used for actually queries.
+  $terms_lookup = array();
+
+  // Create the taxonomy based on classes
+  foreach ($taxonomy->classes as $class_number => $class) {
+
+    // Check whether the title of the class is defined.
+    if (!isset($class->title)) {
+      if (isset($class->id)) {
+        throw new Exception(t("Title is not defined in class :class_id", array(
+          ':class_id' => $class->id,
+        )));
+      }
+      else {
+        $msg = t("Title is not defined in class number :class_number", array(
+          ':class_number' => $class_number,
+        ));
+        throw new Exception($msg);
+      }
+    }
+
+    // Check whether the id of the class is defined.
+    if (!isset($class->id)) {
+      throw new Exception(t("ID is not defined in class :class_title", array(
+        ':class_title' => $class->title,
+      )));
+    }
+
+    _kk_taxon_taxonomy_alter_ensure_defaults($class, 'class');
+
+    if (!isset($class->terms)) {
+      continue;
+    }
+
+    foreach ($class->terms as $term) {
+      // Make the title lower case for later comparison in Taxon (classify.php)
+      $term->title = drupal_strtolower($term->title);
+
+      _kk_taxon_taxonomy_alter_ensure_defaults($term, 'term');
+
+      $terms_lookup[$term->title] = array(
+        'classes' => array(
+          $class->id => new stdClass(),
+        ),
+      );
+      $class_id = &$terms_lookup[$term->title]['classes'][$class->id];
+
+      $class_id->weight = $term->weight;
+      $class_id->required = $term->required;
+      $class_id->requireTerm = $term->requireTerm;
+      $class_id->excludeOnTerm = $term->excludeOnTerm;
+      $class_id->requireClass = $term->requireClass;
+      $class_id->excludeOnClass = $term->excludeOnClass;
+      $class_id->classTitle = $class->title;
+      $class_id->hidden = $class->hidden;
+      $class_id->exclusive = $class->exclusive;
+      $class_id->thresholdWeight = $class->thresholdWeight;
+      $class_id->thresholdCount = $class->thresholdCount;
+      $class_id->thresholdCountUnique = $class->thresholdCountUnique;
+
+      foreach(array('prefix', 'suffix') as $property) {
+        if (!isset($terms_lookup[$term->title][$property])) {
+          $terms_lookup[$term->title][$property] = $term->$property;
+        }
+        elseif ($terms_lookup[$term->title][$property] == "") {
+          $terms_lookup[$term->title][$property] = $term->$property;
+        }
+        elseif ($term->$property != "") {
+          $terms_lookup[$term->title][$property] .= "|" . $term->$property;
+        }
+      }
+    }
+  }
+
+  $taxonomy_lookup = new stdClass();
+
+  // Add the system settings to the lookup taxonomy
+  $taxonomy_lookup->system = $taxonomy->system;
+
+  // Add the classes to the lookup taxonomy
+  $taxonomy_lookup->classes = $terms_lookup;
+
+  return $taxonomy_lookup;
+}
+
+/**
+ * Helper method that prefills object properties based on type.
+ *
+ * @staticvar array $defaults
+ * @param type $object
+ * @param type $type
+ */
+function _kk_taxon_taxonomy_alter_ensure_defaults(&$object, $type) {
+  static $defaults = array(
+    'class' => array(
+      'thresholdWeight' => 5,
+      'hidden' => 0,
+      'exclusive' => 0,
+      'thresholdCount' => 1,
+      'thresholdCountUnique'=> 1,
+    ),
+    'term' => array(
+      'weight' => 5,
+      'required' => 0,
+      'requireTerm' => '',
+      'excludeOnTerm' => '',
+      'requireClass' => '',
+      'excludeOnClass' => '',
+      'prefix' => '',
+      'suffix' => '',
+    ),
+  );
+  foreach($defaults[$type] as $property_name => $default_value) {
+    if(!isset($object->$property_name)) {
+      $object->$property_name = $default_value;
+    }
+  }
+}

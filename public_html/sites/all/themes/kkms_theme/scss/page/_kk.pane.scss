@@ -1,0 +1,273 @@
+.panel-pane{
+  //  margin-bottom: em(18,18);
+}
+.banner-pane{
+  overflow: hidden;
+  position: relative;
+  .field-name-field-pane-body{
+    .field-items{
+      .field-item{
+        @extend %basefontfamily;        
+        width: auto;        
+        padding: $space/2;
+        font-size: em(28,18);
+        line-height: 1em;
+        color: $col-content;
+        background-color: $col-back-b;
+        text-transform: uppercase;
+        font-weight: bold;
+        @include ie8_font_fix('b');
+        
+        .field-item-inner {
+          overflow: hidden;
+          max-height: 4em;
+        }
+      }
+    }
+    
+    @include at-breakpoint($mq-bp-desktop) {
+      top: 30%;
+      width: 100%;
+      position: absolute;
+      
+      .field-items{
+        margin-right: auto;
+        margin-left: auto;
+        max-width: $content-width;
+        padding: 1em;
+        
+        .field-item{
+          display: inline-block;
+          max-width: 80%;
+          padding: $space;
+          font-size: em(42,18);
+          
+          .field-item-inner {
+            max-height: 2em;
+          }
+        }
+      }
+    }
+  }
+}
+
+.pane-bundle-banner-pane{
+  .pane-title{
+    display: none;
+  }
+}
+
+// Text Pane
+.pane-bundle-text-pane{
+  .pane-title{
+    @extend .title-block;
+    margin-bottom: 0.5em;
+  }
+}
+
+
+// Content source
+.pane-kkms-panes-services-source {
+   display: block;
+   max-width: 85%; 
+}
+
+// Support for full width pages
+.node-type-section-page{
+  .sec{
+    &.sec-content{
+      .reg-inner {
+        @include container;
+        position: relative;
+        padding-left: 0;
+        padding-right: 0;
+        max-width: 100%;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+      
+      .reg-inner-regions,
+      .panel-pane {
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+        padding-top: 1em;
+        padding-bottom: 1em;
+        max-width: $content-width;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: em(18,18);
+        clear: both;
+        
+        @include at-breakpoint($mq-bp-desktop) {
+          padding-left: 1em;
+          padding-right: 1em;
+        }
+      }
+      
+      .pane-bundle-files-pane,
+      .pane-bundle-link-box-pane,
+      .pane-bundle-nodequeue-pane {
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+      
+      .reg-inner-regions {
+        overflow: hidden;
+        .panel-pane {
+          padding: 0; 
+        }
+      }
+      
+      .reg-middle-3-col .panel-pane {
+        clear: none;
+        margin-top: $space;
+        margin-bottom: $padding;
+        padding: 0;
+      }      
+      
+      
+      @include at-breakpoint($mq-bp-tablet) {
+        .reg-middle-3-col .panel-pane {
+          @include span-columns(3,6);
+        }
+
+        .reg-middle-3-col .reg-inner-regions > .panel-pane {
+          &.even {
+            @include omega;
+          }
+
+          &.odd {
+            clear: both;
+          }
+        }
+
+        .reg-middle-3-col .panels-ipe-sort-container .panels-ipe-portlet-wrapper {
+          &.even .panel-pane {
+            @include omega;
+          }
+
+          &.odd .panel-pane {
+            clear: both;
+          }
+        }
+      }
+      @include at-breakpoint($mq-bp-desktop) {
+        .reg-middle-3-col .panel-pane {
+          @include span-columns(2,6);
+        }
+
+        .reg-middle-3-col .reg-inner-regions > .panel-pane {
+          &.third {
+            @include omega;
+          }
+
+          &.first {
+            clear: both;
+          }
+        }
+
+        .reg-middle-3-col .panels-ipe-sort-container .panels-ipe-portlet-wrapper {
+          &.third .panel-pane {
+            @include omega;
+          }
+
+          &.first .panel-pane {
+            clear: both;
+          }
+        }
+      }
+
+      .pane-bundle-banner-pane{
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        max-width: none;
+        width: 100%;
+        img{
+          height: auto;
+          width: 100%;  
+        }
+      }
+    }
+  }
+}
+
+.panels-pane-bgcolor-grey{
+  background-color: $col-back-g;
+}
+.panels-pane-bgcolor-white{
+  background-color: $col-content;
+}
+.panels-region-bgcolor-grey{
+  background-color: $col-back-g;
+}
+.panels-region-bgcolor-white{
+  background-color: $col-content;
+}
+
+
+
+
+
+
+
+
+//TODO: Investigate why we need these
+// In order to upload files from panes:
+.ui-widget.ui-front { z-index: 1002; }
+.ui-widget-overlay.ui-front { z-index: 1002; }
+.ui-dialog.ui-widget.media-wrapper { z-index: 1003; }
+
+
+.fb-activity.fb_iframe_widget,
+.fb-activity.fb_iframe_widget span {
+  width: 100% !important;
+}
+
+.not-found {
+    font-size: 30px;
+    margin: 30px 0;
+    text-transform: uppercase;
+}
+
+.pane-bundle-nodes-pane {
+  @include container;
+  font-size: em(18,18);
+  vertical-align: top;
+  clear: right;
+
+  h2.pane-title {
+    font-size: em(24,16);
+    margin-bottom: em(12,24);
+  }
+  .fieldable-panels-pane {
+    vertical-align: top;
+    @include pie-clearfix;
+    
+    .node {
+      @include at-breakpoint($mq-bp-desktop) {
+        @include span-columns(2, 6);
+
+        &.third {
+          @include omega;
+        }
+      }
+    }
+    
+    .bl-img, .bl-video {
+      margin-bottom: 1em;
+    }
+    
+    h3 {
+      margin-bottom: $padding/2;
+      font-size: $text-heading;
+      font-weight: bold;
+      @include ie8_font_fix('b');
+    }
+    
+    .field-name-field-teaser {
+      font-size: em(16, 18);
+    }
+  }
+}

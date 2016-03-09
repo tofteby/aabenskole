@@ -1,0 +1,13 @@
+name = Taxon classification autocomplete
+description = Classify text acording to a taxonomy.
+core = 7.x
+package = KK Custom
+
+dependencies[] = taxon_taxonomy
+
+files[] = kk_taxon_taxonomy_alter.module
+files[] = js/kk_taxon_taxonomy_alter.js
+files[] = js/kk_taxon_taxonomy_alter_form.js
+
+configure = admin/config/content/taxon-taxonomy
+

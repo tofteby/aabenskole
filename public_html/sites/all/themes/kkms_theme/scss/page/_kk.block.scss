@@ -1,0 +1,11 @@
+.block{
+  .title{
+    @extend %text-label;
+  }
+  p{
+  }
+}
+
+.block-simplenews{
+  margin-bottom: 2em;
+}

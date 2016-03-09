@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the KOS Events Search Settings feature.
+ */
+
+include_once 'kos_events_search_settings.features.inc';

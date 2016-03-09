@@ -1,0 +1,7 @@
+name = Services node view
+description = Extend Services module to add a new resource that return a html version of the node.
+
+core = 7.x
+version = "7.x-1.0"
+
+dependencies[] = services

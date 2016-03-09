@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Configuration Blocks feature.
+ */
+
+include_once 'configuration_blocks.features.inc';

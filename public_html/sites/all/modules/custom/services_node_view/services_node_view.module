@@ -1,0 +1,76 @@
+<?php
+
+
+/**
+ * Imlements hook_services_resources()
+ *
+ */
+function services_node_view_services_resources() {
+  $resources['node_view'] = array();
+  
+  $resources['node_view']['retrieve'] = array(
+    'help' => 'View a node by nid',
+    'file' => array('type' => 'inc', 'module' => 'services_node_view', 'name' => 'services_node_view'),
+    'callback' => '_services_node_view_node_resource_view',
+    'args' => array(
+      array(
+        'name' => 'nid',
+        'optional' => FALSE,
+        'source' => array('path' => '0'),
+        'description' => 'The nid of the node to view',
+      ),
+      array(
+        'name' => 'display',
+        'optional' => TRUE,
+        'source' => array('param' => 'display'),
+        'description' => 'The node display',
+        'default value' => 'full',
+      ),
+      array(
+        'name' => 'language',
+        'optional' => TRUE,
+        'source' => array('param' => 'language'),
+        'description' => 'Language that will be passed to the node_view function',
+        'default value' => 'en',
+      ),
+    ),
+    
+    'access callback' => '_node_resource_access',
+    'access arguments' => array('view'),
+    'access arguments append' => TRUE,
+  );
+  
+  return $resources;
+}
+
+function services_node_view_services_node_view_node_load_alter(stdClass $node) {
+  // Adjust the node object before view.
+  if ($node->comment == COMMENT_NODE_OPEN) {
+    $node->comment = COMMENT_NODE_CLOSED;
+  }
+}
+
+function services_node_view_services_node_view_node_view_alter(&$node_view) {
+  // Adjust the node view before render.
+}
+
+function services_node_view_services_node_view_node_render_alter(&$node_render) {
+  $node_render =  preg_replace('@<form[^>]*?>.*?</form>@si', '', $node_render); 
+  $node_render = preg_replace_callback('~(about|href|src|action|longdesc)="([^"]+)~i', '_services_node_view_path_replace', $node_render);
+}
+
+function _services_node_view_path_replace($matches) {
+  $scheme = parse_url($matches[2], PHP_URL_SCHEME);
+  if (!$scheme) {
+    if (strpos($matches[2], '//') === 0) {
+      // No scheme absolute URL.
+      return $matches[0];
+    }
+    $matches[2] = ltrim($matches[2], '/');
+    $url = $GLOBALS['base_url'] . '/' . $matches[2];
+    return "{$matches[1]}=\"{$url}";
+  }
+  else {
+    return $matches[0];
+  }
+}

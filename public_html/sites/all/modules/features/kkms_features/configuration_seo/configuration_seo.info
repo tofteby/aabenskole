@@ -1,0 +1,13 @@
+name = Configuration SEO
+core = 7.x
+package = Configuration
+dependencies[] = contact
+dependencies[] = metatag
+dependencies[] = page_manager
+dependencies[] = views
+features[ctools][] = page_manager:pages_default:1
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:2
+features[metatag][] = node
+features[page_manager_pages][] = kkms_404_page
+features[views_view][] = kkms_feed_xml

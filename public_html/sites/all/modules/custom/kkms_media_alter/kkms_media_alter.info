@@ -1,0 +1,6 @@
+name = Helper module for the media module.
+description = Provides some tweaks to the Media module.
+package = "Media"
+core = 7.x
+
+dependencies[] = media

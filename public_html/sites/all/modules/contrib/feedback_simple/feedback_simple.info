@@ -1,0 +1,14 @@
+name = Feedback Simple
+description = A very simple, very light, CSS only Feedback tab.
+configure = admin/appearance/feedback-simple
+core = 7.x
+
+files[] = feedback_simple.test
+
+
+; Information added by drush on 2014-06-26
+version = "7.x-1.6+2-dev"
+core = "7.x"
+project = "feedback_simple"
+datestamp = "1403780829"
+

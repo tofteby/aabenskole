@@ -1,0 +1,27 @@
+.node-factbox-figures{
+  margin: em(25,18);
+  
+  @include at-breakpoint($mq-bp-desktop) { 
+    margin: em(50,18);
+  }
+  
+  .field-name-title-field{
+    display: none;
+  }
+  h3{
+    display: block;
+    font-size: em(100,18);
+    line-height: em(18,18);
+    font-weight: 800;
+    clear: both;
+    color: $col-gray-70;
+    text-align: center;
+    margin: 0 auto;
+    word-wrap: break-word;
+  }
+  p{
+    text-align: center;
+    margin: 0 auto;
+    color: $col-gray-70;
+  }
+}

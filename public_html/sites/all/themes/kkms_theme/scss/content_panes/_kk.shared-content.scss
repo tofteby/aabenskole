@@ -1,0 +1,184 @@
+/**
+ * Styling of local content pane
+ *
+ * TODO:
+ */
+.view-content-shared-to-channels,
+.view-content-shared-to-this-site {
+  .view-content {
+    .views-row {      
+      .views-field-label {
+        a {
+          @extend %title-local-list-item;
+          color: $col-primary;
+        &:hover {
+            color: $col-button-hover;
+          }
+        }
+      }
+      
+      &:hover{
+        background-color: $col-gray-10;
+      }
+    }
+  }
+}
+
+.view-content-shared-to-channels,
+.view-content-shared-to-this-site {
+  &.view-display-id-panel_pane_1 .view-content .views-row {
+    margin-bottom: 1em;
+  }
+}
+
+
+.view-content-shared-to-channels,
+.view-content-shared-to-this-site {
+  &.view-display-id-panel_pane_2,
+  &.view-display-id-panel_pane_3,
+  &.view-display-id-panel_pane_4 {
+    @extend .bl-grid-space;
+    padding-left: 0;
+    padding-right: 0;
+    
+    div[class*="views-field-sm-thumb-"] {
+      margin: 0 0 2em 0;
+      img {
+        width: 100%; 
+      }
+    }
+    .views-field-sm-field-teaser {
+      font-size: $text-second;
+      word-wrap: break-word;
+      &:hover {
+        color: $col-button-hover;
+      }      
+    }
+    .views-field-label a {
+      font-size: $text-block;
+      text-transform: uppercase;
+      color: $col-primary;
+      margin-bottom: 0.8333333333333333em;
+      display: block;
+      &:hover {
+        color: $col-button-hover;
+      }
+    }
+    .views-row { 
+      padding: 1.5em 1em;
+      
+      @include at-breakpoint($mq-bp-desktop) {
+        padding: 1.5em 2em;
+      }
+      
+      &:hover {
+        background-color: #ededed;
+      }      
+    }
+
+  }
+}
+
+.view-content-shared-to-channels,
+.view-content-shared-to-this-site {
+  &.view-display-id-panel_pane_2 {    
+    div[class*="views-field-sm-thumb-"] {
+      margin: -1em;
+    }
+    .views-row {
+      padding: 1em;
+      
+      &:hover{
+        background-color: $col-gray-10;
+      }
+    }     
+  }
+}
+
+
+
+/**
+ * Event listing pane
+ *
+ * TODO:  
+ */
+
+
+
+
+
+/////
+.view-id-events_list{
+  &.view-display-id-panel_pane_1,
+  &.view-display-id-panel_pane_2 {
+    @extend .bl-grid-space;
+    padding-left: 0;
+    padding-right: 0;
+
+    .view-content .views-row {
+      padding: 0 0 1em 0;
+      border: $col-gray-25 1px solid; 
+      margin-bottom: 1.8em;
+      img{
+        width: 100%;
+      }
+
+      &:hover{
+        background-color: $col-gray-10;
+      }
+
+       .views-field-ds-field-date{
+        span{
+          @extend %title-local-list-item;
+          font-size: $text-label;
+          color: $col-gray-70;
+          padding-left: 1em;
+          display: block;
+          margin: 1.2em 0 0.6em 0;
+        }
+      }
+      
+      .views-field-label {
+        .field-content {
+        a {
+              padding-right: 3em;
+              padding-left: 0.8em;
+              line-height: 1em;
+              display: block;
+              font-weight: bold;
+          }
+        }
+      }
+      
+      .views-field-im-shared-tax-event {
+          .field-content {
+              a {
+                @extend %text-tag;
+                padding-right: 3em;
+                padding-left: 1em;
+                margin: 1.2em 0 0.6em 0;
+                line-height: 1em;
+                display: block;
+              }  
+          }
+      }
+      
+      .views-field-im-shared-tax-place {    
+          .field-content {
+              &:before {
+                @extend %icon;
+                @extend .ic-location:before;
+                margin-right: 7px;
+                position: relative;
+                top: 1px;
+              }
+              margin-top: 0.8em;
+              padding-left: 1em;
+              display: block;
+              font-size: $text-meta;
+              color: $col-gray-70;
+          }
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+name = Custom pane entity types
+description = Creates a couple of entity types used by fieldable panels panes module
+package = KKMS Custom
+core = 7.x
+
+files[] = kkms_panes.module
+dependencies[] = fieldable_panels_panes
+dependencies[] = pull_content
