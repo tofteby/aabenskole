@@ -17,20 +17,15 @@ function kos_theme_form_kos_search_frontpage_events_search_form_alter(&$form, &$
  * Add variables to page.tpl.php.
  */
 function kos_theme_preprocess_page(&$vars, $hook) {
-
-  if(isset($vars['login_link'])) unset($vars['login_link']);
+  if (isset($vars['login_link'])) unset($vars['login_link']);
 }
 
 
 function kos_theme_preprocess_panels_pane(&$vars) {
-  $fields = Array('field_audiences','field_subjects','field_topic','field_school_event_price');
-  if ($vars['pane']->type=='entity_field'
-   && $vars['pane']->configuration['formatter']=='taxonomy_term_reference_link'
-   && $vars['content']['#object']->type == 'school_event'
-   && in_array($vars['content']['#field_name'],$fields)) {
+  $pane = $vars['pane'];
 
-      $vars['theme_hook_suggestions'][] = 'panels_pane__entity_field__taxonomy';
-
+  if ($pane->type == 'entity_field' && $pane->configuration['formatter'] == 'taxonomy_term_reference_link'
+  && $vars['content']['#object']->type == 'school_event') {
+    $vars['theme_hook_suggestions'][] = 'panels_pane__entity_field__taxonomy';
   }
-
 }
