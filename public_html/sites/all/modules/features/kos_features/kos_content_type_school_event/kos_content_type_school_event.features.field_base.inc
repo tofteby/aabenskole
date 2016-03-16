@@ -45,6 +45,42 @@ function kos_content_type_school_event_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
+  // Exported field_base: 'field_preparation'
+  $field_bases['field_preparation'] = array(
+    'active' => 1,
+    'cardinality' => -1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_preparation',
+    'foreign keys' => array(
+      'tid' => array(
+        'columns' => array(
+          'tid' => 'tid',
+        ),
+        'table' => 'taxonomy_term_data',
+      ),
+    ),
+    'indexes' => array(
+      'tid' => array(
+        0 => 'tid',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'taxonomy',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => array(
+          'vocabulary' => 'preparation',
+          'parent' => 0,
+        ),
+      ),
+      'options_list_callback' => 'i18n_taxonomy_allowed_values',
+      'profile2_private' => FALSE,
+    ),
+    'translatable' => 0,
+    'type' => 'taxonomy_term_reference',
+  );
+
   // Exported field_base: 'field_school_event_place'
   $field_bases['field_school_event_place'] = array(
     'active' => 1,
@@ -113,7 +149,7 @@ function kos_content_type_school_event_field_default_field_bases() {
   // Exported field_base: 'field_subjects'
   $field_bases['field_subjects'] = array(
     'active' => 1,
-    'cardinality' => -1,
+    'cardinality' => 3,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_subjects',
@@ -140,6 +176,7 @@ function kos_content_type_school_event_field_default_field_bases() {
         ),
       ),
       'options_list_callback' => 'i18n_taxonomy_allowed_values',
+      'profile2_private' => FALSE,
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
@@ -148,7 +185,7 @@ function kos_content_type_school_event_field_default_field_bases() {
   // Exported field_base: 'field_topic'
   $field_bases['field_topic'] = array(
     'active' => 1,
-    'cardinality' => -1,
+    'cardinality' => 5,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_topic',
@@ -175,6 +212,7 @@ function kos_content_type_school_event_field_default_field_bases() {
         ),
       ),
       'options_list_callback' => 'i18n_taxonomy_allowed_values',
+      'profile2_private' => FALSE,
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',

@@ -265,7 +265,7 @@ function kos_content_type_school_event_field_default_field_instances() {
   $field_instances['node-school_event-field_image'] = array(
     'bundle' => 'school_event',
     'deleted' => 0,
-    'description' => 'Insert picture.',
+    'description' => 'Insert picture. A picture must have the following minimum size: 540x306. The size should have the following hight/width ratio (1.76x1)',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -333,6 +333,7 @@ function kos_content_type_school_event_field_default_field_instances() {
       'settings' => array(
         'allowed_schemes' => array(
           '23video' => 0,
+          'private' => 0,
           'public' => 'public',
           'vimeo' => 0,
           'youtube' => 0,
@@ -435,6 +436,65 @@ function kos_content_type_school_event_field_default_field_instances() {
       ),
       'type' => 'link_field',
       'weight' => 48,
+    ),
+  );
+
+  // Exported field_instance: 'node-school_event-field_preparation'
+  $field_instances['node-school_event-field_preparation'] = array(
+    'bundle' => 'school_event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'i18n_taxonomy',
+        'settings' => array(),
+        'type' => 'i18n_taxonomy_term_reference_link',
+        'weight' => 13,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'related_nodes' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'scs' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'fences_wrapper' => 'div',
+    'field_name' => 'field_preparation',
+    'label' => 'Forberedelse',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => '',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'options_select',
+      'weight' => 46,
     ),
   );
 
@@ -749,7 +809,7 @@ function kos_content_type_school_event_field_default_field_instances() {
     'bundle' => 'school_event',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Select topics from the vocabulary. Max 10.',
+    'description' => 'Select topics from the vocabulary. Max 5.',
     'display' => array(
       'default' => array(
         'label' => 'inline',
@@ -812,14 +872,15 @@ function kos_content_type_school_event_field_default_field_instances() {
   t('Date');
   t('Dynamic related links');
   t('Enter the place, where the school event takes place.');
+  t('Forberedelse');
   t('Images');
   t('Insert a link to the site where you can get more information about the event.');
-  t('Insert picture.');
+  t('Insert picture. A picture must have the following minimum size: 540x306. The size should have the following hight/width ratio (1.76x1)');
   t('Insert start and end date/time for event.');
   t('Link');
   t('Place');
   t('School event price');
-  t('Select topics from the vocabulary. Max 10.');
+  t('Select topics from the vocabulary. Max 5.');
   t('Subjects');
   t('Teaser');
   t('Topic');

@@ -53,9 +53,9 @@ function kos_content_type_school_event_field_group_info() {
     'children' => array(
       0 => 'group_file_attachments',
       1 => 'group_main_content',
-      2 => 'group_taxonomy',
-      3 => 'group_practical',
-      4 => 'group_related_content',
+      2 => 'group_practical',
+      3 => 'group_related_content',
+      4 => 'group_taxonomy',
     ),
     'format_type' => 'htabs',
     'format_settings' => array(
@@ -113,10 +113,9 @@ function kos_content_type_school_event_field_group_info() {
     'label' => 'Content',
     'weight' => '10',
     'children' => array(
-      0 => 'body',
-      1 => 'field_teaser',
-      2 => 'language',
-      3 => 'title',
+      0 => 'field_teaser',
+      1 => 'language',
+      2 => 'title',
     ),
     'format_type' => 'htab',
     'format_settings' => array(
@@ -145,6 +144,7 @@ function kos_content_type_school_event_field_group_info() {
     'weight' => '13',
     'children' => array(
       0 => 'field_date',
+      1 => 'field_preparation',
     ),
     'format_type' => 'htab',
     'format_settings' => array(
@@ -172,9 +172,8 @@ function kos_content_type_school_event_field_group_info() {
     'label' => 'Related content',
     'weight' => '12',
     'children' => array(
-      0 => 'field_place',
-      1 => 'field_link',
-      2 => 'field_school_event_place',
+      0 => 'field_link',
+      1 => 'field_school_event_place',
     ),
     'format_type' => 'htab',
     'format_settings' => array(
@@ -269,14 +268,10 @@ function kos_content_type_school_event_field_group_info() {
     'weight' => '9',
     'children' => array(
       0 => 'field_audiences',
-      1 => 'field_place_category',
-      2 => 'field_school_event_category',
-      3 => 'field_school_event_price',
-      4 => 'field_subjects',
-      5 => 'field_dynamic_links',
-      6 => 'field_topic',
-      7 => 'field_target',
-      8 => 'field_keywords',
+      1 => 'field_dynamic_links',
+      2 => 'field_school_event_price',
+      3 => 'field_subjects',
+      4 => 'field_topic',
     ),
     'format_type' => 'htab',
     'format_settings' => array(
