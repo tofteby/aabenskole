@@ -708,6 +708,35 @@ function kos_content_type_school_event_panelizer_defaults() {
     $display->content['new-e7540b4e-6d05-4650-a7df-97c99ede2a9e'] = $pane;
     $display->panels['sidebar'][0] = 'new-e7540b4e-6d05-4650-a7df-97c99ede2a9e';
     $pane = new stdClass();
+    $pane->pid = 'new-847f8a87-5d30-4bd6-9911-e47120e99800';
+    $pane->panel = 'sidebar';
+    $pane->type = 'entity_field';
+    $pane->subtype = 'node:field_files';
+    $pane->shown = TRUE;
+    $pane->access = array();
+    $pane->configuration = array(
+      'label' => 'title',
+      'formatter' => 'file_default',
+      'delta_limit' => 0,
+      'delta_offset' => '0',
+      'delta_reversed' => FALSE,
+      'formatter_settings' => array(),
+      'context' => 'panelizer',
+      'override_title' => 0,
+      'override_title_text' => '',
+    );
+    $pane->cache = array();
+    $pane->style = array(
+      'settings' => NULL,
+    );
+    $pane->css = array();
+    $pane->extras = array();
+    $pane->position = 1;
+    $pane->locks = array();
+    $pane->uuid = '847f8a87-5d30-4bd6-9911-e47120e99800';
+    $display->content['new-847f8a87-5d30-4bd6-9911-e47120e99800'] = $pane;
+    $display->panels['sidebar'][1] = 'new-847f8a87-5d30-4bd6-9911-e47120e99800';
+    $pane = new stdClass();
     $pane->pid = 'new-2e04d00c-a05f-4746-b6f2-7a88315df72c';
     $pane->panel = 'top';
     $pane->type = 'node_title';

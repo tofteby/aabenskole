@@ -45,40 +45,36 @@ function kos_content_type_school_event_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_preparation'
-  $field_bases['field_preparation'] = array(
+  // Exported field_base: 'field_files'
+  $field_bases['field_files'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_preparation',
+    'field_name' => 'field_files',
     'foreign keys' => array(
-      'tid' => array(
+      'fid' => array(
         'columns' => array(
-          'tid' => 'tid',
+          'fid' => 'fid',
         ),
-        'table' => 'taxonomy_term_data',
+        'table' => 'file_managed',
       ),
     ),
     'indexes' => array(
-      'tid' => array(
-        0 => 'tid',
+      'fid' => array(
+        0 => 'fid',
       ),
     ),
     'locked' => 0,
-    'module' => 'taxonomy',
+    'module' => 'file',
     'settings' => array(
-      'allowed_values' => array(
-        0 => array(
-          'vocabulary' => 'preparation',
-          'parent' => 0,
-        ),
-      ),
-      'options_list_callback' => 'i18n_taxonomy_allowed_values',
+      'display_default' => 1,
+      'display_field' => 1,
       'profile2_private' => FALSE,
+      'uri_scheme' => 'public',
     ),
     'translatable' => 0,
-    'type' => 'taxonomy_term_reference',
+    'type' => 'file',
   );
 
   // Exported field_base: 'field_school_event_place'
