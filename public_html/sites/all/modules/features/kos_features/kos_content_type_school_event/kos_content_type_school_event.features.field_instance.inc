@@ -169,7 +169,7 @@ function kos_content_type_school_event_field_default_field_instances() {
     'fences_wrapper' => 'div',
     'field_name' => 'field_date',
     'label' => 'Date',
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'default_value' => 'now',
       'default_value2' => 'same',
