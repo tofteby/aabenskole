@@ -237,6 +237,55 @@ function content_type_place_panelizer_defaults() {
     $display->content['new-af34a00e-9e42-4d93-b60f-afcfcc6313e9'] = $pane;
     $display->panels['content'][5] = 'new-af34a00e-9e42-4d93-b60f-afcfcc6313e9';
     $pane = new stdClass();
+    $pane->pid = 'new-75cd4f63-7388-4738-91e8-f95a2eeb1cf7';
+    $pane->panel = 'content';
+    $pane->type = 'node_comment_form';
+    $pane->subtype = 'node_comment_form';
+    $pane->shown = TRUE;
+    $pane->access = array();
+    $pane->configuration = array(
+      'anon_links' => 0,
+      'context' => 'panelizer',
+      'override_title' => 0,
+      'override_title_text' => '',
+    );
+    $pane->cache = array();
+    $pane->style = array(
+      'settings' => NULL,
+    );
+    $pane->css = array();
+    $pane->extras = array();
+    $pane->position = 6;
+    $pane->locks = array();
+    $pane->uuid = '75cd4f63-7388-4738-91e8-f95a2eeb1cf7';
+    $display->content['new-75cd4f63-7388-4738-91e8-f95a2eeb1cf7'] = $pane;
+    $display->panels['content'][6] = 'new-75cd4f63-7388-4738-91e8-f95a2eeb1cf7';
+    $pane = new stdClass();
+    $pane->pid = 'new-902991db-767b-4ec1-aae9-99a42c9fd7f2';
+    $pane->panel = 'content';
+    $pane->type = 'node_comments';
+    $pane->subtype = 'node_comments';
+    $pane->shown = TRUE;
+    $pane->access = array();
+    $pane->configuration = array(
+      'mode' => '1',
+      'comments_per_page' => '50',
+      'context' => 'panelizer',
+      'override_title' => 0,
+      'override_title_text' => '',
+    );
+    $pane->cache = array();
+    $pane->style = array(
+      'settings' => NULL,
+    );
+    $pane->css = array();
+    $pane->extras = array();
+    $pane->position = 7;
+    $pane->locks = array();
+    $pane->uuid = '902991db-767b-4ec1-aae9-99a42c9fd7f2';
+    $display->content['new-902991db-767b-4ec1-aae9-99a42c9fd7f2'] = $pane;
+    $display->panels['content'][7] = 'new-902991db-767b-4ec1-aae9-99a42c9fd7f2';
+    $pane = new stdClass();
     $pane->pid = 'new-2352cbee-d494-45c4-bc1a-f90311ffaff1';
     $pane->panel = 'top';
     $pane->type = 'entity_field';
