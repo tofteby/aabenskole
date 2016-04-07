@@ -520,6 +520,76 @@ function kos_content_type_school_event_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-school_event-field_popularity'
+  $field_instances['node-school_event-field_popularity'] = array(
+    'bundle' => 'school_event',
+    'default_value' => array(
+      0 => array(
+        'radioactivity_energy' => 0,
+        'radioactivity_timestamp' => 1459292396,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'radioactivity',
+        'settings' => array(
+          'accuracy' => 100,
+          'energy' => 10,
+          'type' => 'gauge',
+        ),
+        'type' => 'radioactivity_combo_formatter',
+        'weight' => 14,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'related_nodes' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'scs' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'fences_wrapper' => 'p',
+    'field_name' => 'field_popularity',
+    'label' => 'Popularity',
+    'required' => FALSE,
+    'settings' => array(
+      'history' => 1,
+      'history_limit' => 8,
+      'profile' => 'event_popularity',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'radioactivity',
+      'settings' => array(
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'radioactivity_basic_widget',
+      'weight' => 53,
+    ),
+  );
+
   // Exported field_instance: 'node-school_event-field_school_event_place'
   $field_instances['node-school_event-field_school_event_place'] = array(
     'bundle' => 'school_event',
@@ -901,6 +971,7 @@ function kos_content_type_school_event_field_default_field_instances() {
   t('Insert start and end date/time for event.');
   t('Link');
   t('Place');
+  t('Popularity');
   t('School event price');
   t('Select topics from the vocabulary. Max 5.');
   t('Subjects');

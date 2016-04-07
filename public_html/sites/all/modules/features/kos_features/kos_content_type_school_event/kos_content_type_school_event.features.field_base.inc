@@ -77,6 +77,28 @@ function kos_content_type_school_event_field_default_field_bases() {
     'type' => 'file',
   );
 
+  // Exported field_base: 'field_popularity'
+  $field_bases['field_popularity'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_popularity',
+    'foreign keys' => array(),
+    'indexes' => array(
+      'energy' => array(
+        0 => 'radioactivity_energy',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'radioactivity',
+    'settings' => array(
+      'profile2_private' => FALSE,
+    ),
+    'translatable' => 0,
+    'type' => 'radioactivity',
+  );
+
   // Exported field_base: 'field_school_event_place'
   $field_bases['field_school_event_place'] = array(
     'active' => 1,

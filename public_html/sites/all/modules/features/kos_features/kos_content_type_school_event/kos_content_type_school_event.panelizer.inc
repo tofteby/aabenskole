@@ -586,7 +586,11 @@ function kos_content_type_school_event_panelizer_defaults() {
       'delta_limit' => 0,
       'delta_offset' => '0',
       'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
+      'formatter_settings' => array(
+        'title_style' => '_none',
+        'title_link' => 'content',
+        'title_class' => '',
+      ),
       'context' => 'panelizer',
       'override_title' => 1,
       'override_title_text' => 'Place',
@@ -708,6 +712,25 @@ function kos_content_type_school_event_panelizer_defaults() {
     $display->content['new-e7540b4e-6d05-4650-a7df-97c99ede2a9e'] = $pane;
     $display->panels['sidebar'][0] = 'new-e7540b4e-6d05-4650-a7df-97c99ede2a9e';
     $pane = new stdClass();
+    $pane->pid = 'new-3c245675-aa98-4841-ab0f-6e5cf432a2f3';
+    $pane->panel = 'sidebar';
+    $pane->type = 'views_panes';
+    $pane->subtype = 'popular_events-school_events';
+    $pane->shown = TRUE;
+    $pane->access = array();
+    $pane->configuration = array();
+    $pane->cache = array();
+    $pane->style = array(
+      'settings' => NULL,
+    );
+    $pane->css = array();
+    $pane->extras = array();
+    $pane->position = 1;
+    $pane->locks = array();
+    $pane->uuid = '3c245675-aa98-4841-ab0f-6e5cf432a2f3';
+    $display->content['new-3c245675-aa98-4841-ab0f-6e5cf432a2f3'] = $pane;
+    $display->panels['sidebar'][1] = 'new-3c245675-aa98-4841-ab0f-6e5cf432a2f3';
+    $pane = new stdClass();
     $pane->pid = 'new-847f8a87-5d30-4bd6-9911-e47120e99800';
     $pane->panel = 'sidebar';
     $pane->type = 'entity_field';
@@ -731,11 +754,44 @@ function kos_content_type_school_event_panelizer_defaults() {
     );
     $pane->css = array();
     $pane->extras = array();
-    $pane->position = 1;
+    $pane->position = 2;
     $pane->locks = array();
     $pane->uuid = '847f8a87-5d30-4bd6-9911-e47120e99800';
     $display->content['new-847f8a87-5d30-4bd6-9911-e47120e99800'] = $pane;
-    $display->panels['sidebar'][1] = 'new-847f8a87-5d30-4bd6-9911-e47120e99800';
+    $display->panels['sidebar'][2] = 'new-847f8a87-5d30-4bd6-9911-e47120e99800';
+    $pane = new stdClass();
+    $pane->pid = 'new-29b7929a-efda-402c-a010-b4adc3bd6ef0';
+    $pane->panel = 'sidebar';
+    $pane->type = 'entity_field';
+    $pane->subtype = 'node:field_popularity';
+    $pane->shown = TRUE;
+    $pane->access = array();
+    $pane->configuration = array(
+      'label' => 'hidden',
+      'formatter' => 'radioactivity_combo_formatter',
+      'delta_limit' => 0,
+      'delta_offset' => '0',
+      'delta_reversed' => FALSE,
+      'formatter_settings' => array(
+        'energy' => '10',
+        'type' => 'none',
+        'accuracy' => '100',
+      ),
+      'context' => 'panelizer',
+      'override_title' => 0,
+      'override_title_text' => 'Populære aktiviteter',
+    );
+    $pane->cache = array();
+    $pane->style = array(
+      'settings' => NULL,
+    );
+    $pane->css = array();
+    $pane->extras = array();
+    $pane->position = 3;
+    $pane->locks = array();
+    $pane->uuid = '29b7929a-efda-402c-a010-b4adc3bd6ef0';
+    $display->content['new-29b7929a-efda-402c-a010-b4adc3bd6ef0'] = $pane;
+    $display->panels['sidebar'][3] = 'new-29b7929a-efda-402c-a010-b4adc3bd6ef0';
     $pane = new stdClass();
     $pane->pid = 'new-2e04d00c-a05f-4746-b6f2-7a88315df72c';
     $pane->panel = 'top';
