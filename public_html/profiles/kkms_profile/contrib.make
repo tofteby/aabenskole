@@ -71,7 +71,8 @@ projects[services][subdir] = "contrib"
 projects[services][version] = "3.7"
 
 projects[token][subdir] = "contrib"
-projects[token][version] = "1.5"
+projects[token][version] = "1.6"
+projects[token][patch][] = "https://www.drupal.org/files/issues/token-field_description_overwritten-2474403-12-D7.patch"
 
 projects[tablefield][subdir] = "contrib"
 projects[tablefield][version]  = "2.2"
