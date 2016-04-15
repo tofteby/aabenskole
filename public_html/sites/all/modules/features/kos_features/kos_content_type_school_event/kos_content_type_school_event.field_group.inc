@@ -145,6 +145,7 @@ function kos_content_type_school_event_field_group_info() {
     'weight' => '13',
     'children' => array(
       0 => 'field_date',
+      1 => 'field_preparation',
     ),
     'format_type' => 'htab',
     'format_settings' => array(
