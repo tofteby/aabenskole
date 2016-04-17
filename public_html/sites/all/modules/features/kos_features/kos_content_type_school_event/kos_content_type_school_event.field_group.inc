@@ -175,6 +175,7 @@ function kos_content_type_school_event_field_group_info() {
     'children' => array(
       0 => 'field_link',
       1 => 'field_school_event_place',
+      2 => 'field_related_links',
     ),
     'format_type' => 'htab',
     'format_settings' => array(

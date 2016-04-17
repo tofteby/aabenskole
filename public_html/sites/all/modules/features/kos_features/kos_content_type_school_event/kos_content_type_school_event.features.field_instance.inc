@@ -651,6 +651,85 @@ function kos_content_type_school_event_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-school_event-field_related_links'
+  $field_instances['node-school_event-field_related_links'] = array(
+    'bundle' => 'school_event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_default',
+        'weight' => 15,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'related_nodes' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'scs' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'fences_wrapper' => 'div',
+    'field_name' => 'field_related_links',
+    'label' => 'Links',
+    'required' => 0,
+    'settings' => array(
+      'attributes' => array(
+        'class' => '',
+        'configurable_title' => 0,
+        'rel' => '',
+        'target' => '_blank',
+        'title' => '',
+      ),
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+      'enable_tokens' => 1,
+      'linkit' => array(
+        'enable' => 0,
+        'insert_plugin' => '',
+      ),
+      'rel_remove' => 'default',
+      'title' => 'optional',
+      'title_maxlength' => 128,
+      'title_value' => '',
+      'url' => 0,
+      'user_register_form' => FALSE,
+      'validate_url' => 1,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'link',
+      'settings' => array(
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'link_field',
+      'weight' => 49,
+    ),
+  );
+
   // Exported field_instance: 'node-school_event-field_school_event_place'
   $field_instances['node-school_event-field_school_event_place'] = array(
     'bundle' => 'school_event',
@@ -738,7 +817,7 @@ function kos_content_type_school_event_field_default_field_instances() {
         'size' => 100,
       ),
       'type' => 'text_textfield',
-      'weight' => 52,
+      'weight' => 50,
     ),
   );
 
@@ -1032,6 +1111,7 @@ function kos_content_type_school_event_field_default_field_instances() {
   t('Insert picture. A picture must have the following minimum size: 540x306. The size should have the following hight/width ratio (1.76x1)');
   t('Insert start and end date/time for event.');
   t('Link');
+  t('Links');
   t('Place');
   t('Popularity');
   t('School event price');

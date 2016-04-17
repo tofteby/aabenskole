@@ -793,6 +793,35 @@ function kos_content_type_school_event_panelizer_defaults() {
     $display->content['new-29b7929a-efda-402c-a010-b4adc3bd6ef0'] = $pane;
     $display->panels['sidebar'][3] = 'new-29b7929a-efda-402c-a010-b4adc3bd6ef0';
     $pane = new stdClass();
+    $pane->pid = 'new-7b8eec98-a26e-40c8-8ff7-aad403567e89';
+    $pane->panel = 'sidebar';
+    $pane->type = 'entity_field';
+    $pane->subtype = 'node:field_related_links';
+    $pane->shown = TRUE;
+    $pane->access = array();
+    $pane->configuration = array(
+      'label' => 'hidden',
+      'formatter' => 'link_default',
+      'delta_limit' => '0',
+      'delta_offset' => '0',
+      'delta_reversed' => 0,
+      'formatter_settings' => array(),
+      'context' => 'panelizer',
+      'override_title' => 1,
+      'override_title_text' => 'Related links',
+    );
+    $pane->cache = array();
+    $pane->style = array(
+      'settings' => NULL,
+    );
+    $pane->css = array();
+    $pane->extras = array();
+    $pane->position = 4;
+    $pane->locks = array();
+    $pane->uuid = '7b8eec98-a26e-40c8-8ff7-aad403567e89';
+    $display->content['new-7b8eec98-a26e-40c8-8ff7-aad403567e89'] = $pane;
+    $display->panels['sidebar'][4] = 'new-7b8eec98-a26e-40c8-8ff7-aad403567e89';
+    $pane = new stdClass();
     $pane->pid = 'new-2e04d00c-a05f-4746-b6f2-7a88315df72c';
     $pane->panel = 'top';
     $pane->type = 'node_title';
