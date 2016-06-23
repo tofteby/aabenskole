@@ -1,0 +1,7 @@
+name = Ringsted Theme
+description = Subtheme on multisite for Ringsted Kommune
+base theme = kos_theme
+core = 7.x
+screenshot = screenshot.png
+
+stylesheets[all][] = css/ringsted_styles.css

@@ -1,0 +1,25 @@
+@charset "UTF-8";
+
+// Import libraries
+@import "compass";
+@import "susy";
+
+@import "partials/variables";
+@import "partials/mixins";
+@import "partials/typography";
+@import "partials/header";
+
+.page {
+  background-image: none;
+}
+
+.sec-content {
+  background: $lightgray;
+  .sec-inner {
+    background: $lightgray;
+  }
+}
+
+.sec-msg {
+  clear: both;
+}
