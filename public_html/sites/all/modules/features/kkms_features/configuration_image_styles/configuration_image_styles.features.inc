@@ -105,25 +105,15 @@ function configuration_image_styles_image_default_styles() {
     'name' => 'list_content_grid',
     'label' => 'List content grid',
     'effects' => array(
-      18 => array(
-        'label' => 'EPSA Image Crop',
-        'help' => '',
-        'dimensions callback' => 'epsacrop_crop_dimensions',
-        'effect callback' => 'epsacrop_crop_image',
-        'form callback' => 'epsacrop_crop_image_form',
+      19 => array(
+        'label' => 'Reuse EPSA Image Crop',
+        'help' => 'Use the image crop selection from another image style',
+        'effect callback' => 'epsacrop_crop_image_reuse',
+        'form callback' => 'epsacrop_crop_image_reuse_form',
         'module' => 'epsacrop',
-        'name' => 'epsacrop_crop',
+        'name' => 'epsacrop_crop_reuse',
         'data' => array(
-          'width' => 300,
-          'height' => 170,
-          'anchor' => 'center-center',
-          'disable_scale' => 1,
-          'jcrop_settings' => array(
-            'aspect_ratio' => '',
-            'bgcolor' => 'black',
-            'bgopacity' => 0.6,
-            'fallback' => 1,
-          ),
+          'jcrop_reuse' => 'school_event_node_view',
         ),
         'weight' => -10,
       ),
@@ -140,7 +130,7 @@ function configuration_image_styles_image_default_styles() {
           'width' => 300,
           'height' => 170,
         ),
-        'weight' => -9,
+        'weight' => -8,
       ),
     ),
   );
