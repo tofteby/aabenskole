@@ -21,9 +21,9 @@ function content_type_script_node_info() {
     'script' => array(
       'name' => t('Iframe/Script'),
       'base' => 'node_content',
-      'description' => t('Single textarea without wysiwyg, and with disabled text filters.'),
+      'description' => t('Bruges til at indsætte en iframe eller script'),
       'has_title' => '1',
-      'title_label' => t('Title'),
+      'title_label' => t('Titel'),
       'help' => '',
     ),
   );

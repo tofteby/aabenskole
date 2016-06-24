@@ -20,6 +20,7 @@ dependencies[] = link
 dependencies[] = list
 dependencies[] = media
 dependencies[] = media_multiselect
+dependencies[] = node
 dependencies[] = nodequeue_reference
 dependencies[] = options
 dependencies[] = page_manager

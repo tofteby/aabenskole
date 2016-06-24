@@ -325,12 +325,20 @@ function content_type_blog_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
+    'fences_wrapper' => 'div',
     'field_name' => 'field_image_single',
     'label' => 'Image',
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
       'default_image' => 0,
+      'epsacrop' => array(
+        'styles' => array(
+          'banner' => 0,
+          'flexslider_full' => 0,
+          'node_view_images' => 'node_view_images',
+        ),
+      ),
       'file_directory' => 'uploaded-images',
       'file_extensions' => 'png gif jpg jpeg',
       'max_filesize' => '10 MB',
@@ -362,6 +370,7 @@ function content_type_blog_field_default_field_instances() {
           'upload' => 'upload',
           'youtube' => 0,
         ),
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'progress_indicator' => 'throbber',
       ),
       'type' => 'media_generic',

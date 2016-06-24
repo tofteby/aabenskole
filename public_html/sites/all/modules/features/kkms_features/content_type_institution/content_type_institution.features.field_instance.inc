@@ -582,6 +582,19 @@ function content_type_institution_field_default_field_instances() {
     'settings' => array(
       'alt_field' => 0,
       'default_image' => 0,
+      'epsacrop' => array(
+        'styles' => array(
+          'banner' => 0,
+          'blog_list' => 0,
+          'event_gallery_pane' => 0,
+          'flexslider_full' => 0,
+          'list_content_grid' => 0,
+          'node_view_images' => 'node_view_images',
+          'person_list_thumbnail' => 0,
+          'school_event_node_view' => 0,
+          'search_page' => 0,
+        ),
+      ),
       'file_directory' => 'uploaded-images',
       'file_extensions' => 'png gif jpg jpeg',
       'max_filesize' => '10 MB',
@@ -613,6 +626,7 @@ function content_type_institution_field_default_field_instances() {
           'upload' => 'upload',
           'youtube' => 0,
         ),
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'progress_indicator' => 'throbber',
       ),
       'type' => 'media_generic',

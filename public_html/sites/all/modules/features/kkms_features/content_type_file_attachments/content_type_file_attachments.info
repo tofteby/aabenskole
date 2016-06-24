@@ -11,6 +11,7 @@ dependencies[] = file_entity
 dependencies[] = flexslider_fields
 dependencies[] = media
 dependencies[] = media_multiselect
+dependencies[] = node
 dependencies[] = strongarm
 dependencies[] = text
 dependencies[] = title

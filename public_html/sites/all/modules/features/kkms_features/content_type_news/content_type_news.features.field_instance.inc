@@ -457,12 +457,18 @@ function content_type_news_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
+    'fences_wrapper' => 'div',
     'field_name' => 'field_image',
     'label' => 'Images',
     'required' => 1,
     'settings' => array(
       'alt_field' => 0,
       'default_image' => 0,
+      'epsacrop' => array(
+        'styles' => array(
+          'flexslider_full' => 'flexslider_full',
+        ),
+      ),
       'file_directory' => 'uploaded-images',
       'file_extensions' => 'png gif jpg jpeg',
       'max_filesize' => '10 MB',
@@ -494,6 +500,7 @@ function content_type_news_field_default_field_instances() {
           'upload' => 'upload',
           'youtube' => 0,
         ),
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'progress_indicator' => 'throbber',
       ),
       'type' => 'media_multiselect',

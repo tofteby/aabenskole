@@ -7,6 +7,7 @@ project = content_type_script
 dependencies[] = ctools
 dependencies[] = features
 dependencies[] = field_bases
+dependencies[] = node
 dependencies[] = strongarm
 dependencies[] = text
 dependencies[] = title

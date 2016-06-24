@@ -27,9 +27,9 @@ function content_type_area_node_info() {
     'area' => array(
       'name' => t('Area'),
       'base' => 'node_content',
-      'description' => t('For showing geographic areas with markers generated from the geographic location of the content.'),
+      'description' => t('Bruges til at vise georgrafiske områder samt det indhold på hjemmesiden, som er relateret til disse områder. '),
       'has_title' => '1',
-      'title_label' => t('Title'),
+      'title_label' => t('Titel'),
       'help' => '',
     ),
   );
