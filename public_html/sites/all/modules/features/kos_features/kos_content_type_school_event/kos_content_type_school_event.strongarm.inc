@@ -153,11 +153,11 @@ function kos_content_type_school_event_strongarm() {
       'display' => array(
         'language' => array(
           'default' => array(
-            'weight' => '15',
+            'weight' => '9',
             'visible' => FALSE,
           ),
           'full' => array(
-            'weight' => '1',
+            'weight' => '0',
             'visible' => TRUE,
           ),
           'related_nodes' => array(
