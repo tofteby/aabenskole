@@ -39,7 +39,7 @@ function content_type_institution_node_info() {
       'base' => 'node_content',
       'description' => t('Describes institution-related information.'),
       'has_title' => '1',
-      'title_label' => t('Title'),
+      'title_label' => t('Titel'),
       'help' => '',
     ),
   );

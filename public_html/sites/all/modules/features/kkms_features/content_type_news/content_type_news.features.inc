@@ -30,9 +30,9 @@ function content_type_news_node_info() {
     'news' => array(
       'name' => t('News'),
       'base' => 'node_content',
-      'description' => t('Use news for content that is relevant for a limited time interval, like press releases. Use scheduling integration to choose specific time for publishing in advance.'),
+      'description' => t('Bruges til indhold, der er aktuelt i en tidsbegrænset periode, og har nyhedsværdi. Fx pressemeddelelser.'),
       'has_title' => '1',
-      'title_label' => t('Title'),
+      'title_label' => t('Titel'),
       'help' => '',
     ),
   );

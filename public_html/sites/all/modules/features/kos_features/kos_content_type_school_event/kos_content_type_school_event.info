@@ -19,6 +19,7 @@ dependencies[] = kos_views_local_content
 dependencies[] = link
 dependencies[] = list
 dependencies[] = media_multiselect
+dependencies[] = node
 dependencies[] = options
 dependencies[] = panelizer
 dependencies[] = radioactivity

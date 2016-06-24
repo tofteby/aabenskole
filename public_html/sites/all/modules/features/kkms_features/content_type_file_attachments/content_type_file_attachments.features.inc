@@ -23,15 +23,15 @@ function content_type_file_attachments_node_info() {
       'base' => 'node_content',
       'description' => t('A number of image attachments to be displayed as a slideshow.'),
       'has_title' => '1',
-      'title_label' => t('Title'),
+      'title_label' => t('Titel'),
       'help' => '',
     ),
     'video' => array(
       'name' => t('Video/Slide'),
       'base' => 'node_content',
-      'description' => t('Secondary content that can have both videos and images (displayed as a slide).'),
+      'description' => t('Sekundær indholdstype der kan indeholde både videoer og billeder (vises som et slideshow)'),
       'has_title' => '1',
-      'title_label' => t('Title'),
+      'title_label' => t('Titel'),
       'help' => '',
     ),
   );

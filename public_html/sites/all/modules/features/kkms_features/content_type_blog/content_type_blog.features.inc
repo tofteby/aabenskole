@@ -39,7 +39,7 @@ function content_type_blog_node_info() {
       'base' => 'node_content',
       'description' => t('Use for multi-user blogs. Every user gets a personal blog.'),
       'has_title' => '1',
-      'title_label' => t('Title'),
+      'title_label' => t('Titel'),
       'help' => '',
     ),
   );

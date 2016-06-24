@@ -352,8 +352,8 @@ function kos_content_type_school_event_field_default_field_instances() {
         'label' => 'above',
         'module' => 'flexslider_fields',
         'settings' => array(
-          'caption' => FALSE,
-          'image_style' => '',
+          'caption' => 0,
+          'image_style' => 'flexslider_full',
           'optionset' => 'default',
         ),
         'type' => 'flexslider',
@@ -400,6 +400,19 @@ function kos_content_type_school_event_field_default_field_instances() {
     'settings' => array(
       'alt_field' => 0,
       'default_image' => 0,
+      'epsacrop' => array(
+        'styles' => array(
+          'banner' => 0,
+          'blog_list' => 0,
+          'event_gallery_pane' => 0,
+          'flexslider_full' => 0,
+          'list_content_grid' => 0,
+          'node_view_images' => 0,
+          'person_list_thumbnail' => 0,
+          'school_event_node_view' => 'school_event_node_view',
+          'search_page' => 0,
+        ),
+      ),
       'file_directory' => '',
       'file_extensions' => 'png gif jpg jpeg',
       'max_filesize' => '10 MB',
@@ -414,7 +427,6 @@ function kos_content_type_school_event_field_default_field_instances() {
       'settings' => array(
         'allowed_schemes' => array(
           '23video' => 0,
-          'private' => 0,
           'public' => 'public',
           'vimeo' => 0,
           'youtube' => 0,
