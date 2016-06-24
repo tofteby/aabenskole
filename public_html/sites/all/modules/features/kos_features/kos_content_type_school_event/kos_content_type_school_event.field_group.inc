@@ -25,6 +25,7 @@ function kos_content_type_school_event_field_group_info() {
     'children' => array(
       0 => 'field_image',
       1 => 'field_files',
+      2 => 'field_video',
     ),
     'format_type' => 'htab',
     'format_settings' => array(
@@ -235,7 +236,7 @@ function kos_content_type_school_event_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Taxonomies',
-    'weight' => '1',
+    'weight' => '2',
     'children' => array(
       0 => 'group_lift',
       1 => 'group_right',

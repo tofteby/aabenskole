@@ -672,6 +672,43 @@ function kos_content_type_school_event_panelizer_defaults() {
     $display->content['new-1dbf5712-9ca3-4142-97d6-434e93f4adcd'] = $pane;
     $display->panels['content_top'][0] = 'new-1dbf5712-9ca3-4142-97d6-434e93f4adcd';
     $pane = new stdClass();
+    $pane->pid = 'new-3c25eb6d-a2c3-4bd6-aea0-9f8f409d1aae';
+    $pane->panel = 'content_top';
+    $pane->type = 'entity_field';
+    $pane->subtype = 'node:field_video';
+    $pane->shown = TRUE;
+    $pane->access = array();
+    $pane->configuration = array(
+      'label' => 'title',
+      'formatter' => 'file_rendered',
+      'delta_limit' => 0,
+      'delta_offset' => '0',
+      'delta_reversed' => FALSE,
+      'formatter_settings' => array(
+        'controls' => 1,
+        'autoplay' => 0,
+        'loop' => 0,
+        'multiple_file_behavior' => 'tags',
+        'width' => '',
+        'height' => '',
+        'file_view_mode' => 'default',
+      ),
+      'context' => 'panelizer',
+      'override_title' => 1,
+      'override_title_text' => '',
+    );
+    $pane->cache = array();
+    $pane->style = array(
+      'settings' => NULL,
+    );
+    $pane->css = array();
+    $pane->extras = array();
+    $pane->position = 1;
+    $pane->locks = array();
+    $pane->uuid = '3c25eb6d-a2c3-4bd6-aea0-9f8f409d1aae';
+    $display->content['new-3c25eb6d-a2c3-4bd6-aea0-9f8f409d1aae'] = $pane;
+    $display->panels['content_top'][1] = 'new-3c25eb6d-a2c3-4bd6-aea0-9f8f409d1aae';
+    $pane = new stdClass();
     $pane->pid = 'new-e7540b4e-6d05-4650-a7df-97c99ede2a9e';
     $pane->panel = 'sidebar';
     $pane->type = 'views_panes';
