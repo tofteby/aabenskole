@@ -82,42 +82,42 @@ function kos_content_type_school_event_views_default_views() {
       'empty_column' => 0,
     ),
   );
-  /* Forbindelse: Indhold: Forfatter */
+  /* Relationship: Content: Author */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-  /* Felt: Indhold: Titel */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Felt: Indhold: Oprettelsesdato */
+  /* Field: Content: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'node';
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['label'] = 'Date';
   $handler->display->display_options['fields']['created']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['created']['date_format'] = 'kos_events_date';
-  /* Felt: Indhold: Udgivet */
+  /* Field: Content: Published */
   $handler->display->display_options['fields']['status']['id'] = 'status';
   $handler->display->display_options['fields']['status']['table'] = 'node';
   $handler->display->display_options['fields']['status']['field'] = 'status';
   $handler->display->display_options['fields']['status']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['status']['type'] = 'published-notpublished';
   $handler->display->display_options['fields']['status']['not'] = 0;
-  /* Felt: Indhold: Redigér-link */
+  /* Field: Content: Edit link */
   $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['label'] = '';
   $handler->display->display_options['fields']['edit_node']['element_label_colon'] = FALSE;
-  /* Sorteringskriterie: Indhold: Oprettelsesdato */
+  /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Kontekstuelt filter: User: Uid */
+  /* Contextual filter: User: Uid */
   $handler->display->display_options['arguments']['uid']['id'] = 'uid';
   $handler->display->display_options['arguments']['uid']['table'] = 'users';
   $handler->display->display_options['arguments']['uid']['field'] = 'uid';
@@ -128,14 +128,14 @@ function kos_content_type_school_event_views_default_views() {
   $handler->display->display_options['arguments']['uid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['uid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['uid']['summary_options']['items_per_page'] = '25';
-  /* Filterkriterie: Indhold: Type */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
     'school_event' => 'school_event',
   );
-  /* Filterkriterie: User: Aktuelle */
+  /* Filter criterion: User: Current */
   $handler->display->display_options['filters']['uid_current']['id'] = 'uid_current';
   $handler->display->display_options['filters']['uid_current']['table'] = 'users';
   $handler->display->display_options['filters']['uid_current']['field'] = 'uid_current';
@@ -167,27 +167,21 @@ function kos_content_type_school_event_views_default_views() {
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['use_more_text'] = 'mere';
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Udfør';
-  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Gendan';
-  $handler->display->display_options['exposed_form']['options']['exposed_sorts_label'] = 'Sortér efter';
-  $handler->display->display_options['exposed_form']['options']['sort_asc_label'] = 'Stigende';
-  $handler->display->display_options['exposed_form']['options']['sort_desc_label'] = 'Faldende';
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['pager']['options']['items_per_page'] = '6';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Overskrift: Global: Ufiltreret tekst */
+  /* Header: Global: Unfiltered text */
   $handler->display->display_options['header']['area_text_custom']['id'] = 'area_text_custom';
   $handler->display->display_options['header']['area_text_custom']['table'] = 'views';
   $handler->display->display_options['header']['area_text_custom']['field'] = 'area_text_custom';
   $handler->display->display_options['header']['area_text_custom']['content'] = 'Latest activities <a href=\'/search/events\'>> See all</a>';
-  /* Felt: Indhold: Images */
+  /* Field: Content: Images */
   $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
   $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
   $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
@@ -204,7 +198,7 @@ function kos_content_type_school_event_views_default_views() {
   $handler->display->display_options['fields']['field_image']['delta_limit'] = '1';
   $handler->display->display_options['fields']['field_image']['delta_offset'] = '0';
   $handler->display->display_options['fields']['field_image']['field_api_classes'] = TRUE;
-  /* Felt: Indhold: Date */
+  /* Field: Content: Date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -224,14 +218,14 @@ function kos_content_type_school_event_views_default_views() {
   $handler->display->display_options['fields']['field_date']['delta_limit'] = '1';
   $handler->display->display_options['fields']['field_date']['delta_offset'] = '0';
   $handler->display->display_options['fields']['field_date']['field_api_classes'] = TRUE;
-  /* Felt: Indhold: Titel */
+  /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Felt: Felt: Teaser */
+  /* Field: Field: Teaser */
   $handler->display->display_options['fields']['field_teaser']['id'] = 'field_teaser';
   $handler->display->display_options['fields']['field_teaser']['table'] = 'field_data_field_teaser';
   $handler->display->display_options['fields']['field_teaser']['field'] = 'field_teaser';
@@ -241,25 +235,22 @@ function kos_content_type_school_event_views_default_views() {
   $handler->display->display_options['fields']['field_teaser']['element_wrapper_type'] = '0';
   $handler->display->display_options['fields']['field_teaser']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['field_teaser']['field_api_classes'] = TRUE;
-  /* Felt: Indhold: Subjects */
+  /* Field: Content: Subjects */
   $handler->display->display_options['fields']['field_subjects']['id'] = 'field_subjects';
   $handler->display->display_options['fields']['field_subjects']['table'] = 'field_data_field_subjects';
   $handler->display->display_options['fields']['field_subjects']['field'] = 'field_subjects';
-  $handler->display->display_options['fields']['field_subjects']['label'] = 'Fag';
   $handler->display->display_options['fields']['field_subjects']['delta_offset'] = '0';
-  /* Felt: Indhold: Topic */
+  /* Field: Content: Topic */
   $handler->display->display_options['fields']['field_topic']['id'] = 'field_topic';
   $handler->display->display_options['fields']['field_topic']['table'] = 'field_data_field_topic';
   $handler->display->display_options['fields']['field_topic']['field'] = 'field_topic';
-  $handler->display->display_options['fields']['field_topic']['label'] = 'Emne';
   $handler->display->display_options['fields']['field_topic']['delta_offset'] = '0';
-  /* Felt: Indhold: Audiences */
+  /* Field: Content: Audiences */
   $handler->display->display_options['fields']['field_audiences']['id'] = 'field_audiences';
   $handler->display->display_options['fields']['field_audiences']['table'] = 'field_data_field_audiences';
   $handler->display->display_options['fields']['field_audiences']['field'] = 'field_audiences';
-  $handler->display->display_options['fields']['field_audiences']['label'] = 'Klassetrin';
   $handler->display->display_options['fields']['field_audiences']['delta_offset'] = '0';
-  /* Felt: Indhold: School event price */
+  /* Field: Content: School event price */
   $handler->display->display_options['fields']['field_school_event_price']['id'] = 'field_school_event_price';
   $handler->display->display_options['fields']['field_school_event_price']['table'] = 'field_data_field_school_event_price';
   $handler->display->display_options['fields']['field_school_event_price']['field'] = 'field_school_event_price';
@@ -268,36 +259,36 @@ function kos_content_type_school_event_views_default_views() {
   $handler->display->display_options['fields']['field_school_event_price']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_school_event_price']['element_wrapper_type'] = '0';
   $handler->display->display_options['fields']['field_school_event_price']['field_api_classes'] = TRUE;
-  /* Felt: Felt: Link */
+  /* Field: Field: Link */
   $handler->display->display_options['fields']['field_link_1']['id'] = 'field_link_1';
   $handler->display->display_options['fields']['field_link_1']['table'] = 'field_data_field_link';
   $handler->display->display_options['fields']['field_link_1']['field'] = 'field_link';
   $handler->display->display_options['fields']['field_link_1']['label'] = '';
   $handler->display->display_options['fields']['field_link_1']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_link_1']['alter']['text'] = '<a href=\'[field_link_1-url]\' target=\'_blank\'>Gå til aktivitet</a> ';
+  $handler->display->display_options['fields']['field_link_1']['alter']['text'] = '<a href=\'[field_link_1-url]\' target=\'_blank\'>Go to activity</a>';
   $handler->display->display_options['fields']['field_link_1']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_link_1']['element_wrapper_type'] = 'div';
   $handler->display->display_options['fields']['field_link_1']['element_wrapper_class'] = 'school-event-link';
   $handler->display->display_options['fields']['field_link_1']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['field_link_1']['click_sort_column'] = 'url';
-  /* Sorteringskriterie: Indhold: Forfremmet til forside */
+  /* Sort criterion: Content: Promoted to front page */
   $handler->display->display_options['sorts']['promote']['id'] = 'promote';
   $handler->display->display_options['sorts']['promote']['table'] = 'node';
   $handler->display->display_options['sorts']['promote']['field'] = 'promote';
   $handler->display->display_options['sorts']['promote']['order'] = 'DESC';
-  /* Sorteringskriterie: Indhold: Oprettelsesdato */
+  /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Filterkriterie: Indhold: Udgivet */
+  /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Filterkriterie: Indhold: Type */
+  /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -307,6 +298,19 @@ function kos_content_type_school_event_views_default_views() {
 
   /* Display: Content pane */
   $handler = $view->new_display('panel_pane', 'Content pane', 'panel_pane_1');
+
+  /* Display: Feed */
+  $handler = $view->new_display('feed', 'Feed', 'feed_1');
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['style_plugin'] = 'rss';
+  $handler->display->display_options['row_plugin'] = 'node_rss';
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Content: Post date */
+  $handler->display->display_options['sorts']['created']['id'] = 'created';
+  $handler->display->display_options['sorts']['created']['table'] = 'node';
+  $handler->display->display_options['sorts']['created']['field'] = 'created';
+  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  $handler->display->display_options['path'] = 'nyeste-aktiviteter';
   $export['school_events_list'] = $view;
 
   return $export;
