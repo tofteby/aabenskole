@@ -1,2 +1,11 @@
 @include include_font("Museo300");
 $MuseoLight:"Museo300", Helvetica, Arial, sans-serif;
+
+@include include_font("MuseoSans");
+$MuseoSans:"MuseoSans", Helvetica Arial, sans-serif;
+
+@include include_font("Museo500");
+$MuseoMiddle:"Museo500", Helvetica, Arial, sans-serif;
+
+@include include_font("Museo700");
+$MuseoBold:"Museo700", Helvetica, Arial, sans-serif;

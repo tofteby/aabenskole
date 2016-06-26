@@ -1,0 +1,34 @@
+//------------------------------------------------------------------------------
+// Footer
+.footer {
+  background: $grayMedium url(../images/small-circle.png) no-repeat;
+  background-position: 110% -95px;
+}
+
+.sec-footer {
+  background: none;
+}
+
+.footer-wrapper {
+  background: url(../images/big-circle.png) no-repeat;
+  background-position: -250px -95px;
+  padding: 55px 0 100px;
+  font-family: $MuseoSans;
+  position: relative;
+
+  // ---------------------------------------------------------------------------
+  // Titles styles
+  h2 {
+    color: $def-color;
+    @include font-size(22);
+    font-family: $MuseoMiddle;
+    margin-bottom: 50px;
+  }
+
+  h3 {
+    color: $def-color;
+    @include font-size(16);
+    font-family: $MuseoMiddle;
+    margin-bottom: 40px;
+  }
+}
