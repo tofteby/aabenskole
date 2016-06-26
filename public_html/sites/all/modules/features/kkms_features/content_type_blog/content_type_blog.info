@@ -17,6 +17,7 @@ dependencies[] = i18n_taxonomy
 dependencies[] = image
 dependencies[] = media
 dependencies[] = media_multiselect
+dependencies[] = node
 dependencies[] = options
 dependencies[] = page_manager
 dependencies[] = panelizer

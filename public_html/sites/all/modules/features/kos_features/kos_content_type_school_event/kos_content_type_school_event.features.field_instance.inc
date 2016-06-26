@@ -136,7 +136,7 @@ function kos_content_type_school_event_field_default_field_instances() {
           'show_repeat_rule' => 'show',
         ),
         'type' => 'date_default',
-        'weight' => 13,
+        'weight' => 10,
       ),
       'related_nodes' => array(
         'label' => 'above',
@@ -213,14 +213,14 @@ function kos_content_type_school_event_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 10,
+        'weight' => 3,
       ),
       'full' => array(
         'label' => 'above',
         'module' => 'i18n_field',
         'settings' => array(),
         'type' => 'i18n_list_default',
-        'weight' => 12,
+        'weight' => 9,
       ),
       'related_nodes' => array(
         'label' => 'above',
@@ -272,13 +272,13 @@ function kos_content_type_school_event_field_default_field_instances() {
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_default',
-        'weight' => 13,
+        'weight' => 6,
       ),
       'full' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 14,
       ),
       'related_nodes' => array(
         'label' => 'above',
@@ -352,8 +352,8 @@ function kos_content_type_school_event_field_default_field_instances() {
         'label' => 'above',
         'module' => 'flexslider_fields',
         'settings' => array(
-          'caption' => FALSE,
-          'image_style' => '',
+          'caption' => 0,
+          'image_style' => 'flexslider_full',
           'optionset' => 'default',
         ),
         'type' => 'flexslider',
@@ -367,7 +367,7 @@ function kos_content_type_school_event_field_default_field_instances() {
           'image_style' => '',
         ),
         'type' => 'image',
-        'weight' => 2,
+        'weight' => 1,
       ),
       'related_nodes' => array(
         'label' => 'above',
@@ -400,6 +400,19 @@ function kos_content_type_school_event_field_default_field_instances() {
     'settings' => array(
       'alt_field' => 0,
       'default_image' => 0,
+      'epsacrop' => array(
+        'styles' => array(
+          'banner' => 0,
+          'blog_list' => 0,
+          'event_gallery_pane' => 0,
+          'flexslider_full' => 0,
+          'list_content_grid' => 0,
+          'node_view_images' => 0,
+          'person_list_thumbnail' => 0,
+          'school_event_node_view' => 'school_event_node_view',
+          'search_page' => 0,
+        ),
+      ),
       'file_directory' => '',
       'file_extensions' => 'png gif jpg jpeg',
       'max_filesize' => '10 MB',
@@ -414,7 +427,6 @@ function kos_content_type_school_event_field_default_field_instances() {
       'settings' => array(
         'allowed_schemes' => array(
           '23video' => 0,
-          'private' => 0,
           'public' => 'public',
           'vimeo' => 0,
           'youtube' => 0,
@@ -459,7 +471,7 @@ function kos_content_type_school_event_field_default_field_instances() {
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_default',
-        'weight' => 11,
+        'weight' => 8,
       ),
       'related_nodes' => array(
         'label' => 'above',
@@ -541,13 +553,13 @@ function kos_content_type_school_event_field_default_field_instances() {
           'type' => 'gauge',
         ),
         'type' => 'radioactivity_combo_formatter',
-        'weight' => 14,
+        'weight' => 7,
       ),
       'full' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 13,
       ),
       'related_nodes' => array(
         'label' => 'above',
@@ -602,13 +614,13 @@ function kos_content_type_school_event_field_default_field_instances() {
         'module' => 'i18n_taxonomy',
         'settings' => array(),
         'type' => 'i18n_taxonomy_term_reference_link',
-        'weight' => 13,
+        'weight' => 5,
       ),
       'full' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 12,
       ),
       'related_nodes' => array(
         'label' => 'above',
@@ -663,13 +675,13 @@ function kos_content_type_school_event_field_default_field_instances() {
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_default',
-        'weight' => 15,
+        'weight' => 8,
       ),
       'full' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 11,
       ),
       'related_nodes' => array(
         'label' => 'above',
@@ -748,7 +760,7 @@ function kos_content_type_school_event_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 15,
       ),
       'related_nodes' => array(
         'label' => 'above',
@@ -840,7 +852,7 @@ function kos_content_type_school_event_field_default_field_instances() {
         'module' => 'i18n_taxonomy',
         'settings' => array(),
         'type' => 'i18n_taxonomy_term_reference_link',
-        'weight' => 8,
+        'weight' => 6,
       ),
       'related_nodes' => array(
         'label' => 'above',
@@ -953,7 +965,7 @@ function kos_content_type_school_event_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 12,
+        'weight' => 4,
       ),
       'full' => array(
         'label' => 'above',
@@ -1055,7 +1067,7 @@ function kos_content_type_school_event_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 10,
+        'weight' => 7,
       ),
       'related_nodes' => array(
         'label' => 'above',
@@ -1096,6 +1108,112 @@ function kos_content_type_school_event_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-school_event-field_video'
+  $field_instances['node-school_event-field_video'] = array(
+    'bundle' => 'school_event',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'file_entity',
+        'settings' => array(
+          'autoplay' => 0,
+          'controls' => 1,
+          'height' => '',
+          'loop' => 0,
+          'multiple_file_behavior' => 'tags',
+          'muted' => FALSE,
+          'width' => '',
+        ),
+        'type' => 'file_video',
+        'weight' => 1,
+      ),
+      'full' => array(
+        'label' => 'hidden',
+        'module' => 'file_entity',
+        'settings' => array(
+          'autoplay' => FALSE,
+          'controls' => TRUE,
+          'loop' => FALSE,
+          'multiple_file_behavior' => 'tags',
+        ),
+        'type' => 'file_audio',
+        'weight' => 2,
+      ),
+      'related_nodes' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'scs' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'fences_wrapper' => 'div',
+    'field_name' => 'field_video',
+    'label' => 'Video',
+    'required' => 0,
+    'settings' => array(
+      'description_field' => 0,
+      'epsacrop' => array(
+        'styles' => array(
+          'banner' => 0,
+          'blog_list' => 0,
+          'event_gallery_pane' => 0,
+          'flexslider_full' => 0,
+          'node_view_images' => 0,
+          'person_list_thumbnail' => 0,
+          'school_event_node_view' => 0,
+          'search_page' => 0,
+        ),
+      ),
+      'file_directory' => 'videos',
+      'file_extensions' => 'txt',
+      'max_filesize' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'media',
+      'settings' => array(
+        'allowed_schemes' => array(
+          '23video' => 0,
+          'oembed' => 'oembed',
+          'public' => 'public',
+          'vimeo' => 0,
+        ),
+        'allowed_types' => array(
+          'audio' => 'audio',
+          'document' => 0,
+          'image' => 0,
+          'video' => 'video',
+        ),
+        'browser_plugins' => array(
+          'media_default--media_browser_1' => 'media_default--media_browser_1',
+          'media_default--media_browser_my_files' => 'media_default--media_browser_my_files',
+          'media_internet' => 'media_internet',
+          'upload' => 'upload',
+        ),
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'media_generic',
+      'weight' => 10,
+    ),
+  );
+
   // Translatables
   // Included for use with string extractors like potx.
   t('Audiences');
@@ -1120,6 +1238,7 @@ function kos_content_type_school_event_field_default_field_instances() {
   t('Teaser');
   t('Topic');
   t('Turns on or off the dynamic related links view.');
+  t('Video');
   t('Write a short description of the event. Max 200 characters.');
 
   return $field_instances;

@@ -21,9 +21,9 @@ function content_type_faq_qa_node_info() {
     'faq_qa' => array(
       'name' => t('FAQ/QA'),
       'base' => 'node_content',
-      'description' => t('Frequently asked questions related to a content.'),
+      'description' => t('Ofte stillede spørgsmål der er relateret til det primære indhold.'),
       'has_title' => '1',
-      'title_label' => t('Title'),
+      'title_label' => t('Titel'),
       'help' => '',
     ),
   );
