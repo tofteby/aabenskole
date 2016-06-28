@@ -101,7 +101,7 @@ $term_fields = _kos_search_get_term_fields();
         <?php if($result['fields']['sm_vid_School_event_price']['0']): ?>
         <div class='price'><span class="price-text"><?php print $result['fields']['sm_vid_School_event_price']['0']?></span></div>
         <?php endif; ?>
-        <div class='icon-link'><span class="link-search"><?php print l(t('Go to event'),$url, array('attributes' => array('target'=>'_blank')))?></span></div>
+        <div class='icon-link'><span class="link-search"><?php print l(t('Go to event'),$url)?></span></div>
       </div>
   </div>
 </li>

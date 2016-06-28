@@ -28,3 +28,8 @@
              url($url + '.svg#' + $name) format('svg');
     }
 }
+
+@mixin button() {
+  padding: 10px;
+  background: $verysofrblue;
+}

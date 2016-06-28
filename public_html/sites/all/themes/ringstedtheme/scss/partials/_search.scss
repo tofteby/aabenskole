@@ -18,8 +18,7 @@
           .link-search {
             // font-family: "Gill Sans W01","Gill Sans",serif;
             a {
-              padding: 10px;
-              background: $verysofrblue;
+              @include button;
             }
           }
         }

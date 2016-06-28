@@ -1,0 +1,11 @@
+.school-event-link a {
+  @include button;
+  color: #F15E4A;
+  margin-top: 1.35em;
+  display: block;
+  font-size: 0.8em;
+  font-family: "Gill Sans W01","Gill Sans",serif;
+  font-weight: bold;
+  margin-top: 20px;
+  float: left;
+}
