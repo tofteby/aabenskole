@@ -27,6 +27,15 @@
   font-family: "Museo700";
   src: url(../fonts/Museo700.eot);
   src: url(../fonts/Museo700.eot?#iefix) format("embedded-opentype"), url(../fonts/Museo700.woff) format("woff"), url(../fonts/Museo700.ttf) format("truetype"), url(../fonts/Museo700.svg#Museo700) format("svg"); }
+/* line 13, ../scss/partials/_typography.scss */
+a:link, a:visited {
+  text-decoration: none;
+  color: #2e5f84; }
+
+/* line 17, ../scss/partials/_typography.scss */
+a:hover {
+  color: #15414d; }
+
 /* line 1, ../scss/partials/_header.scss */
 .sec-menu {
   clear: both;
@@ -114,15 +123,21 @@
 /* line 15, ../scss/partials/_search.scss */
 .page-search-events .sec-inner .apachesolr_search-results .search-result .search-fields-events-right .icon-link {
   margin-top: 30px; }
-/* line 20, ../scss/partials/_search.scss */
-.page-search-events .sec-inner .apachesolr_search-results .search-result .search-fields-events-right .link-search a {
-  padding: 10px;
-  background: #bec8c8; }
+/* line 18, ../scss/partials/_search.scss */
+.page-search-events .sec-inner .apachesolr_search-results .search-result .search-fields-events-right .link-search {
+  font-family: "Gill Sans W01","Gill Sans",serif;
+  font-weight: bold; }
+  /* line 21, ../scss/partials/_search.scss */
+  .page-search-events .sec-inner .apachesolr_search-results .search-result .search-fields-events-right .link-search a {
+    padding: 10px;
+    background: #2e5f84;
+    color: white !important; }
 
 /* line 1, ../scss/partials/_school_event.scss */
 .school-event-link a {
   padding: 10px;
-  background: #bec8c8;
+  background: #2e5f84;
+  color: white !important;
   color: #F15E4A;
   margin-top: 1.35em;
   display: block;
@@ -132,17 +147,39 @@
   margin-top: 20px;
   float: left; }
 
-/* line 15, ../scss/ringsted_styles.scss */
+/* line 1, ../scss/partials/_forms.scss */
+.form-submit {
+  background: #2e5f84 !important;
+  border-color: #2e5f84 !important; }
+
+/* line 1, ../scss/partials/_pager_slideshow.scss */
+.pager li a,
+.flexslider li a {
+  background-color: #2e5f84 !important; }
+
+/* line 1, ../scss/partials/_icons.scss */
+[class^="ic-"]:hover:before,
+.mobile-trigger.active:before,
+[class*=" ic-"]:hover:before {
+  color: #2e5f84 !important; }
+
+/* line 1, ../scss/partials/_faq.scss */
+.field-name-field-qa .ui-state-default a,
+.field-name-field-qa .ui-widget-content .ui-state-default a,
+.field-name-field-qa .ui-widget-header .ui-state-default a {
+  color: #2e5f84 !important; }
+
+/* line 19, ../scss/ringsted_styles.scss */
 .page {
   background-image: none; }
 
-/* line 19, ../scss/ringsted_styles.scss */
+/* line 23, ../scss/ringsted_styles.scss */
 .sec-content {
   background: #EBEBEB; }
-  /* line 21, ../scss/ringsted_styles.scss */
+  /* line 25, ../scss/ringsted_styles.scss */
   .sec-content .sec-inner {
     background: #EBEBEB; }
 
-/* line 26, ../scss/ringsted_styles.scss */
+/* line 30, ../scss/ringsted_styles.scss */
 .sec-msg {
   clear: both; }

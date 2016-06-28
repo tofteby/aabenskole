@@ -9,3 +9,11 @@ $MuseoMiddle:"Museo500", Helvetica, Arial, sans-serif;
 
 @include include_font("Museo700");
 $MuseoBold:"Museo700", Helvetica, Arial, sans-serif;
+
+a:link, a:visited {
+  text-decoration: none;
+  color: $pri;
+}
+a:hover {
+  color: #15414d;
+}

@@ -31,5 +31,6 @@
 
 @mixin button() {
   padding: 10px;
-  background: $verysofrblue;
+  background: $pri;
+  color: white !important;
 }

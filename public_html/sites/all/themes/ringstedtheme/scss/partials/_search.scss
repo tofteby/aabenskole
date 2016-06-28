@@ -16,7 +16,8 @@
             margin-top: 30px;
           }
           .link-search {
-            // font-family: "Gill Sans W01","Gill Sans",serif;
+            font-family: "Gill Sans W01","Gill Sans",serif;
+            font-weight: bold;
             a {
               @include button;
             }
