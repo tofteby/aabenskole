@@ -69,7 +69,9 @@ $term_fields = _kos_search_get_term_fields();
 ?>
 <li class="clearfix <?php print $classes; ?>"<?php print $attributes; ?>>
   <div class="search-snippet-info">
-     <p class="search-image"><?php echo $image_field ?></p>
+     <a href="<?php print $url; ?>">
+       <p class="search-image"><?php echo $image_field ?></p>
+     </a>
      <div class="content">
         <?php print render($title_prefix); ?>
           <h3 class="title"<?php print $title_attributes; ?>>
@@ -99,7 +101,7 @@ $term_fields = _kos_search_get_term_fields();
         <?php if($result['fields']['sm_vid_School_event_price']['0']): ?>
         <div class='price'><span class="price-text"><?php print $result['fields']['sm_vid_School_event_price']['0']?></span></div>
         <?php endif; ?>
-        <div class='icon-link'><span class="link-search"><?php print l(t('Go to event'),$result['fields']['ss_field_link_url'], array('attributes' => array('target'=>'_blank')))?></span></div>
+        <div class='icon-link'><span class="link-search"><?php print l(t('Go to event'),$url, array('attributes' => array('target'=>'_blank')))?></span></div>
       </div>
   </div>
 </li>

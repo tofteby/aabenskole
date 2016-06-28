@@ -1,0 +1,29 @@
+/// Search PAGE STYLE
+.page-search-events {
+  .sec-inner {
+    .apachesolr_search-results {
+      .search-result {
+        .search-fields-events-right {
+          .date,
+          .price,
+          .icon-link {
+            font-size: 14px;
+            display: block;
+            margin-bottom: 3%;
+            font-style: normal;
+          }
+          .icon-link {
+            margin-top: 30px;
+          }
+          .link-search {
+            // font-family: "Gill Sans W01","Gill Sans",serif;
+            a {
+              padding: 10px;
+              background: $verysofrblue;
+            }
+          }
+        }
+      }
+    }
+  }
+}
