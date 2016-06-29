@@ -331,6 +331,10 @@ function kos_content_type_school_event_views_default_views() {
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
   $handler->display->display_options['path'] = 'nyeste-aktiviteter';
+  $handler->display->display_options['displays'] = array(
+    'panel_pane_1' => 'panel_pane_1',
+    'default' => 0,
+  );
   $export['school_events_list'] = $view;
 
   return $export;

@@ -36,6 +36,16 @@ a:link, a:visited {
 a:hover {
   color: #15414d; }
 
+/* line 22, ../scss/partials/_typography.scss */
+.view .feed-icon {
+  content: '' !important; }
+  /* line 24, ../scss/partials/_typography.scss */
+  .view .feed-icon:before {
+    content: '' !important; }
+  /* line 27, ../scss/partials/_typography.scss */
+  .view .feed-icon a.feed-icon:before {
+    content: "\e60e" !important; }
+
 @media (max-width: 960px) {
   /* line 3, ../scss/partials/_header.scss */
   .sec-header a {

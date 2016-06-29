@@ -17,3 +17,15 @@ a:link, a:visited {
 a:hover {
   color: #15414d;
 }
+
+.view {
+  .feed-icon {
+    content: '' !important;
+    &:before {
+      content: '' !important;
+    }
+    a.feed-icon:before {
+      content: "\e60e" !important;
+    }
+  }
+}
