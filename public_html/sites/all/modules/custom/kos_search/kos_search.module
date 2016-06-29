@@ -319,11 +319,9 @@ function kos_search_preprocess_link_from_link($term_id) {
 
   foreach ($fields as $solr_field => $field_data) {
     if ($term->vocabulary_machine_name == $field_data['vocabulary']) {
-      $q = $solr_field;
+      return 'events' . '?f[0]=' . $solr_field . '%3A' . $term->tid;
     }
   }
-
-  return 'events' . '?f[0]=' . $q . '%3A' . $term->tid;
 }
 
 /**
