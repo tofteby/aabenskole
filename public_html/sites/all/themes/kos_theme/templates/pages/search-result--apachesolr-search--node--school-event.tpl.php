@@ -89,7 +89,7 @@ $term_fields = _kos_search_get_term_fields();
             <span class="tx-type" ><?php echo $field_data['title']?>:</span>
             <?php foreach(${$field_id} as $term_item): ?>
               <div class="field-item">
-                <?php print $term_item['name']; ?>
+                <a href="<?php print kos_search_preprocess_link_from_link($term_item['term_id']); ?>"><?php print $term_item['name']; ?></a>
               </div>
             <?php endforeach;?>
             </div>

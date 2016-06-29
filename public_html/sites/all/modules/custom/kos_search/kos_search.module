@@ -308,6 +308,25 @@ function kos_search_preprocess_link(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_link().
+ *
+ * Preprocess term links to point to search page.
+ */
+function kos_search_preprocess_link_from_link($term_id) {
+  $term = taxonomy_term_load($term_id);
+
+  $fields = _kos_search_get_term_fields();
+
+  foreach ($fields as $solr_field => $field_data) {
+    if ($term->vocabulary_machine_name == $field_data['vocabulary']) {
+      $q = $solr_field;
+    }
+  }
+
+  return 'events' . '?f[0]=' . $q . '%3A' . $term->tid;
+}
+
+/**
  * Helper method to call in update hook, when the KOS_SEARCH_DATE_FORMAT
  * constant is changed. Deletes the old date format and adds a new one instead.
  * Prevents issues when called sequentailly and adding the same format twice.
