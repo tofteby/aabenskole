@@ -13,6 +13,8 @@ $realm_variables = array();
   'chosen_no_results_text' => 'Ingen resultater kamp',
   'chosen_placeholder_text_multiple' => 'Vælg nogle muligheder',
   'chosen_placeholder_text_single' => 'Vælg en mulighed',
+  'site_name' => 'aabenskole.bellcom.dk',
+  'site_slogan' => '',
 );
   $realm_variables['language']['en'] = array(
   'chosen_no_results_text' => 'No results match',

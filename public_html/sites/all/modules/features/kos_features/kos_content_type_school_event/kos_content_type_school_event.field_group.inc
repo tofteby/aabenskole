@@ -275,6 +275,7 @@ function kos_content_type_school_event_field_group_info() {
       2 => 'field_school_event_price',
       3 => 'field_subjects',
       4 => 'field_topic',
+      5 => 'field_competence',
     ),
     'format_type' => 'htab',
     'format_settings' => array(

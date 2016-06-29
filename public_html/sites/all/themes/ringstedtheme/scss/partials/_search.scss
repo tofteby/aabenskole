@@ -44,6 +44,33 @@
 
 @include breakpoint(max-width 960px) {
   .block-facetapi {
-    margin: 30px 0 !important;
+    margin-bottom: 30px !important;
+  }
+}
+
+.apachesolr-browse-blocks,
+.sec-inner {
+  .block-facetapi {
+    display: inline-block;
+    float: left;
+    @include span-columns(1,5);
+    &:last-of-type {
+      @include omega;
+    }
+  }
+}
+@include at-breakpoint($mq-bp-tablet) {
+  .sec-inner .block-facetapi {
+    @include span-columns(6,6);
+  }
+  .sec-inner .block-facetapi {
+     @include omega;
+  }
+
+}
+@include at-breakpoint($mq-bp-mobile) {
+  .sec-inner .block-facetapi {
+    float: none;
+    width: 100%;
   }
 }

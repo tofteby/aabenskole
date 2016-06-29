@@ -140,6 +140,10 @@ function _kos_search_get_term_fields() {
       'title' => t('Target'),
       'vocabulary' => 'audiences',
     ),
+    'im_field_competence' => array(
+      'title' => t('Compentencies'),
+      'vocabulary' => 'competence',
+    ),
   );
 }
 

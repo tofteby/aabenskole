@@ -174,7 +174,43 @@ a:hover {
 @media (max-width: 960px) {
   /* line 46, ../scss/partials/_search.scss */
   .block-facetapi {
-    margin: 30px 0 !important; } }
+    margin-bottom: 30px !important; } }
+/* line 53, ../scss/partials/_search.scss */
+.apachesolr-browse-blocks .block-facetapi,
+.sec-inner .block-facetapi {
+  display: inline-block;
+  float: left;
+  width: 16.66667%;
+  float: left;
+  margin-right: 4.16667%;
+  display: inline; }
+  /* line 57, ../scss/partials/_search.scss */
+  .apachesolr-browse-blocks .block-facetapi:last-of-type,
+  .sec-inner .block-facetapi:last-of-type {
+    float: right;
+    margin-right: 0;
+    *margin-left: -1em;
+    display: inline; }
+
+@media (min-width: 480px) and (max-width: 767px) {
+  /* line 63, ../scss/partials/_search.scss */
+  .sec-inner .block-facetapi {
+    width: 100%;
+    float: left;
+    margin-right: 3.44828%;
+    display: inline; }
+
+  /* line 66, ../scss/partials/_search.scss */
+  .sec-inner .block-facetapi {
+    float: right;
+    margin-right: 0;
+    *margin-left: -1em;
+    display: inline; } }
+@media (max-width: 479px) {
+  /* line 72, ../scss/partials/_search.scss */
+  .sec-inner .block-facetapi {
+    float: none;
+    width: 100%; } }
 /* line 1, ../scss/partials/_school_event.scss */
 .school-event-link a {
   padding: 7px;
