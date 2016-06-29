@@ -6,6 +6,10 @@
   border: 0;
   width: 100%;
 
+  .sec-inner {
+    padding: 0;
+  }
+
   .menu-main {
     float: right;
     width: 100%;
@@ -18,8 +22,9 @@
 
   li {
     @include inline-block();
-    margin: 0 5px 0 -4px;
+    margin: 0;
     text-transform: uppercase;
+    float: none;
   }
 
   a {
