@@ -19,16 +19,26 @@
           }
         }
 
-        // Equal heights on news rows.
-        $(window).load(function() {
+        // Equal heights on school event rows.
+        function fixEventHeight() {
           $(".view-school-events-list", context).each(function() {
-            $(".views-row", $(this)).equalHeights();
+            if ($(window).width() > 480) {
+              $(".views-row", $(this)).equalHeights();
+            } else {
+              $(".views-row").height('auto');
+              $(".views-row").css('padding-bottom', '100px');
+            }
           });
+        }
+
+        $(window).load(function() {
+          fixBodyHeight();
+          fixEventHeight();
         });
 
-        fixBodyHeight();
         $(window).resize(function() {
           fixBodyHeight();
+          fixEventHeight();
         });
     }
   };
