@@ -12,7 +12,6 @@
 .footer-wrapper {
   background: url(../images/big-circle.png) no-repeat;
   background-position: -250px -95px;
-  padding: 55px 0 100px;
   font-family: $MuseoSans;
   position: relative;
 
@@ -23,6 +22,7 @@
     @include font-size(22);
     font-family: $MuseoMiddle;
     margin-bottom: 50px;
+    text-transform: capitalize;
   }
 
   h3 {
@@ -30,5 +30,15 @@
     @include font-size(16);
     font-family: $MuseoMiddle;
     margin-bottom: 40px;
+    text-transform: capitalize;
+  }
+  .sec-inner {
+    .footer-section,
+    section {
+      width: 23.85321%;
+      float: left;
+      margin-right: 1.52905%;
+      display: inline;
+    }
   }
 }
