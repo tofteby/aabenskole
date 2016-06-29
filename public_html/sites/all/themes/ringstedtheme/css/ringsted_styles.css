@@ -36,7 +36,19 @@ a:link, a:visited {
 a:hover {
   color: #15414d; }
 
-/* line 1, ../scss/partials/_header.scss */
+@media (max-width: 960px) {
+  /* line 3, ../scss/partials/_header.scss */
+  .sec-header a {
+    width: 100%; }
+  /* line 6, ../scss/partials/_header.scss */
+  .sec-header img {
+    margin: 0 auto; }
+
+  /* line 10, ../scss/partials/_header.scss */
+  .sec-menu {
+    float: none !important;
+    text-align: center !important; } }
+/* line 16, ../scss/partials/_header.scss */
 .sec-menu {
   clear: both;
   float: right;
@@ -44,17 +56,17 @@ a:hover {
   text-align: right;
   border: 0;
   width: 100%; }
-  /* line 9, ../scss/partials/_header.scss */
+  /* line 24, ../scss/partials/_header.scss */
   .sec-menu .sec-inner {
     padding: 0; }
-  /* line 13, ../scss/partials/_header.scss */
+  /* line 28, ../scss/partials/_header.scss */
   .sec-menu .menu-main {
     float: right;
     width: 100%; }
-  /* line 19, ../scss/partials/_header.scss */
+  /* line 34, ../scss/partials/_header.scss */
   .sec-menu .nav {
     display: inline-block; }
-  /* line 23, ../scss/partials/_header.scss */
+  /* line 38, ../scss/partials/_header.scss */
   .sec-menu li {
     display: inline-block;
     vertical-align: middle;
@@ -64,7 +76,7 @@ a:hover {
     margin: 0;
     text-transform: uppercase;
     float: none; }
-  /* line 30, ../scss/partials/_header.scss */
+  /* line 45, ../scss/partials/_header.scss */
   .sec-menu a {
     font-size: 22px;
     font-size: 1.375rem;
@@ -72,16 +84,16 @@ a:hover {
     font-family: "Museo300", Helvetica, Arial, sans-serif;
     font-weight: normal;
     display: block; }
-    /* line 37, ../scss/partials/_header.scss */
+    /* line 52, ../scss/partials/_header.scss */
     .sec-menu a:hover {
       background-color: #EBEBEB;
       color: #333; }
-  /* line 45, ../scss/partials/_header.scss */
+  /* line 60, ../scss/partials/_header.scss */
   .sec-menu .active a,
   .sec-menu .active-trail a {
     color: #333;
     background-color: #EBEBEB; }
-  /* line 51, ../scss/partials/_header.scss */
+  /* line 66, ../scss/partials/_header.scss */
   .sec-menu .last {
     margin-right: 0; }
 
@@ -124,10 +136,21 @@ a:hover {
     margin-right: 1.52905%;
     display: inline; }
 
-/* line 6, ../scss/partials/_search.scss */
+/* line 1, ../scss/partials/_search.scss */
+.page-search .search-form .form-submit {
+  padding: 9px 0.5em; }
+
+/* line 4, ../scss/partials/_search.scss */
+.form-item-retain-filters {
+  margin-top: 40px !important; }
+
+/* line 10, ../scss/partials/_search.scss */
+.page-search-events .events-topbar-search select {
+  width: 100%; }
+/* line 17, ../scss/partials/_search.scss */
 .page-search-events .sec-inner .apachesolr_search-results .search-result.highlighted {
   background: #c6d8e2; }
-/* line 10, ../scss/partials/_search.scss */
+/* line 21, ../scss/partials/_search.scss */
 .page-search-events .sec-inner .apachesolr_search-results .search-result .search-fields-events-right .date,
 .page-search-events .sec-inner .apachesolr_search-results .search-result .search-fields-events-right .price,
 .page-search-events .sec-inner .apachesolr_search-results .search-result .search-fields-events-right .icon-link {
@@ -135,22 +158,26 @@ a:hover {
   display: block;
   margin-bottom: 3%;
   font-style: normal; }
-/* line 18, ../scss/partials/_search.scss */
+/* line 29, ../scss/partials/_search.scss */
 .page-search-events .sec-inner .apachesolr_search-results .search-result .search-fields-events-right .icon-link {
   margin-top: 30px; }
-/* line 21, ../scss/partials/_search.scss */
+/* line 32, ../scss/partials/_search.scss */
 .page-search-events .sec-inner .apachesolr_search-results .search-result .search-fields-events-right .link-search {
   font-family: "Gill Sans W01","Gill Sans",serif;
   font-weight: bold; }
-  /* line 24, ../scss/partials/_search.scss */
+  /* line 35, ../scss/partials/_search.scss */
   .page-search-events .sec-inner .apachesolr_search-results .search-result .search-fields-events-right .link-search a {
-    padding: 10px;
+    padding: 7px;
     background: #2e5f84;
     color: white !important; }
 
+@media (max-width: 960px) {
+  /* line 46, ../scss/partials/_search.scss */
+  .block-facetapi {
+    margin: 30px 0 !important; } }
 /* line 1, ../scss/partials/_school_event.scss */
 .school-event-link a {
-  padding: 10px;
+  padding: 7px;
   background: #2e5f84;
   color: white !important;
   color: #F15E4A;
@@ -181,11 +208,23 @@ a:hover {
 .form-submit {
   background: #2e5f84 !important;
   border-color: #2e5f84 !important; }
+  @media (max-width: 960px) {
+    /* line 1, ../scss/partials/_forms.scss */
+    .form-submit {
+      width: 100%; } }
 
 /* line 1, ../scss/partials/_pager_slideshow.scss */
 .pager li a,
 .flexslider li a {
   background-color: #2e5f84 !important; }
+
+@media (max-width: 960px) {
+  /* line 7, ../scss/partials/_pager_slideshow.scss */
+  .flexslider {
+    margin-bottom: 0; } }
+/* line 14, ../scss/partials/_pager_slideshow.scss */
+.pager .pager-previous span, .pager .pager-current span {
+  background-color: #3b7aaa !important; }
 
 /* line 1, ../scss/partials/_icons.scss */
 [class^="ic-"]:hover:before,
@@ -213,3 +252,10 @@ a:hover {
 /* line 31, ../scss/ringsted_styles.scss */
 .sec-msg {
   clear: both; }
+
+/* line 36, ../scss/ringsted_styles.scss */
+.front .panel-3col-33-stacked {
+  margin-top: -30px; }
+/* line 39, ../scss/ringsted_styles.scss */
+.front .sec-content .sec-inner, .front .sec-content .menu-serv-wrapper {
+  padding-top: 0; }

@@ -2,3 +2,17 @@
 .flexslider li a {
   background-color: $pri !important;
 }
+
+@include breakpoint(max-width 960px) {
+  .flexslider {
+    margin-bottom: 0;
+  }
+}
+
+.pager {
+  .pager-previous, .pager-current {
+    span {
+      background-color: lighten($pri, 10%) !important;
+    }
+  }
+}

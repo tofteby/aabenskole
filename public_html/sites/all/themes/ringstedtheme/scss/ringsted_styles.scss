@@ -31,3 +31,12 @@
 .sec-msg {
   clear: both;
 }
+
+.front {
+  .panel-3col-33-stacked {
+    margin-top: -30px;
+  }
+  .sec-content .sec-inner, .sec-content .menu-serv-wrapper {
+    padding-top: 0;
+  }
+}

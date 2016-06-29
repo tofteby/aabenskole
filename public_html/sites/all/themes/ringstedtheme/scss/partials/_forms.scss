@@ -1,4 +1,7 @@
 .form-submit {
   background: $pri !important;
   border-color: $pri !important;
+  @include breakpoint(max-width 960px) {
+    width: 100%;
+  }
 }

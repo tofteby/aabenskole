@@ -1,5 +1,16 @@
-/// Search PAGE STYLE
+.page-search .search-form .form-submit {
+  padding: 9px 0.5em;
+}
+.form-item-retain-filters {
+  margin-top: 40px !important;
+}
+
 .page-search-events {
+  .events-topbar-search {
+    select {
+      width: 100%;
+    }
+  }
   .sec-inner {
     .apachesolr_search-results {
       .search-result {
@@ -28,5 +39,11 @@
         }
       }
     }
+  }
+}
+
+@include breakpoint(max-width 960px) {
+  .block-facetapi {
+    margin: 30px 0 !important;
   }
 }
