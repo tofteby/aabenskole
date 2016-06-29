@@ -5,3 +5,20 @@
  */
 
 include_once 'kos_content_type_school_event.features.inc';
+
+function kos_content_type_school_event_permission() {
+  return array(
+    'allow publish school event' => array(
+      'title' => t('Allow to publish school event'),
+      'description' => t('Allow to publish content school event'),
+    ),
+  );
+}
+
+function kos_content_type_school_event_form_alter($form, &$form_state, $form_id) {
+  if ($form_id == 'school_event_node_form') {
+    if (!user_access('allow publish school event')) {
+      $form_state['values']['status'] = 0;
+    }
+  }
+}
