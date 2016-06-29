@@ -75,6 +75,11 @@ function kos_search_apachesolr_query_alter(DrupalSolrQueryInterface $query) {
 function kos_search_preprocess_search_result(&$variables) {
   $term_fields = _kos_search_get_term_fields();
 
+  $node = node_load($variables['result']['node']->entity_id);
+  if (!empty($node->field_highlighted)) {
+    $variables['classes_array'][] = 'highlighted';
+  }
+
   if (arg(0) == 'search' && arg(1) == 'events') {
     $search_keyword = arg(2);
 

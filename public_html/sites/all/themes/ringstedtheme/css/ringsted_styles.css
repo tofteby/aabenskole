@@ -112,7 +112,10 @@ a:hover {
     font-family: "Museo500", Helvetica, Arial, sans-serif;
     margin-bottom: 40px; }
 
-/* line 7, ../scss/partials/_search.scss */
+/* line 6, ../scss/partials/_search.scss */
+.page-search-events .sec-inner .apachesolr_search-results .search-result.highlighted {
+  background: #c6d8e2; }
+/* line 10, ../scss/partials/_search.scss */
 .page-search-events .sec-inner .apachesolr_search-results .search-result .search-fields-events-right .date,
 .page-search-events .sec-inner .apachesolr_search-results .search-result .search-fields-events-right .price,
 .page-search-events .sec-inner .apachesolr_search-results .search-result .search-fields-events-right .icon-link {
@@ -120,14 +123,14 @@ a:hover {
   display: block;
   margin-bottom: 3%;
   font-style: normal; }
-/* line 15, ../scss/partials/_search.scss */
+/* line 18, ../scss/partials/_search.scss */
 .page-search-events .sec-inner .apachesolr_search-results .search-result .search-fields-events-right .icon-link {
   margin-top: 30px; }
-/* line 18, ../scss/partials/_search.scss */
+/* line 21, ../scss/partials/_search.scss */
 .page-search-events .sec-inner .apachesolr_search-results .search-result .search-fields-events-right .link-search {
   font-family: "Gill Sans W01","Gill Sans",serif;
   font-weight: bold; }
-  /* line 21, ../scss/partials/_search.scss */
+  /* line 24, ../scss/partials/_search.scss */
   .page-search-events .sec-inner .apachesolr_search-results .search-result .search-fields-events-right .link-search a {
     padding: 10px;
     background: #2e5f84;

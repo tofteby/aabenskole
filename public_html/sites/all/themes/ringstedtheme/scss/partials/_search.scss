@@ -3,6 +3,9 @@
   .sec-inner {
     .apachesolr_search-results {
       .search-result {
+        &.highlighted {
+          background: lighten($blue, 40%);
+        }
         .search-fields-events-right {
           .date,
           .price,

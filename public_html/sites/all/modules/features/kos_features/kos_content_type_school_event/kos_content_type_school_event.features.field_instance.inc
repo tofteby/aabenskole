@@ -342,6 +342,69 @@ function kos_content_type_school_event_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-school_event-field_highlighted'
+  $field_instances['node-school_event-field_highlighted'] = array(
+    'bundle' => 'school_event',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 11,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'related_nodes' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'scs' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'fences_wrapper' => 'div',
+    'field_name' => 'field_highlighted',
+    'label' => 'Highlighted',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 1,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+      ),
+      'type' => 'options_onoff',
+      'weight' => 54,
+    ),
+  );
+
   // Exported field_instance: 'node-school_event-field_image'
   $field_instances['node-school_event-field_image'] = array(
     'bundle' => 'school_event',
@@ -1224,6 +1287,7 @@ function kos_content_type_school_event_field_default_field_instances() {
   t('Enter the place, where the school event takes place.');
   t('Files');
   t('Forberedelse');
+  t('Highlighted');
   t('Images');
   t('Insert a link to the site where you can get more information about the event.');
   t('Insert picture. A picture must have the following minimum size: 540x306. The size should have the following hight/width ratio (1.76x1)');
