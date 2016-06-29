@@ -166,6 +166,7 @@ function configuration_apachesolr_facetapi_default_facet_settings() {
     'keep_open' => 0,
     'expand' => 1,
     'collapsible_children' => 0,
+    'optgroups' => 1,
   );
   $export['apachesolr@solr:block:created'] = $facet;
 
@@ -215,6 +216,7 @@ function configuration_apachesolr_facetapi_default_facet_settings() {
     'remove_selected' => 0,
     'auto_submit' => 1,
     'act_single' => 0,
+    'optgroups' => 1,
   );
   $export['apachesolr@solr:block:im_shared_tax_common'] = $facet;
 
@@ -264,6 +266,7 @@ function configuration_apachesolr_facetapi_default_facet_settings() {
     'keep_open' => 0,
     'expand' => 1,
     'collapsible_children' => 0,
+    'optgroups' => 1,
   );
   $export['apachesolr@solr:block:im_shared_tax_event'] = $facet;
 
@@ -310,6 +313,7 @@ function configuration_apachesolr_facetapi_default_facet_settings() {
     'remove_selected' => 0,
     'auto_submit' => 1,
     'act_single' => 0,
+    'optgroups' => 1,
   );
   $export['apachesolr@solr:block:im_shared_tax_place'] = $facet;
 
@@ -377,6 +381,9 @@ function configuration_apachesolr_facetapi_default_facet_settings() {
     'collapsible_checkboxes_keep_open' => 1,
     'collapsible_checkboxes_expand' => 0,
     'collapsible_checkboxes_collapsible_children' => 0,
+    'optgroups' => 1,
+    'default_option_label' => '',
+    'submit_page' => '',
   );
   $export['apachesolr@solr:block:sm_search_terms'] = $facet;
 
