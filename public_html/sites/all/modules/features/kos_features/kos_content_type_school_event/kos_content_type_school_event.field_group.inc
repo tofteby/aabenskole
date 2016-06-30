@@ -116,8 +116,9 @@ function kos_content_type_school_event_field_group_info() {
     'weight' => '10',
     'children' => array(
       0 => 'field_teaser',
-      1 => 'language',
-      2 => 'title',
+      1 => 'field_school_event_body',
+      2 => 'language',
+      3 => 'title',
     ),
     'format_type' => 'htab',
     'format_settings' => array(

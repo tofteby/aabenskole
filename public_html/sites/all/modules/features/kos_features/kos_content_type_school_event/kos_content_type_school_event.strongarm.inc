@@ -132,13 +132,13 @@ function kos_content_type_school_event_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'language' => array(
-          'weight' => '2',
+          'weight' => '56',
         ),
         'metatags' => array(
           'weight' => '40',
         ),
         'title' => array(
-          'weight' => '3',
+          'weight' => '57',
         ),
         'path' => array(
           'weight' => '5',

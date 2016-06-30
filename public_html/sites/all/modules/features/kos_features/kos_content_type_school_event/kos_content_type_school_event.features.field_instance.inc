@@ -864,6 +864,63 @@ function kos_content_type_school_event_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-school_event-field_school_event_body'
+  $field_instances['node-school_event-field_school_event_body'] = array(
+    'bundle' => 'school_event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 13,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'related_nodes' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'scs' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_school_event_body',
+    'label' => 'Body',
+    'required' => FALSE,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 59,
+    ),
+  );
+
   // Exported field_instance: 'node-school_event-field_school_event_place'
   $field_instances['node-school_event-field_school_event_place'] = array(
     'bundle' => 'school_event',
@@ -1166,7 +1223,7 @@ function kos_content_type_school_event_field_default_field_instances() {
         'rows' => 3,
       ),
       'type' => 'text_textarea',
-      'weight' => 4,
+      'weight' => 58,
     ),
   );
 
@@ -1339,6 +1396,7 @@ function kos_content_type_school_event_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Audiences');
+  t('Body');
   t('Choose subject.');
   t('Comment');
   t('Competencies');
