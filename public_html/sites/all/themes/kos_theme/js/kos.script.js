@@ -22,6 +22,7 @@
         // Equal heights on school event rows.
         function fixEventHeight() {
           $(".view-school-events-list", context).each(function() {
+            $(".list-content-wrapper", $(this)).equalHeights();
             if ($(window).width() > 480) {
               $(".views-row", $(this)).equalHeights();
             } else {

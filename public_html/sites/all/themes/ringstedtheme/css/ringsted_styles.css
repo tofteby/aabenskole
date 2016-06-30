@@ -252,25 +252,28 @@ a:hover {
   margin-top: 1.35em;
   display: block;
   font-size: 0.8em;
-  font-family: "Gill Sans W01","Gill Sans",serif;
   font-weight: bold;
   margin-top: 20px;
   float: left; }
 
-/* line 13, ../scss/partials/_school_event.scss */
+/* line 12, ../scss/partials/_school_event.scss */
 .pane-bundle-events-gallery-pane {
   margin-bottom: 10px; }
-  /* line 15, ../scss/partials/_school_event.scss */
+  /* line 14, ../scss/partials/_school_event.scss */
   .pane-bundle-events-gallery-pane .pane-title {
     position: relative !important; }
   @media (max-width: 800px) {
-    /* line 19, ../scss/partials/_school_event.scss */
+    /* line 18, ../scss/partials/_school_event.scss */
     .pane-bundle-events-gallery-pane .pane-title {
       top: 35px !important; } }
   @media (min-width: 800px) {
-    /* line 24, ../scss/partials/_school_event.scss */
+    /* line 23, ../scss/partials/_school_event.scss */
     .pane-bundle-events-gallery-pane .pane-title {
       top: 45px !important; } }
+
+/* line 31, ../scss/partials/_school_event.scss */
+.view-school-events-list .views-field-nothing .field {
+  padding: 0 !important; }
 
 /* line 1, ../scss/partials/_forms.scss */
 .form-submit {

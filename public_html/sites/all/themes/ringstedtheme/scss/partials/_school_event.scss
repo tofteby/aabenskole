@@ -4,7 +4,6 @@
   margin-top: 1.35em;
   display: block;
   font-size: 0.8em;
-  font-family: "Gill Sans W01","Gill Sans",serif;
   font-weight: bold;
   margin-top: 20px;
   float: left;
@@ -23,6 +22,14 @@
   @include breakpoint(800px) {
     .pane-title {;
       top: 45px !important;
+    }
+  }
+}
+
+.view-school-events-list {
+  .views-field-nothing {
+    .field {
+      padding: 0 !important;
     }
   }
 }
