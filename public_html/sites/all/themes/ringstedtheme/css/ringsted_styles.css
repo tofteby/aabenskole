@@ -36,13 +36,24 @@ a:link, a:visited {
 a:hover {
   color: #15414d; }
 
-/* line 22, ../scss/partials/_typography.scss */
+/* line 21, ../scss/partials/_typography.scss */
+.sec {
+  font-family: "Museo300", Helvetica, Arial, sans-serif !important; }
+  /* line 22, ../scss/partials/_typography.scss */
+  .sec body, .sec a, .sec h1, .sec h2, .sec h3, .sec h4, .sec h5,
+  .sec label,
+  .sec .field,
+  .sec .pane-title,
+  .sec .views-label {
+    font-family: "Museo300", Helvetica, Arial, sans-serif !important; }
+
+/* line 33, ../scss/partials/_typography.scss */
 .view .feed-icon {
   content: '' !important; }
-  /* line 24, ../scss/partials/_typography.scss */
+  /* line 35, ../scss/partials/_typography.scss */
   .view .feed-icon:before {
     content: '' !important; }
-  /* line 27, ../scss/partials/_typography.scss */
+  /* line 38, ../scss/partials/_typography.scss */
   .view .feed-icon a.feed-icon:before {
     content: "\e60e" !important; }
 

@@ -18,6 +18,17 @@ a:hover {
   color: #15414d;
 }
 
+.sec {
+  body, a, h1, h2, h3, h4, h5,
+  label,
+  .field,
+  .pane-title,
+  .views-label {
+    font-family: $MuseoLight !important;
+  }
+  font-family: $MuseoLight !important;
+}
+
 .view {
   .feed-icon {
     content: '' !important;
