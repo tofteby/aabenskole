@@ -232,6 +232,10 @@ a:hover {
   .sec-inner .block-facetapi {
     float: none;
     width: 100%; } }
+/* line 78, ../scss/partials/_search.scss */
+.chosen-container .chosen-choices li.search-choice {
+  padding: 0.3em 1em 0.3em 1em !important; }
+
 /* line 1, ../scss/partials/_school_event.scss */
 .school-event-link a {
   padding: 7px;
