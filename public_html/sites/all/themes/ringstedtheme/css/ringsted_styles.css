@@ -236,6 +236,11 @@ a:hover {
 .chosen-container .chosen-choices li.search-choice {
   padding: 0.3em 1em 0.3em 1em !important; }
 
+/* line 82, ../scss/partials/_search.scss */
+.page-search-events .search-categories .field-item {
+  padding: 0 !important;
+  word-break: none !important; }
+
 /* line 1, ../scss/partials/_school_event.scss */
 .school-event-link a {
   padding: 7px;
