@@ -49,11 +49,13 @@ a:hover {
 
 /* line 33, ../scss/partials/_typography.scss */
 .view .feed-icon {
-  content: '' !important; }
-  /* line 35, ../scss/partials/_typography.scss */
+  content: '' !important;
+  float: right;
+  margin-top: 20px; }
+  /* line 37, ../scss/partials/_typography.scss */
   .view .feed-icon:before {
     content: '' !important; }
-  /* line 38, ../scss/partials/_typography.scss */
+  /* line 40, ../scss/partials/_typography.scss */
   .view .feed-icon a.feed-icon:before {
     content: "\e60e" !important; }
 

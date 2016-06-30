@@ -32,6 +32,8 @@ a:hover {
 .view {
   .feed-icon {
     content: '' !important;
+    float: right;
+    margin-top: 20px;
     &:before {
       content: '' !important;
     }
