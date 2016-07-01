@@ -78,9 +78,14 @@ function content_type_script_field_default_field_instances() {
   // Exported field_instance: 'node-script-field_script'
   $field_instances['node-script-field_script'] = array(
     'bundle' => 'script',
-    'default_value' => NULL,
+    'default_value' => array(
+      0 => array(
+        'value' => '<iframe width="560" height="315" src="//www.skoletube.dk./e/1476881251/0" frameborder="0" allowfullscreen></iframe>',
+        'format' => 'unfiltered_html',
+      ),
+    ),
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Embeded f. eks.: <iframe width="560" height="315" src="//www.skoletube.dk./e/1476881251/0" frameborder="0" allowfullscreen></iframe>',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -146,6 +151,10 @@ function content_type_script_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
         'rows' => 5,
       ),
       'type' => 'text_textarea',
@@ -241,6 +250,7 @@ function content_type_script_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Comment');
+  t('Embeded f. eks.: <iframe width="560" height="315" src="//www.skoletube.dk./e/1476881251/0" frameborder="0" allowfullscreen></iframe>');
   t('Iframe/Script');
   t('Title');
 

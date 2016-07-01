@@ -26,6 +26,7 @@ function kos_content_type_school_event_field_group_info() {
       0 => 'field_image',
       1 => 'field_files',
       2 => 'field_video',
+      3 => 'field_skoletube_iframe',
     ),
     'format_type' => 'htab',
     'format_settings' => array(
@@ -85,7 +86,6 @@ function kos_content_type_school_event_field_group_info() {
       0 => 'field_audiences',
       1 => 'field_subjects',
       2 => 'field_topic',
-      3 => 'field_place_ref',
     ),
     'format_type' => 'div',
     'format_settings' => array(
@@ -117,9 +117,8 @@ function kos_content_type_school_event_field_group_info() {
     'weight' => '10',
     'children' => array(
       0 => 'field_teaser',
-      1 => 'field_school_event_body',
-      2 => 'language',
-      3 => 'title',
+      1 => 'language',
+      2 => 'title',
     ),
     'format_type' => 'htab',
     'format_settings' => array(
@@ -177,7 +176,8 @@ function kos_content_type_school_event_field_group_info() {
     'weight' => '12',
     'children' => array(
       0 => 'field_link',
-      1 => 'field_related_links',
+      1 => 'field_school_event_place',
+      2 => 'field_related_links',
     ),
     'format_type' => 'htab',
     'format_settings' => array(
@@ -207,7 +207,8 @@ function kos_content_type_school_event_field_group_info() {
     'children' => array(
       0 => 'field_date',
       1 => 'field_link',
-      2 => 'field_school_event_price',
+      2 => 'field_school_event_place',
+      3 => 'field_school_event_price',
     ),
     'format_type' => 'div',
     'format_settings' => array(
@@ -275,8 +276,6 @@ function kos_content_type_school_event_field_group_info() {
       2 => 'field_school_event_price',
       3 => 'field_subjects',
       4 => 'field_topic',
-      5 => 'field_competence',
-      6 => 'field_place_ref',
     ),
     'format_type' => 'htab',
     'format_settings' => array(

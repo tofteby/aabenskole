@@ -21,7 +21,8 @@ function content_type_script_node_info() {
     'script' => array(
       'name' => t('Iframe/Script'),
       'base' => 'node_content',
-      'description' => t('Bruges til at indsætte en iframe eller script'),
+      'description' => t('iframe bruges til at sætte indhold fra andre hjemmesider ind i en ramme på din hjemmeside. Det kan eksempelvis være kursusoversigter hos eksterne samarbejdspartnere.iframes er dog som udgangspunkt ikke tilgængelige, og bør derfor så vidt muligt undgås.
+'),
       'has_title' => '1',
       'title_label' => t('Titel'),
       'help' => '',

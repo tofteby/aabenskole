@@ -1016,6 +1016,97 @@ function kos_content_type_school_event_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-school_event-field_school_event_place'
+  $field_instances['node-school_event-field_school_event_place'] = array(
+    'bundle' => 'school_event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Enter the place, where the school event takes place.',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 8,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 15,
+      ),
+      'related_nodes' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'scs' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'fences_wrapper' => 'div',
+    'field_name' => 'field_school_event_place',
+    'label' => 'Place',
+    'required' => 0,
+    'settings' => array(
+      'better_formats' => array(
+        'allowed_formats' => array(
+          'filtered_html' => 'filtered_html',
+          'full_html' => 'full_html',
+          'plain_text' => 'plain_text',
+          'unfiltered_html' => 'unfiltered_html',
+        ),
+        'allowed_formats_toggle' => 0,
+        'default_order_toggle' => 0,
+        'default_order_wrapper' => array(
+          'formats' => array(
+            'filtered_html' => array(
+              'weight' => 1,
+            ),
+            'full_html' => array(
+              'weight' => 0,
+            ),
+            'plain_text' => array(
+              'weight' => 10,
+            ),
+            'unfiltered_html' => array(
+              'weight' => 2,
+            ),
+          ),
+        ),
+      ),
+      'linkit' => array(
+        'enable' => 0,
+        'insert_plugin' => '',
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'size' => 100,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 50,
+    ),
+  );
+
   // Exported field_instance: 'node-school_event-field_school_event_price'
   $field_instances['node-school_event-field_school_event_price'] = array(
     'bundle' => 'school_event',
@@ -1073,6 +1164,73 @@ function kos_content_type_school_event_field_default_field_instances() {
       ),
       'type' => 'options_buttons',
       'weight' => 46,
+    ),
+  );
+
+  // Exported field_instance: 'node-school_event-field_skoletube_iframe'
+  $field_instances['node-school_event-field_skoletube_iframe'] = array(
+    'bundle' => 'school_event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Indtase en iframe indhold',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 14,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'related_nodes' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'scs' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'fences_wrapper' => 'div',
+    'field_name' => 'field_skoletube_iframe',
+    'label' => 'Skoletube Iframe',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'entityreference',
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'path' => '',
+        'references_dialog_add' => 0,
+        'references_dialog_edit' => 0,
+        'references_dialog_search' => 0,
+        'references_dialog_search_view' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete',
+      'weight' => 11,
     ),
   );
 
@@ -1406,10 +1564,12 @@ function kos_content_type_school_event_field_default_field_instances() {
   t('Competencies');
   t('Date');
   t('Dynamic related links');
+  t('Enter the place, where the school event takes place.');
   t('Files');
   t('Forberedelse');
   t('Highlighted');
   t('Images');
+  t('Indtase en iframe indhold');
   t('Insert a link to the site where you can get more information about the event.');
   t('Insert picture. A picture must have the following minimum size: 540x306. The size should have the following hight/width ratio (1.76x1)');
   t('Insert start and end date/time for event.');
@@ -1419,6 +1579,7 @@ function kos_content_type_school_event_field_default_field_instances() {
   t('Popularity');
   t('School event price');
   t('Select topics from the vocabulary. Max 5.');
+  t('Skoletube Iframe');
   t('Subjects');
   t('Teaser');
   t('Topic');
