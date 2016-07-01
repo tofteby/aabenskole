@@ -39,6 +39,9 @@
 .view-school-events-list {
   .views-row {
     position: relative;
+    .field-name-field-school-event-price {
+      display: block !important;
+    }
   }
   .views-field-nothing {
     .field {

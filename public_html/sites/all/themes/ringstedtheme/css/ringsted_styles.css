@@ -302,7 +302,10 @@ a:hover {
 /* line 40, ../scss/partials/_school_event.scss */
 .view-school-events-list .views-row {
   position: relative; }
-/* line 44, ../scss/partials/_school_event.scss */
+  /* line 42, ../scss/partials/_school_event.scss */
+  .view-school-events-list .views-row .field-name-field-school-event-price {
+    display: block !important; }
+/* line 47, ../scss/partials/_school_event.scss */
 .view-school-events-list .views-field-nothing .field {
   padding: 0 !important; }
 
@@ -361,3 +364,8 @@ a:hover {
 /* line 39, ../scss/ringsted_styles.scss */
 .front .sec-content .sec-inner, .front .sec-content .menu-serv-wrapper {
   padding-top: 0; }
+
+@media (max-width: 768px) {
+  /* line 45, ../scss/ringsted_styles.scss */
+  .banner-pane-search-form {
+    bottom: 1% !important; } }
