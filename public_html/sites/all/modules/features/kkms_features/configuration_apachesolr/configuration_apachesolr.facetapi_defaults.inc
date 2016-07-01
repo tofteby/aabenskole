@@ -37,6 +37,50 @@ function configuration_apachesolr_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
+  $facet->name = 'apachesolr@solr::im_field_competence';
+  $facet->searcher = 'apachesolr@solr';
+  $facet->realm = '';
+  $facet->facet = 'im_field_competence';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'operator' => 'and',
+    'hard_limit' => '50',
+    'dependencies' => array(
+      'roles' => array(),
+      'bundle' => 'none',
+      'bundle_selected' => array(),
+    ),
+    'facet_mincount' => '0',
+    'facet_missing' => 0,
+    'flatten' => '0',
+    'query_type' => 'term',
+  );
+  $export['apachesolr@solr::im_field_competence'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'apachesolr@solr::im_field_place_ref';
+  $facet->searcher = 'apachesolr@solr';
+  $facet->realm = '';
+  $facet->facet = 'im_field_place_ref';
+  $facet->enabled = FALSE;
+  $facet->settings = array(
+    'operator' => 'and',
+    'hard_limit' => '50',
+    'dependencies' => array(
+      'roles' => array(),
+    ),
+    'facet_mincount' => '0',
+    'facet_missing' => 0,
+    'flatten' => '0',
+    'query_type' => 'term',
+  );
+  $export['apachesolr@solr::im_field_place_ref'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
   $facet->name = 'apachesolr@solr::im_shared_tax_common';
   $facet->searcher = 'apachesolr@solr';
   $facet->realm = '';
@@ -94,9 +138,9 @@ function configuration_apachesolr_facetapi_default_facet_settings() {
       'bundle' => 'none',
       'bundle_selected' => array(),
     ),
-    'facet_mincount' => '1',
+    'facet_mincount' => '0',
     'facet_missing' => 0,
-    'flatten' => '1',
+    'flatten' => '0',
     'query_type' => 'term',
   );
   $export['apachesolr@solr::im_shared_tax_place'] = $facet;
@@ -169,6 +213,116 @@ function configuration_apachesolr_facetapi_default_facet_settings() {
     'optgroups' => 1,
   );
   $export['apachesolr@solr:block:created'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'apachesolr@solr:block:im_field_competence';
+  $facet->searcher = 'apachesolr@solr';
+  $facet->realm = 'block';
+  $facet->facet = 'im_field_competence';
+  $facet->enabled = TRUE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_multiselect',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+      'indexed' => 0,
+    ),
+    'sort_weight' => array(
+      'active' => '-50',
+      'count' => '-49',
+      'display' => '-48',
+      'indexed' => '0',
+    ),
+    'sort_order' => array(
+      'active' => '3',
+      'count' => '3',
+      'display' => '4',
+      'indexed' => '4',
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => '20',
+    'nofollow' => 1,
+    'show_expanded' => 0,
+    'add_count' => 0,
+    'remove_selected' => 0,
+    'auto_submit' => 1,
+    'act_single' => 0,
+    'optgroups' => 0,
+    'default_option_label' => '',
+    'submit_page' => '',
+    'keep_open' => 0,
+    'expand' => 1,
+    'collapsible_children' => 0,
+    'collapsible_checkboxes_keep_open' => 0,
+    'collapsible_checkboxes_expand' => 1,
+    'collapsible_checkboxes_collapsible_children' => 0,
+    'empty_text' => array(
+      'value' => '',
+      'format' => 'full_html',
+    ),
+    'submit_realm' => 'Save and go back to realm settings',
+  );
+  $export['apachesolr@solr:block:im_field_competence'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'apachesolr@solr:block:im_field_place_ref';
+  $facet->searcher = 'apachesolr@solr';
+  $facet->realm = 'block';
+  $facet->facet = 'im_field_place_ref';
+  $facet->enabled = TRUE;
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_multiselect',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+      'indexed' => 0,
+    ),
+    'sort_weight' => array(
+      'active' => '-50',
+      'count' => '-49',
+      'display' => '-48',
+      'indexed' => '0',
+    ),
+    'sort_order' => array(
+      'active' => '3',
+      'count' => '3',
+      'display' => '4',
+      'indexed' => '4',
+    ),
+    'empty_behavior' => 'none',
+    'soft_limit' => '20',
+    'nofollow' => 1,
+    'show_expanded' => 0,
+    'add_count' => 0,
+    'remove_selected' => 0,
+    'auto_submit' => 1,
+    'act_single' => 0,
+    'optgroups' => 0,
+    'default_option_label' => '',
+    'submit_page' => '',
+    'keep_open' => 0,
+    'expand' => 1,
+    'collapsible_children' => 0,
+    'collapsible_checkboxes_keep_open' => 0,
+    'collapsible_checkboxes_expand' => 1,
+    'collapsible_checkboxes_collapsible_children' => 0,
+    'empty_text' => array(
+      'value' => '',
+      'format' => 'full_html',
+    ),
+    'submit_realm' => 'Save and go back to realm settings',
+  );
+  $export['apachesolr@solr:block:im_field_place_ref'] = $facet;
 
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
@@ -277,7 +431,7 @@ function configuration_apachesolr_facetapi_default_facet_settings() {
   $facet->searcher = 'apachesolr@solr';
   $facet->realm = 'block';
   $facet->facet = 'im_shared_tax_place';
-  $facet->enabled = TRUE;
+  $facet->enabled = FALSE;
   $facet->settings = array(
     'weight' => 0,
     'widget' => 'facetapi_multiselect',
@@ -309,11 +463,19 @@ function configuration_apachesolr_facetapi_default_facet_settings() {
       'format' => 'full_html',
     ),
     'submit_realm' => 'Save and go back to realm settings',
-    'add_count' => 1,
+    'add_count' => 0,
     'remove_selected' => 0,
     'auto_submit' => 1,
     'act_single' => 0,
-    'optgroups' => 1,
+    'optgroups' => 0,
+    'default_option_label' => '',
+    'submit_page' => '',
+    'keep_open' => 0,
+    'expand' => 1,
+    'collapsible_children' => 0,
+    'collapsible_checkboxes_keep_open' => 0,
+    'collapsible_checkboxes_expand' => 1,
+    'collapsible_checkboxes_collapsible_children' => 0,
   );
   $export['apachesolr@solr:block:im_shared_tax_place'] = $facet;
 

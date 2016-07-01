@@ -144,6 +144,10 @@ function _kos_search_get_term_fields() {
       'title' => t('Compentencies'),
       'vocabulary' => 'competence',
     ),
+    'im_field_place_ref' => array(
+      'title' => t('Place'),
+      'vocabulary' => 'place',
+    ),
   );
 }
 

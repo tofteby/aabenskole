@@ -562,6 +562,35 @@ function kos_content_type_school_event_panelizer_defaults() {
     $display->content['new-92ee0777-e376-4cd4-894e-82536fe0272e'] = $pane;
     $display->panels['content_left'][4] = 'new-92ee0777-e376-4cd4-894e-82536fe0272e';
     $pane = new stdClass();
+    $pane->pid = 'new-fe9f1a2a-f2a1-44ff-bf88-7aa22854a484';
+    $pane->panel = 'content_left';
+    $pane->type = 'entity_field';
+    $pane->subtype = 'node:field_place_ref';
+    $pane->shown = TRUE;
+    $pane->access = array();
+    $pane->configuration = array(
+      'label' => 'title',
+      'formatter' => 'taxonomy_term_reference_link',
+      'delta_limit' => '0',
+      'delta_offset' => '0',
+      'delta_reversed' => 0,
+      'formatter_settings' => array(),
+      'context' => 'panelizer',
+      'override_title' => 0,
+      'override_title_text' => '',
+    );
+    $pane->cache = array();
+    $pane->style = array(
+      'settings' => NULL,
+    );
+    $pane->css = array();
+    $pane->extras = array();
+    $pane->position = 5;
+    $pane->locks = array();
+    $pane->uuid = 'fe9f1a2a-f2a1-44ff-bf88-7aa22854a484';
+    $display->content['new-fe9f1a2a-f2a1-44ff-bf88-7aa22854a484'] = $pane;
+    $display->panels['content_left'][5] = 'new-fe9f1a2a-f2a1-44ff-bf88-7aa22854a484';
+    $pane = new stdClass();
     $pane->pid = 'new-f6ee00d1-0e07-4c1f-b68d-0afccaa9ba67';
     $pane->panel = 'content_right';
     $pane->type = 'entity_field';
