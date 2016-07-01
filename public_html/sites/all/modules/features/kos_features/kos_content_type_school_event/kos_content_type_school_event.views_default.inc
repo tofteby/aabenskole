@@ -96,7 +96,7 @@ function kos_content_type_school_event_views_default_views() {
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'node';
   $handler->display->display_options['fields']['created']['field'] = 'created';
-  $handler->display->display_options['fields']['created']['label'] = 'Date';
+  $handler->display->display_options['fields']['created']['label'] = 'Dato';
   $handler->display->display_options['fields']['created']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['created']['date_format'] = 'kos_events_date';
   /* Felt: Indhold: Udgivet */
@@ -209,6 +209,7 @@ function kos_content_type_school_event_views_default_views() {
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['label'] = '';
+  $handler->display->display_options['fields']['field_date']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_date']['element_type'] = '0';
   $handler->display->display_options['fields']['field_date']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_date']['element_wrapper_type'] = '0';
@@ -229,18 +230,33 @@ function kos_content_type_school_event_views_default_views() {
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['exclude'] = TRUE;
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   /* Felt: Felt: Teaser */
   $handler->display->display_options['fields']['field_teaser']['id'] = 'field_teaser';
   $handler->display->display_options['fields']['field_teaser']['table'] = 'field_data_field_teaser';
   $handler->display->display_options['fields']['field_teaser']['field'] = 'field_teaser';
   $handler->display->display_options['fields']['field_teaser']['label'] = '';
+  $handler->display->display_options['fields']['field_teaser']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_teaser']['element_type'] = '0';
   $handler->display->display_options['fields']['field_teaser']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_teaser']['element_wrapper_type'] = '0';
   $handler->display->display_options['fields']['field_teaser']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['field_teaser']['field_api_classes'] = TRUE;
+  /* Felt: Date, title and teaser (tokens) */
+  $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['ui_name'] = 'Date, title and teaser (tokens)';
+  $handler->display->display_options['fields']['nothing']['label'] = '';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<div class="list-content-wrapper">
+  [field_date]
+  [title]
+  [field_teaser]
+</div>';
+  $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   /* Felt: Indhold: Subjects */
   $handler->display->display_options['fields']['field_subjects']['id'] = 'field_subjects';
   $handler->display->display_options['fields']['field_subjects']['table'] = 'field_data_field_subjects';
@@ -268,27 +284,14 @@ function kos_content_type_school_event_views_default_views() {
   $handler->display->display_options['fields']['field_school_event_price']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_school_event_price']['element_wrapper_type'] = '0';
   $handler->display->display_options['fields']['field_school_event_price']['field_api_classes'] = TRUE;
-  /* Felt: Felt: Link */
-  $handler->display->display_options['fields']['field_link_1']['id'] = 'field_link_1';
-  $handler->display->display_options['fields']['field_link_1']['table'] = 'field_data_field_link';
-  $handler->display->display_options['fields']['field_link_1']['field'] = 'field_link';
-  $handler->display->display_options['fields']['field_link_1']['label'] = '';
-  $handler->display->display_options['fields']['field_link_1']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_link_1']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_link_1']['alter']['text'] = '<a href=\'[field_link_1-url]\' target=\'_blank\'>Gå til aktivitet</a> ';
-  $handler->display->display_options['fields']['field_link_1']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_link_1']['element_wrapper_type'] = 'div';
-  $handler->display->display_options['fields']['field_link_1']['element_wrapper_class'] = 'school-event-link';
-  $handler->display->display_options['fields']['field_link_1']['element_default_classes'] = FALSE;
-  $handler->display->display_options['fields']['field_link_1']['click_sort_column'] = 'url';
   /* Felt: Indhold: Link */
   $handler->display->display_options['fields']['view_node']['id'] = 'view_node';
   $handler->display->display_options['fields']['view_node']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['view_node']['field'] = 'view_node';
   $handler->display->display_options['fields']['view_node']['label'] = '';
-  $handler->display->display_options['fields']['view_node']['element_type'] = 'div';
-  $handler->display->display_options['fields']['view_node']['element_class'] = 'school-event-link';
   $handler->display->display_options['fields']['view_node']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['view_node']['element_wrapper_type'] = 'div';
+  $handler->display->display_options['fields']['view_node']['element_wrapper_class'] = 'school-event-link';
   $handler->display->display_options['fields']['view_node']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['view_node']['text'] = 'Gå til aktivitet';
   /* Sorteringskriterie: Indhold: Forfremmet til forside */

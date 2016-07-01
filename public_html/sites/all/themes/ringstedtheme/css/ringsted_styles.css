@@ -244,34 +244,47 @@ a:hover {
   word-break: none !important; }
 
 /* line 1, ../scss/partials/_school_event.scss */
-.school-event-link a {
-  padding: 7px;
-  background: #2e5f84;
-  color: white !important;
-  color: #F15E4A;
-  margin-top: 1.35em;
-  display: block;
-  font-size: 0.8em;
-  font-weight: bold;
-  margin-top: 20px;
-  float: left; }
+.school-event-link {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 4% 7% !important; }
+  /* line 6, ../scss/partials/_school_event.scss */
+  .school-event-link a {
+    padding: 7px;
+    background: #2e5f84;
+    color: white !important;
+    color: #F15E4A;
+    margin-top: 1.35em;
+    display: block;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-top: 20px;
+    float: left; }
+  /* line 16, ../scss/partials/_school_event.scss */
+  .school-event-link span {
+    display: inline-block;
+    float: left; }
 
-/* line 12, ../scss/partials/_school_event.scss */
+/* line 22, ../scss/partials/_school_event.scss */
 .pane-bundle-events-gallery-pane {
   margin-bottom: 10px; }
-  /* line 14, ../scss/partials/_school_event.scss */
+  /* line 24, ../scss/partials/_school_event.scss */
   .pane-bundle-events-gallery-pane .pane-title {
     position: relative !important; }
   @media (max-width: 800px) {
-    /* line 18, ../scss/partials/_school_event.scss */
+    /* line 28, ../scss/partials/_school_event.scss */
     .pane-bundle-events-gallery-pane .pane-title {
       top: 35px !important; } }
   @media (min-width: 800px) {
-    /* line 23, ../scss/partials/_school_event.scss */
+    /* line 33, ../scss/partials/_school_event.scss */
     .pane-bundle-events-gallery-pane .pane-title {
       top: 45px !important; } }
 
-/* line 31, ../scss/partials/_school_event.scss */
+/* line 40, ../scss/partials/_school_event.scss */
+.view-school-events-list .views-row {
+  position: relative; }
+/* line 44, ../scss/partials/_school_event.scss */
 .view-school-events-list .views-field-nothing .field {
   padding: 0 !important; }
 
