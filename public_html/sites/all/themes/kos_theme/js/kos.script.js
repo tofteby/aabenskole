@@ -25,7 +25,9 @@
             $(".list-content-wrapper", $(this)).equalHeights();
             if ($(window).width() > 480) {
               $(".views-row", $(this)).equalHeights();
-              $(".views-row").css('height', $(".views-row").height() + 80);
+              $(".views-row").once(function() {
+                $(this).css('height', $(".views-row").height() + 80)
+              });
             } else {
               $(".views-row").height('auto');
               $(".views-row").css('padding-bottom', '100px');
@@ -36,6 +38,7 @@
         $(window).load(function() {
           fixBodyHeight();
           fixEventHeight();
+          $(window).trigger('resize');
         });
 
         $(window).resize(function() {

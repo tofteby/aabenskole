@@ -40,3 +40,9 @@
     padding-top: 0;
   }
 }
+
+@include breakpoint(max-width 768px) {
+  .banner-pane-search-form {
+    bottom: 1% !important;
+  }
+}
