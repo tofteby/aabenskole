@@ -38,24 +38,30 @@ a:hover {
 
 /* line 21, ../scss/partials/_typography.scss */
 .sec {
-  font-family: "Museo300", Helvetica, Arial, sans-serif !important; }
+  font-family: "MuseoSans", Helvetica Arial, sans-serif !important;
+  font-size: 16px; }
   /* line 22, ../scss/partials/_typography.scss */
-  .sec body, .sec a, .sec h1, .sec h2, .sec h3, .sec h4, .sec h5,
-  .sec label,
-  .sec .field,
-  .sec .pane-title,
-  .sec .views-label {
+  .sec h1, .sec h2, .sec h3, .sec h4, .sec h5,
+  .sec .pane-title, .sec .view-header {
     font-family: "Museo300", Helvetica, Arial, sans-serif !important; }
+  /* line 28, ../scss/partials/_typography.scss */
+  .sec .field-name-field-teaser {
+    font-family: "MuseoSans", Helvetica Arial, sans-serif !important;
+    font-size: 24px; }
+  /* line 32, ../scss/partials/_typography.scss */
+  .sec .list-content-wrapper > a {
+    font-family: "Museo300", Helvetica, Arial, sans-serif !important;
+    font-size: 16px !important; }
 
-/* line 33, ../scss/partials/_typography.scss */
+/* line 39, ../scss/partials/_typography.scss */
 .view .feed-icon {
   content: '' !important;
   float: right;
   margin-top: 20px; }
-  /* line 37, ../scss/partials/_typography.scss */
+  /* line 43, ../scss/partials/_typography.scss */
   .view .feed-icon:before {
     content: '' !important; }
-  /* line 40, ../scss/partials/_typography.scss */
+  /* line 46, ../scss/partials/_typography.scss */
   .view .feed-icon a.feed-icon:before {
     content: "\e60e" !important; }
 

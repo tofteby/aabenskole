@@ -19,14 +19,20 @@ a:hover {
 }
 
 .sec {
-  body, a, h1, h2, h3, h4, h5,
-  label,
-  .field,
-  .pane-title,
-  .views-label {
+  h1, h2, h3, h4, h5,
+  .pane-title, .view-header {
     font-family: $MuseoLight !important;
   }
-  font-family: $MuseoLight !important;
+  font-family: $MuseoSans !important;
+  font-size: 16px;
+  .field-name-field-teaser {
+    font-family: $MuseoSans !important;
+    font-size: 24px;
+  }
+  .list-content-wrapper > a {
+    font-family: $MuseoLight !important;
+    font-size: 16px !important;
+  }
 }
 
 .view {
