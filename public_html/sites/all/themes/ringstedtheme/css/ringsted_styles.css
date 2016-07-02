@@ -203,7 +203,7 @@ a:hover {
 .sec-inner .block-facetapi {
   display: inline-block;
   float: left;
-  margin-bottom: 0px !important;
+  margin-bottom: 0 !important;
   width: 31.03448%;
   float: left;
   margin-right: 3.44828%;
@@ -214,50 +214,51 @@ a:hover {
     float: right;
     margin-right: 0;
     *margin-left: -1em;
-    display: inline; }
-  /* line 61, ../scss/partials/_search.scss */
+    display: inline;
+    float: left !important; }
+  /* line 62, ../scss/partials/_search.scss */
   .apachesolr-browse-blocks .block-facetapi:nth-of-type(4n),
   .sec-inner .block-facetapi:nth-of-type(4n) {
     clear: left; }
 
 @media (min-width: 480px) and (max-width: 767px) {
-  /* line 67, ../scss/partials/_search.scss */
+  /* line 68, ../scss/partials/_search.scss */
   .sec-inner .block-facetapi {
     width: 100%;
     float: left;
     margin-right: 3.44828%;
     display: inline; }
 
-  /* line 70, ../scss/partials/_search.scss */
+  /* line 71, ../scss/partials/_search.scss */
   .sec-inner .block-facetapi {
     float: right;
     margin-right: 0;
     *margin-left: -1em;
     display: inline; } }
 @media (max-width: 479px) {
-  /* line 76, ../scss/partials/_search.scss */
+  /* line 77, ../scss/partials/_search.scss */
   .sec-inner .block-facetapi {
     float: none;
     width: 100%; } }
-/* line 82, ../scss/partials/_search.scss */
+/* line 83, ../scss/partials/_search.scss */
 .page-search-events .search-categories .field-item {
   padding: 0 !important;
   word-break: none !important; }
 
-/* line 87, ../scss/partials/_search.scss */
+/* line 88, ../scss/partials/_search.scss */
 .search-choice-close {
   left: 10px !important;
   top: 12px !important; }
 
-/* line 92, ../scss/partials/_search.scss */
+/* line 93, ../scss/partials/_search.scss */
 .search-field, .search-field input {
   height: 48px !important; }
 
-/* line 96, ../scss/partials/_search.scss */
+/* line 97, ../scss/partials/_search.scss */
 .search-choice {
   padding: 10px 20px !important;
   padding-left: 30px !important; }
-  /* line 99, ../scss/partials/_search.scss */
+  /* line 100, ../scss/partials/_search.scss */
   .search-choice span {
     margin-left: 3px; }
 
