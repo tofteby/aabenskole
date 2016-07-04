@@ -141,23 +141,23 @@ a:hover {
   background-position: -250px -95px;
   font-family: "MuseoSans", Helvetica Arial, sans-serif;
   position: relative; }
-  /* line 20, ../scss/partials/_footer.scss */
-  .footer-wrapper h2 {
+  /* line 21, ../scss/partials/_footer.scss */
+  .footer-wrapper .block h2 {
     color: #333;
     font-size: 22px;
     font-size: 1.375rem;
     font-family: "Museo500", Helvetica, Arial, sans-serif;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
     text-transform: capitalize; }
-  /* line 28, ../scss/partials/_footer.scss */
-  .footer-wrapper h3 {
+  /* line 29, ../scss/partials/_footer.scss */
+  .footer-wrapper .block h3 {
     color: #333;
     font-size: 16px;
     font-size: 1rem;
     font-family: "Museo500", Helvetica, Arial, sans-serif;
     margin-bottom: 40px;
     text-transform: capitalize; }
-  /* line 36, ../scss/partials/_footer.scss */
+  /* line 38, ../scss/partials/_footer.scss */
   .footer-wrapper .sec-inner .footer-section,
   .footer-wrapper .sec-inner section {
     width: 23.85321%;

@@ -17,20 +17,22 @@
 
   // ---------------------------------------------------------------------------
   // Titles styles
-  h2 {
-    color: $def-color;
-    @include font-size(22);
-    font-family: $MuseoMiddle;
-    margin-bottom: 50px;
-    text-transform: capitalize;
-  }
+  .block {
+    h2 {
+      color: $def-color;
+      @include font-size(22);
+      font-family: $MuseoMiddle;
+      margin-bottom: 20px;
+      text-transform: capitalize;
+    }
 
-  h3 {
-    color: $def-color;
-    @include font-size(16);
-    font-family: $MuseoMiddle;
-    margin-bottom: 40px;
-    text-transform: capitalize;
+    h3 {
+      color: $def-color;
+      @include font-size(16);
+      font-family: $MuseoMiddle;
+      margin-bottom: 40px;
+      text-transform: capitalize;
+    }
   }
   .sec-inner {
     .footer-section,
