@@ -15,10 +15,32 @@ function kos_content_type_school_event_permission() {
   );
 }
 
-function kos_content_type_school_event_form_alter($form, &$form_state, $form_id) {
+function kos_content_type_school_event_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'school_event_node_form') {
+
     if (!user_access('allow publish school event')) {
       $form_state['values']['status'] = 0;
+
+      $form['#after_build'][] = 'kos_content_type_school_event_remove_required';
+      unset($form['#fieldgroups']['group_file_attachments']);
+      unset($form['field_image']);
+      unset($form['field_files']);
+      unset($form['field_video']);
+      unset($form['field_skoletube_iframe']);
     }
+
   }
+}
+
+function kos_content_type_school_event_remove_required($form, &$form_state) {
+
+  $form['field_image']['#required'] = FALSE;
+  $form['field_image'][LANGUAGE_NONE]['#required'] = FALSE;
+  $form['field_image'][LANGUAGE_NONE][0]['value']['#required'] = FALSE;
+
+  $form['field_link']['#required'] = FALSE;
+  $form['field_link'][LANGUAGE_NONE]['#required'] = FALSE;
+  $form['field_link'][LANGUAGE_NONE][0]['url']['#required'] = FALSE;
+  $form['field_link'][LANGUAGE_NONE][0]['title']['#required'] = FALSE;
+  return $form;
 }
