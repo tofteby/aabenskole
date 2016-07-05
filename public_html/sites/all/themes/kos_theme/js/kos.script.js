@@ -26,7 +26,7 @@
             if ($(window).width() > 480) {
               $(".views-row", $(this)).equalHeights();
               $(".views-row").once(function() {
-                $(this).css('height', $(".views-row").height() + 80)
+                $(this).css('height', $(".views-row").height() + 40)
               });
             } else {
               $(".views-row").height('auto');
