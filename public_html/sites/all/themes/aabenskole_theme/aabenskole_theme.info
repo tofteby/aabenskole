@@ -1,5 +1,5 @@
-name = KK Multisite
-description = Multisite Theme for Københavns Kommune
+name = Åbenskole theme
+description = Åbenskole base theme
 core = 7.x
 engine = phptemplate
 screenshot = screenshot.png
@@ -20,13 +20,13 @@ regions[topbar_search] = Topbar Search
 
 ; ----- / STYLESHEETS / -----
 
-stylesheets[print][] = css/kkms.print.css
+stylesheets[print][] = css/aabenskole.print.css
 
 
 ; ----- / SCRIPTS /
 
 scripts[] = js/libraries/modernizr.min.js
-scripts[] = js/kk.ms.script.js
+scripts[] = js/aabenskole.script.js
 
 
 ; ----- / PANELS / -----

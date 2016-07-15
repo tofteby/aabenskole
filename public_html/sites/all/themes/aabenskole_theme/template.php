@@ -4,7 +4,7 @@
  * Implements hook_css_alter().
  * Unset unneeded module and library css.
  */
-function kkms_theme_css_alter(&$css) {
+function aabenskole_theme_css_alter(&$css) {
   unset($css[drupal_get_path('module','system').'/system.menus.css']);
   unset($css[drupal_get_path('module','system').'/system.theme.css']);
   unset($css[drupal_get_path('module','field').'/theme/field.css']);
@@ -22,27 +22,27 @@ function kkms_theme_css_alter(&$css) {
  * Implements template_preprocess_html.
  * Add default or custom css to head.
  */
-function kkms_theme_preprocess_html(&$vars, $hook) {
-  $theme_path = drupal_get_path('theme', 'kkms_theme');
+function aabenskole_theme_preprocess_html(&$vars, $hook) {
+  $theme_path = drupal_get_path('theme', 'aabenskole_theme');
   if(theme_get_setting('default_theme_set') != 1) {
     $theme_path = variable_get('file_public_path', conf_path() . '/files') . '/theme';
   }
 
   // If default styling is selected, add pregenerated css.
   if (theme_get_setting('default_theme_set') == 1) {
-    drupal_add_css($theme_path . '/css/kkms.style.default.css', array(
+    drupal_add_css($theme_path . '/css/aabenskole.style.default.css', array(
       'preprocess' => FALSE,
     ));
   }
   // If not, load custom css from sites/[file_public_path].
   else {
-    drupal_add_css($theme_path. '/css/kkms.style.css', array(
+    drupal_add_css($theme_path. '/css/aabenskole.style.css', array(
       'preprocess' => FALSE,
     ));
   }
 
   drupal_add_css(
-    $theme_path. '/css/kkms.ie.css',
+    $theme_path. '/css/aabenskole.ie.css',
     array(
       'group' => CSS_THEME,
       'browsers' => array(
@@ -55,7 +55,7 @@ function kkms_theme_preprocess_html(&$vars, $hook) {
   );
 
   drupal_add_css(
-    $theme_path. '/css/kkms.ie8.css',
+    $theme_path. '/css/aabenskole.ie8.css',
     array(
       'group' => CSS_THEME,
       'browsers' => array(
@@ -74,7 +74,7 @@ function kkms_theme_preprocess_html(&$vars, $hook) {
  * Implements template_preprocess_page.
  * Add variables to page.tpl.php.
  */
-function kkms_theme_preprocess_page(&$vars, $hook) {
+function aabenskole_theme_preprocess_page(&$vars, $hook) {
 
   $login_link = NULL;
   if (user_is_anonymous()) {
@@ -82,7 +82,7 @@ function kkms_theme_preprocess_page(&$vars, $hook) {
   }
   $vars['login_link'] = $login_link;
 
-  $theme_path = drupal_get_path('theme', 'kkms_theme');
+  $theme_path = drupal_get_path('theme', 'aabenskole_theme');
   drupal_add_js($theme_path . '/js/jquery.equalheights.js');
 
   // Make $site_name available in theme even if it is turned off in theme settings
@@ -93,7 +93,7 @@ function kkms_theme_preprocess_page(&$vars, $hook) {
  * Implements template_preprocess_html.
  * Add default or custom css to head.
  */
-function kkms_theme_preprocess_region(&$vars, $hook) {
+function aabenskole_theme_preprocess_region(&$vars, $hook) {
   // Remove region classes for all regions as default.
   // Wrappers for regions without classes are not printed.
   $vars['classes_array'] = array();
@@ -117,7 +117,7 @@ function kkms_theme_preprocess_region(&$vars, $hook) {
  *   - Node type:   $vars['type']
  *
  */
-function kkms_theme_preprocess_node(&$vars) {
+function aabenskole_theme_preprocess_node(&$vars) {
 
   // Add template suggestions for node.tpl.php.
   // Pattern: node--[view mode].tpl.php including custom view modes.
@@ -163,7 +163,7 @@ function kkms_theme_preprocess_node(&$vars) {
 /**
  * Theme overrides for blocks.
  */
-function kkms_theme_preprocess_block(&$vars) {
+function aabenskole_theme_preprocess_block(&$vars) {
   // Remove uneeded wrapper elements from main content block.
   if (!empty($vars['elements']['#block']->delta) && $vars['elements']['#block']->delta == 'main') {
     $vars['theme_hook_suggestions'][] = 'block__nowrap';
@@ -233,7 +233,7 @@ function kkms_theme_preprocess_block(&$vars) {
 
   // Add styling classes for specific blocks.
   switch ($vars['elements']['#block']->delta) {
-    case 'kkms-social-share-block':
+    case 'aabenskole-social-share-block':
       $vars['title_attributes_array']['class'][] = 'element-invisible';
       $vars['classes_array'] = array('bl-icons');
       break;
@@ -248,7 +248,7 @@ function kkms_theme_preprocess_block(&$vars) {
 /**
  *  Implements hook_preprocess for views_view_unformatted
  */
-function kkms_theme_preprocess_views_view_unformatted(&$vars) {
+function aabenskole_theme_preprocess_views_view_unformatted(&$vars) {
   $rows = $vars['rows'];
   $count = 0;
 
@@ -277,7 +277,7 @@ function kkms_theme_preprocess_views_view_unformatted(&$vars) {
  * Implements hook_preprocess_views_view_fields()
  *
  */
-function kkms_theme_preprocess_views_view_fields(&$vars) {
+function aabenskole_theme_preprocess_views_view_fields(&$vars) {
   $view = $vars['view'];
 
   foreach ($vars['fields'] as $id => $field) {
@@ -334,7 +334,7 @@ function kkms_theme_preprocess_views_view_fields(&$vars) {
  * Adds classes for styling.
  * @todo: Test if it is necessary to add a test for view mode for the fields.
  */
-function kkms_theme_preprocess_field(&$vars) {
+function aabenskole_theme_preprocess_field(&$vars) {
 
   // Add classes for specific view mode only.
   if ($vars['element']['#view_mode'] == 'related_content') {
@@ -508,7 +508,7 @@ function kkms_theme_preprocess_field(&$vars) {
  * Add classes for styling.
  *
  */
-function kkms_theme_preprocess_panels_pane(&$vars) {
+function aabenskole_theme_preprocess_panels_pane(&$vars) {
   $vars['inner_prefix'] = '';
   $vars['inner_suffix'] = '';
             
@@ -663,7 +663,7 @@ function kkms_theme_preprocess_panels_pane(&$vars) {
  * Implements hook_form_formid_alter().
  * Changes search button for search_block_form.
  */
-function kkms_theme_form_search_block_form_alter(&$form, &$form_state) {
+function aabenskole_theme_form_search_block_form_alter(&$form, &$form_state) {
   if (!empty($form['search_block_form'])) {
     if(isset($form['search_block_form']['#attributes']['title'])){
       $form['search_block_form']['#attributes']['placeholder'] = t('Enter your search');
@@ -677,7 +677,7 @@ function kkms_theme_form_search_block_form_alter(&$form, &$form_state) {
  * Unsets title if it exists for all content types
  * other than section pages to avoid duplicate title.
  */
-function kkms_theme_preprocess_panelizer_view_mode(&$vars) {
+function aabenskole_theme_preprocess_panelizer_view_mode(&$vars) {
   if (!empty($vars['title']) && $vars['element']['#entity_type'] == 'node') {
     $element = $vars['element'];
     if ($element['#bundle'] == 'section_page' && $element['#view_mode'] == 'full') {
@@ -714,7 +714,7 @@ function kkms_theme_preprocess_panelizer_view_mode(&$vars) {
  * Also related problem is "Form label missing" error, which is a real failure to meet
  * 3.3.2 Labels or Instructions: Labels or instructions are provided when content requires user input. (Level A)
  */
-function kkms_theme_form_element_label($variables) {
+function aabenskole_theme_form_element_label($variables) {
   $element = $variables['element'];
   // This is also used in the installer, pre-database setup.
   $t = get_t();
@@ -766,7 +766,7 @@ function kkms_theme_form_element_label($variables) {
  *
  * @ingroup themeable
  */
-function kkms_theme_panels_default_style_render_region($vars) {
+function aabenskole_theme_panels_default_style_render_region($vars) {
   $output = '';
   $output .= implode('', $vars['panes']);
   return $output;
@@ -782,7 +782,7 @@ function kkms_theme_panels_default_style_render_region($vars) {
  *
  * @ingroup themeable
  */
-function kkms_theme_file_link__icon($vars) {
+function aabenskole_theme_file_link__icon($vars) {
   $file = $vars['file'];
 
   $url = file_create_url($file->uri);
@@ -900,7 +900,7 @@ function kkms_theme_file_link__icon($vars) {
  *
  * Set a custom class on the table with the list view.
  */
-function kkms_theme_preprocess_views_view_table(&$vars) {
+function aabenskole_theme_preprocess_views_view_table(&$vars) {
   if(in_array($vars['view']->name,array('institutions_list','persons_list'))){
     $class = preg_replace('/\_/i','-',$vars['view']->name);
     $vars['classes_array'][] = 'list';
@@ -913,7 +913,7 @@ function kkms_theme_preprocess_views_view_table(&$vars) {
  *
  * Set a custom class on the table with the list view.
  */
-function kkms_theme_preprocess_views_view_list(&$vars) {
+function aabenskole_theme_preprocess_views_view_list(&$vars) {
   // The list type can be obtained by digging through the views object, but we do a quick hack here.
   $list_type = preg_replace('/[\<\>]/i','',$vars['list_type_prefix']);
   if(in_array($vars['view']->name,array('institutions_list','persons_list'))){
@@ -929,7 +929,7 @@ function kkms_theme_preprocess_views_view_list(&$vars) {
  *
  * Set a custom class on the view div-wrapper with the list view.
  */
-function kkms_theme_preprocess_views_view(&$vars) {
+function aabenskole_theme_preprocess_views_view(&$vars) {
 
   if(isset($vars['view']->name)){
     $class = sprintf("%s-wrapper",preg_replace('/\_/i','-',$vars['view']->name));
@@ -981,7 +981,7 @@ function kkms_theme_preprocess_views_view(&$vars) {
  * - The first and last page elements are removed.
  * - The symbols for privious and next elements are changed.
  */
-function kkms_theme_pager($variables) {
+function aabenskole_theme_pager($variables) {
   $tags = $variables['tags'];
 
   $tags = array(
@@ -1105,7 +1105,7 @@ function kkms_theme_pager($variables) {
  *
  * On first page, the previous element is still rendered as nolink.
  */
-function kkms_theme_pager_previous($variables) {
+function aabenskole_theme_pager_previous($variables) {
   $text = $variables['text'];
   $element = $variables['element'];
   $interval = $variables['interval'];
@@ -1137,7 +1137,7 @@ function kkms_theme_pager_previous($variables) {
  *
  * On last page, the next element is still rendered as nolink.
  */
-function kkms_theme_pager_next($variables) {
+function aabenskole_theme_pager_next($variables) {
   $text = $variables['text'];
   $element = $variables['element'];
   $interval = $variables['interval'];
@@ -1173,7 +1173,7 @@ function kkms_theme_pager_next($variables) {
  *
  * @ingroup themable
  */
-function kkms_theme_follow_link($variables) {
+function aabenskole_theme_follow_link($variables) {
   $link = $variables['link'];
   $title = '<span class="tx-ic">' . $variables['title'] . '</span>';
   $classes = array();
@@ -1196,7 +1196,7 @@ function kkms_theme_follow_link($variables) {
  * Theme override for search result information.
  * @see theme_apachesolr_panels_info().
  */
-function kkms_theme_apachesolr_panels_info($variables) {
+function aabenskole_theme_apachesolr_panels_info($variables) {
   $response = $variables['response'];
   $search = $variables['search'];
   if ($total = $response->response->numFound) {
@@ -1219,14 +1219,14 @@ function kkms_theme_apachesolr_panels_info($variables) {
  *
  * Custom theme for openlayers map.
  */
-function kkms_theme_openlayers_map_alter(&$map) {
-  $path = drupal_get_path('theme', 'kkms_theme');
+function aabenskole_theme_openlayers_map_alter(&$map) {
+  $path = drupal_get_path('theme', 'aabenskole_theme');
   $map['image_path'] = $path . '/templates/openlayers/default/img/';
   $map['css_path'] = $path . '/templates/openlayers/default/style.css';
 }
 
 
-function kkms_theme_status_messages($variables) {
+function aabenskole_theme_status_messages($variables) {
   $display = $variables['display'];
   $output = '';
 
@@ -1266,7 +1266,7 @@ function kkms_theme_status_messages($variables) {
  *
  * @ingroup themeable
  */
-function kkms_theme_menu_link__menu_events_submenu(array $variables) {
+function aabenskole_theme_menu_link__menu_events_submenu(array $variables) {
   $element = $variables['element'];
   $sub_menu = '';
 

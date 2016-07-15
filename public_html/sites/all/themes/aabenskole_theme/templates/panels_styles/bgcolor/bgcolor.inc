@@ -13,12 +13,12 @@ $plugin = array(
     'hook theme' => array(
       'panels_pane_bgcolor' => array(
         'arguments' => array('content' => NULL, 'color' => NULL),
-        'path' =>  drupal_get_path('theme', 'kkms_theme') . '/templates/panels_styles/bgcolor',
+        'path' =>  drupal_get_path('theme', 'aabenskole_theme') . '/templates/panels_styles/bgcolor',
         'template' => 'bgcolor-pane',
       ),
       'panels_region_bgcolor' => array(
         'arguments' => array('content' => NULL, 'color' => NULL),
-        'path' =>  drupal_get_path('theme', 'kkms_theme') . '/templates/panels_styles/bgcolor',
+        'path' =>  drupal_get_path('theme', 'aabenskole_theme') . '/templates/panels_styles/bgcolor',
         'template' => 'bgcolor-region',
       ),
     ),

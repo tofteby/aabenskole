@@ -1,0 +1,5 @@
+name = Åbenskole Admin Theme
+description = Multisite Admin Theme for Åbenskole
+core = 7.x
+base theme = 'seven'
+stylesheets[screen][] = css/aabenskole_admin.css

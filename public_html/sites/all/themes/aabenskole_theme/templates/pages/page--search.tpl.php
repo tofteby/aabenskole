@@ -120,7 +120,7 @@
   </div><!-- /.sec-msg -->
   <div id="main-content" class="sec sec-content">
     <div class="sec-inner">
-    <?php print render($page['content']['kkms_social_kkms-social-share-block']); ?>
+    <?php print render($page['content']['aabenskole_social_aabenskole-social-share-block']); ?>
     <?php if ($page['topbar_search']) :?>
       <section class="region topbar topbar-search">
         <div class="sec-inner">

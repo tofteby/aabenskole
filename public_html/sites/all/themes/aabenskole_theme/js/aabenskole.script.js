@@ -98,7 +98,7 @@
   /**
   * Toogle classes on radio buttons.
   */
-  Drupal.behaviors.kkmsSocialIcons = {
+  Drupal.behaviors.aabenskoleSocialIcons = {
     attach: function (context, settings) {
       // Add toggle link.
       function addToggle(icons) {
@@ -143,7 +143,7 @@
    * Run functions on document ready.
    */
   $(document).ready(function() {
-    var basepath = '/sites/all/themes/kkms_theme/';
+    var basepath = '/sites/all/themes/aabenskole_theme/';
 
     if (!Modernizr.mq('only all')) {
       $('html').addClass('no-mq');
@@ -182,7 +182,7 @@
   /**
   * Adjust the heights in various parts
   */
-  Drupal.behaviors.kkmsHeights = {
+  Drupal.behaviors.aabenskoleHeights = {
     attach: function (context, settings) {
         // Hack to have a minimum height on pages.
         function fixBodyHeight() {
@@ -237,7 +237,7 @@
     /**
      * Misc small adjustments
      */
-    Drupal.behaviors.kkmsMisc = {
+    Drupal.behaviors.aabenskoleMisc = {
         attach: function (context, settings) {
 
             // Add support for closing Drupal messages.
@@ -318,7 +318,7 @@
  /**
   * Menu mobile behavior
   */
-  Drupal.behaviors.kkmsMobileBehavior = {
+  Drupal.behaviors.aabenskoleMobileBehavior = {
     attach: function (context, settings) {
       var menu_section = $('.sec-menu .sec-inner', context);
       var main_menu = $('#main-menu', menu_section);
@@ -380,7 +380,7 @@
   /**
   * Second level menu behavior
   */
-  Drupal.behaviors.kkmsSecondMenuBehavior = {
+  Drupal.behaviors.aabenskoleSecondMenuBehavior = {
     attach: function (context, settings) {
       var second_menu = $('.menu-block-second_level');
       

@@ -3,8 +3,8 @@
 /**
  * Implements hook_form_system_theme_settings_alter()
  */
-function kkms_theme_form_system_theme_settings_alter(&$form, &$form_state, $form_id = NULL) {
-  $theme_path = drupal_get_path('theme', 'kkms_theme');
+function aabenskole_theme_form_system_theme_settings_alter(&$form, &$form_state, $form_id = NULL) {
+  $theme_path = drupal_get_path('theme', 'aabenskole_theme');
   global $theme_key;
 
 
@@ -438,14 +438,14 @@ function kkms_theme_form_system_theme_settings_alter(&$form, &$form_state, $form
   $form['default_theme_set']['theme_settings_container']['layout']['#collapsible'] = TRUE;
   $form['default_theme_set']['theme_settings_container']['layout']['#collapsed'] = FALSE;
 
-  $form['#validate'][] = 'kkms_theme_form_system_theme_settings_validate';
-  $form['#submit'][] = 'kkms_theme_form_system_theme_settings_submit';
+  $form['#validate'][] = 'aabenskole_theme_form_system_theme_settings_validate';
+  $form['#submit'][] = 'aabenskole_theme_form_system_theme_settings_submit';
 
   return $form;
 }
 
 
-function kkms_theme_form_system_theme_settings_validate($form, &$form_state) {
+function aabenskole_theme_form_system_theme_settings_validate($form, &$form_state) {
   // Handle file uploads.
   $validators = array('file_validate_is_image' => array());
 
@@ -498,19 +498,19 @@ function kkms_theme_form_system_theme_settings_validate($form, &$form_state) {
   // If the user provided a path for a header image or background image, make sure a file
   // exists at that path.
   if ($form_state['values']['image_header_name']) {
-    $path = kkms_theme_system_theme_settings_validate_path($form_state['values']['image_header_name']);
+    $path = aabenskole_theme_system_theme_settings_validate_path($form_state['values']['image_header_name']);
     if (!$path) {
       form_set_error('image_header_name', t('The custom header image path is invalid.'));
     }
   }
   if ($form_state['values']['image_bg_name']) {
-    $path = kkms_theme_system_theme_settings_validate_path($form_state['values']['image_bg_name']);
+    $path = aabenskole_theme_system_theme_settings_validate_path($form_state['values']['image_bg_name']);
     if (!$path) {
       form_set_error('image_bg_name', t('The custom background path is invalid.'));
     }
   }
   if ($form_state['values']['image_footer_name']) {
-    $path = kkms_theme_system_theme_settings_validate_path($form_state['values']['image_footer_name']);
+    $path = aabenskole_theme_system_theme_settings_validate_path($form_state['values']['image_footer_name']);
     if (!$path) {
       form_set_error('image_footer_name', t('The custom footer path is invalid.'));
     }
@@ -519,7 +519,7 @@ function kkms_theme_form_system_theme_settings_validate($form, &$form_state) {
 
 
 /**
- * Helper function for the kkms_theme_system_theme_settings_validate_path form.
+ * Helper function for the aabenskole_theme_system_theme_settings_validate_path form.
  *
  * Attempts to validate normal system paths, paths relative to the public files
  * directory, or stream wrapper URIs. If the given path is any of the above,
@@ -532,7 +532,7 @@ function kkms_theme_form_system_theme_settings_validate($form, &$form_state) {
  *   A valid path that can be displayed through the theme system, or FALSE if
  *   the path could not be validated.
  */
-function kkms_theme_system_theme_settings_validate_path($path) {
+function aabenskole_theme_system_theme_settings_validate_path($path) {
   // Absolute local file paths are invalid.
   if (drupal_realpath($path) == $path) {
     return FALSE;
@@ -555,8 +555,8 @@ function kkms_theme_system_theme_settings_validate_path($path) {
  * Implements theme_form_FORMID_submit().
  * Submit handler for theme settings
  */
-function kkms_theme_form_system_theme_settings_submit($form, &$form_state) {
-  $path_to_theme = drupal_get_path('theme', 'kkms_theme');
+function aabenskole_theme_form_system_theme_settings_submit($form, &$form_state) {
+  $path_to_theme = drupal_get_path('theme', 'aabenskole_theme');
 
   $public_files_theme_path = variable_get('file_public_path', conf_path() . '/files');
 
@@ -724,13 +724,13 @@ function kkms_theme_form_system_theme_settings_submit($form, &$form_state) {
     $output = shell_exec($cmd);
     watchdog('theme', '%cmd => %output', array('%output' => $output, '%cmd' => $cmd), WATCHDOG_INFO);
 
-    if (file_exists($public_files_theme_path . '/theme/scss/kkms.style.scss')) {
-      $cmd = 'rm ' . $public_files_theme_path . '/theme/scss/kkms.style.scss';
+    if (file_exists($public_files_theme_path . '/theme/scss/aabenskole.style.scss')) {
+      $cmd = 'rm ' . $public_files_theme_path . '/theme/scss/aabenskole.style.scss';
       $output = shell_exec($cmd);
       watchdog('theme', '%cmd => %output', array('%output' => $output, '%cmd' => $cmd), WATCHDOG_INFO);
     }
 
-    $cmd = 'mv ' . $public_files_theme_path . '/theme/scss/_kkms.style.scss ' . $public_files_theme_path . '/theme/scss/kkms.style.scss';
+    $cmd = 'mv ' . $public_files_theme_path . '/theme/scss/_aabenskole.style.scss ' . $public_files_theme_path . '/theme/scss/aabenskole.style.scss';
     $output = shell_exec($cmd);
     watchdog('theme', '%cmd => %output', array('%output' => $output, '%cmd' => $cmd), WATCHDOG_INFO);
 
@@ -766,7 +766,7 @@ function kkms_theme_form_system_theme_settings_submit($form, &$form_state) {
     cache_clear_all('*', 'cache_page', TRUE);
 
   } else {
-    drupal_set_message("Error accessing _kk.settings.scss file. Please check that the correct access settings is set for the sites/all/themes/kkms_theme/scss folder.", 'error');
-    watchdog('theme', 'Error accessing _kk.settings.scss file. Please check that the correct access settings is set for the sites/all/themes/kkms_theme/scss folder.', WATCHDOG_ERROR);
+    drupal_set_message("Error accessing _kk.settings.scss file. Please check that the correct access settings is set for the sites/all/themes/aabenskole_theme/scss folder.", 'error');
+    watchdog('theme', 'Error accessing _kk.settings.scss file. Please check that the correct access settings is set for the sites/all/themes/aabenskole_theme/scss folder.', WATCHDOG_ERROR);
   }
 }
