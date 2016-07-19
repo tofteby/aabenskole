@@ -352,27 +352,28 @@ a:hover {
 
 /* line 20, ../scss/ringsted_styles.scss */
 .page {
-  background-image: none; }
+  background-image: none;
+  background: none; }
 
-/* line 24, ../scss/ringsted_styles.scss */
+/* line 25, ../scss/ringsted_styles.scss */
 .sec-content {
   background: #EBEBEB; }
-  /* line 26, ../scss/ringsted_styles.scss */
+  /* line 27, ../scss/ringsted_styles.scss */
   .sec-content .sec-inner {
     background: #EBEBEB; }
 
-/* line 31, ../scss/ringsted_styles.scss */
+/* line 32, ../scss/ringsted_styles.scss */
 .sec-msg {
   clear: both; }
 
-/* line 36, ../scss/ringsted_styles.scss */
+/* line 37, ../scss/ringsted_styles.scss */
 .front .panel-3col-33-stacked {
   margin-top: -30px; }
-/* line 39, ../scss/ringsted_styles.scss */
+/* line 40, ../scss/ringsted_styles.scss */
 .front .sec-content .sec-inner, .front .sec-content .menu-serv-wrapper {
   padding-top: 0; }
 
 @media (max-width: 768px) {
-  /* line 45, ../scss/ringsted_styles.scss */
+  /* line 46, ../scss/ringsted_styles.scss */
   .banner-pane-search-form {
     bottom: 1% !important; } }

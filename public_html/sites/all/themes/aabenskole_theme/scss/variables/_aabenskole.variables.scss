@@ -54,6 +54,8 @@ $gutter-width   : 20px !default;   // Gutter width (relative to columns)
 $grid-padding   : $gutter-width;   // grid-padding equal to gutters
 $container-width: 1020px !default; // Max width applied to outer content wrapper.
 $content-width: 59em;
+$from-direction : 'left';
+$border-box-sizing  : false !default;
 
 // Media queries
 // ------------------------------------

@@ -1,6 +1,6 @@
 name = KOS Theme
 description = Subtheme on multisite for Københavns Kommune
-base theme = kkms_theme
+base theme = aabenskole_theme
 core = 7.x
 screenshot = screenshot.png
 

@@ -562,8 +562,8 @@ function aabenskole_theme_form_system_theme_settings_submit($form, &$form_state)
 
   $realpath_pftp = drupal_realpath($public_files_theme_path);
 
-  //$path_to_settings_scss = drupal_get_path($public_files_theme_path) . '/scss/settings/_kk.settings.scss';
-  $path_to_settings_scss = $realpath_pftp . '/theme/scss/settings/_kk.settings.scss';
+  //$path_to_settings_scss = drupal_get_path($public_files_theme_path) . '/scss/settings/_aabenskole.settings.scss';
+  $path_to_settings_scss = $realpath_pftp . '/theme/scss/settings/_aabenskole.settings.scss';
   $create_path = $realpath_pftp . '/theme/scss/settings/';
 
   if (!file_exists($create_path)) {
@@ -766,7 +766,7 @@ function aabenskole_theme_form_system_theme_settings_submit($form, &$form_state)
     cache_clear_all('*', 'cache_page', TRUE);
 
   } else {
-    drupal_set_message("Error accessing _kk.settings.scss file. Please check that the correct access settings is set for the sites/all/themes/aabenskole_theme/scss folder.", 'error');
-    watchdog('theme', 'Error accessing _kk.settings.scss file. Please check that the correct access settings is set for the sites/all/themes/aabenskole_theme/scss folder.', WATCHDOG_ERROR);
+    drupal_set_message("Error accessing _aabenskole.settings.scss file. Please check that the correct access settings is set for the sites/all/themes/aabenskole_theme/scss folder.", 'error');
+    watchdog('theme', 'Error accessing _aabenskole.settings.scss file. Please check that the correct access settings is set for the sites/all/themes/aabenskole_theme/scss folder.', WATCHDOG_ERROR);
   }
 }

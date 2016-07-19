@@ -21,6 +21,11 @@
   line-height: 1.15em;
 }
 
+.page {
+  background: none;
+}
+
+
 .title-block {
   @extend %title-block;
   text-transform: uppercase;
