@@ -1,6 +1,6 @@
 name = Ringsted Theme
 description = Subtheme on multisite for Ringsted Kommune
-base theme = kos_theme
+base theme = sub_theme_aabenskole
 core = 7.x
 screenshot = screenshot.png
 

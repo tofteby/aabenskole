@@ -1,5 +1,5 @@
-name = KOS Theme
-description = Subtheme on multisite for Københavns Kommune
+name = Subthme Theme åbenskole
+description = Subtheme of åbenskole theme
 base theme = aabenskole_theme
 core = 7.x
 screenshot = screenshot.png
@@ -21,14 +21,14 @@ regions[events_topbar_search] = Events Topbar Search
 
 ; ----- / STYLESHEETS / -----
 
-stylesheets[all][] = css/kos_styles.css
+stylesheets[all][] = css/sub_theme_aabenskole_styles.css
 
 
 ; ----- / SCRIPTS /
 
 scripts[] = js/libraries/modernizr.min.js
 scripts[] = js/jquery.equalheights.js
-scripts[] = js/kos.script.js
+scripts[] = js/sub_theme_aabenskole.script.js
 
 
 

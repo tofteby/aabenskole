@@ -7,16 +7,16 @@
 
 // Import variables
 // Uncomment to this next line line to use debug settings for development.
-// @import "variables/_kk.settings.scss";
-@import "variables/_kk.variables.scss";
+// @import "variables/_sub_theme.settings.scss";
+@import "variables/_sub_theme.variables.scss";
 
 
 // Import mixins
-@import "mixins/_kk.mixin.grids.scss";
-@import "mixins/_kk.mixin.type.scss";
-@import "mixins/_kk.mixin.style.scss";
+@import "mixins/_sub_theme.mixin.grids.scss";
+@import "mixins/_sub_theme.mixin.type.scss";
+@import "mixins/_sub_theme.mixin.style.scss";
 
-@import "page/_kk.page.scss";   
+@import "page/_sub_theme.page.scss";
 
 
 // ------------------- ICON fontface  BEGIN ------------------------------ //
@@ -666,7 +666,7 @@ div.ctools-modal-content .modal-content {
     }
     .magnifier {
       background-color: rgba(0, 0, 0, 0);
-      background-image: url("/sites/all/themes/kos_theme/images/icon-search.png");
+      background-image: url("/sites/all/themes/sub_theme_aabenskole/images/icon-search.png");
       background-position: center center;
       background-repeat: no-repeat;
       background-size: 21px 21px;

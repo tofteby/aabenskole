@@ -5,7 +5,7 @@
  * Unset unneeded module and library css.
  */
 
-function kos_theme_form_kos_search_frontpage_events_search_form_alter(&$form, &$form_state, $form_id) {
+function sub_theme_aabenskole_form_kos_search_frontpage_events_search_form_alter(&$form, &$form_state, $form_id) {
   $form['keyword']['#field_suffix'] = '<span class="magnifier"></span>';
   $form['submit']['#prefix'] = '<div class="arrow-box">';
   $form['submit']['#suffix'] = '<span class="arrow-search ic-arrow-right"></span></div>';
@@ -16,12 +16,12 @@ function kos_theme_form_kos_search_frontpage_events_search_form_alter(&$form, &$
  * Implements template_preprocess_page.
  * Add variables to page.tpl.php.
  */
-function kos_theme_preprocess_page(&$vars, $hook) {
+function sub_theme_aabenskole_preprocess_page(&$vars, $hook) {
   if (isset($vars['login_link'])) unset($vars['login_link']);
 }
 
 
-function kos_theme_preprocess_panels_pane(&$vars) {
+function sub_theme_aabenskole_preprocess_panels_pane(&$vars) {
   $pane = $vars['pane'];
 
   if ($pane->type == 'entity_field' && $pane->configuration['formatter'] == 'taxonomy_term_reference_link'
