@@ -47,12 +47,12 @@ a:hover {
 
 /* line 46, ../scss/partials/_typography.scss */
 .sec-msg a {
-  border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.1) !important;
   font-weight: 200 !important; }
 
 /* line 55, ../scss/partials/_typography.scss */
 .sec-menu a {
-  border-right: 1px solid rgba(255, 255, 255, 0.2) !important; }
+  border-right: 1px solid rgba(0, 0, 0, 0.1) !important; }
 
 /* line 64, ../scss/partials/_typography.scss */
 .sec {
@@ -354,74 +354,75 @@ span {
   font-family: "Open Sans", sans-serif !important;
   text-transform: uppercase;
   font-size: 0.8em !important;
-  color: #f56042 !important; }
+  color: #333 !important;
+  font-weight: bold; }
 
-/* line 73, ../scss/partials/_school_event.scss */
+/* line 74, ../scss/partials/_school_event.scss */
 .date-display-end {
   font-size: 0.5em !important;
   margin-bottom: 10px !important; }
 
-/* line 80, ../scss/partials/_school_event.scss */
+/* line 81, ../scss/partials/_school_event.scss */
 .field-type-text-long {
   color: #333 !important;
   font-size: 1.2em !important;
   margin-top: 20px !important;
-  margin-bottom: 12px !important;
+  margin-bottom: 0px !important;
   line-height: 1.4rem;
   text-transform: none !important; }
 
-/* line 99, ../scss/partials/_school_event.scss */
+/* line 100, ../scss/partials/_school_event.scss */
 .list-content-wrapper a {
   font-weight: bold !important;
   color: #000 !important;
   margin-bottom: 20px !important;
   font-size: 1.5em !important; }
 
-/* line 107, ../scss/partials/_school_event.scss */
+/* line 108, ../scss/partials/_school_event.scss */
 .pane-bundle-events-gallery-pane {
   margin-bottom: 10px; }
-  /* line 111, ../scss/partials/_school_event.scss */
+  /* line 112, ../scss/partials/_school_event.scss */
   .pane-bundle-events-gallery-pane .pane-title {
     position: relative !important;
     color: #333 !important;
     font-weight: 600;
     font-family: "Open Sans", sans-serif !important; }
-  /* line 122, ../scss/partials/_school_event.scss */
+  /* line 123, ../scss/partials/_school_event.scss */
   .pane-bundle-events-gallery-pane .title {
     color: #333 !important; }
-  /* line 127, ../scss/partials/_school_event.scss */
+  /* line 128, ../scss/partials/_school_event.scss */
   .pane-bundle-events-gallery-pane .panels-ipe-placeholder {
     background: #f3f2f2;
     background-color: #f3f2f2 !important;
     box-shadow: none !important; }
-  /* line 136, ../scss/partials/_school_event.scss */
+  /* line 137, ../scss/partials/_school_event.scss */
   .pane-bundle-events-gallery-pane .panels-ipe-on {
     background: #f3f2f2;
     background-color: #f3f2f2 !important;
     box-shadow: none !important; }
-  /* line 147, ../scss/partials/_school_event.scss */
+  /* line 148, ../scss/partials/_school_event.scss */
   .pane-bundle-events-gallery-pane .center-wrapper .panel-col a img, .pane-bundle-events-gallery-pane .center-wrapper .panel-col-last a img {
     box-shadow: none !important; }
-  /* line 157, ../scss/partials/_school_event.scss */
+  /* line 158, ../scss/partials/_school_event.scss */
   .pane-bundle-events-gallery-pane .panel-panel {
     background: none !important;
     background-color: none !important; }
   @media (max-width: 800px) {
-    /* line 164, ../scss/partials/_school_event.scss */
+    /* line 165, ../scss/partials/_school_event.scss */
     .pane-bundle-events-gallery-pane .pane-title {
       top: 35px !important; } }
   @media (min-width: 800px) {
-    /* line 169, ../scss/partials/_school_event.scss */
+    /* line 170, ../scss/partials/_school_event.scss */
     .pane-bundle-events-gallery-pane .pane-title {
       top: 45px !important; } }
 
-/* line 176, ../scss/partials/_school_event.scss */
+/* line 177, ../scss/partials/_school_event.scss */
 .view-school-events-list .views-row {
   position: relative; }
-  /* line 178, ../scss/partials/_school_event.scss */
+  /* line 179, ../scss/partials/_school_event.scss */
   .view-school-events-list .views-row .field-name-field-school-event-price {
     display: block !important; }
-/* line 183, ../scss/partials/_school_event.scss */
+/* line 184, ../scss/partials/_school_event.scss */
 .view-school-events-list .views-field-nothing .field {
   padding: 0 !important; }
 
@@ -591,64 +592,57 @@ div.panels-ipe-handlebar-wrapper li a {
   border: none !important;
   box-shadow: none !important;
   background: none !important;
-  color: #FFC92D !important; }
+  color: #ff2e00 !important;
+  font-weight: 700 !important; }
 
-/* line 148, ../scss/ringsted_styles.scss */
+/* line 149, ../scss/ringsted_styles.scss */
 .sec-msg {
   clear: both;
-  background: #ff2e00;
-  /* For browsers that do not support gradients */
-  background: -webkit-linear-gradient(left, #ff2e00, #ffd500);
-  /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient(right, #ff2e00, #ffd500);
-  /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient(right, #ff2e00, #ffd500);
-  /* For Firefox 3.6 to 15 */
-  background: linear-gradient(to right, #ff2e00, #ffd500);
-  /* Standard syntax */ }
+  background: #333;
+  /* For browsers that do not support gradients */ }
 
-/* line 160, ../scss/ringsted_styles.scss */
+/* line 159, ../scss/ringsted_styles.scss */
 .logo-page img {
   margin-left: -20px; }
 
-/* line 165, ../scss/ringsted_styles.scss */
+/* line 164, ../scss/ringsted_styles.scss */
 .footer-logo {
   margin-left: -8px; }
 
-/* line 172, ../scss/ringsted_styles.scss */
+/* line 171, ../scss/ringsted_styles.scss */
 .events-search-title {
   font-family: "Open Sans", sans-serif !important;
   margin-bottom: 10px !important; }
 
-/* line 179, ../scss/ringsted_styles.scss */
+/* line 178, ../scss/ringsted_styles.scss */
 .picture img {
   box-shadow: none !important;
   border-bottom: 2px solid #ff2e00 !important; }
 
-/* line 186, ../scss/ringsted_styles.scss */
+/* line 185, ../scss/ringsted_styles.scss */
 .banner-pane-search-form {
   font-family: "Open Sans", sans-serif !important; }
 
-/* line 195, ../scss/ringsted_styles.scss */
+/* line 194, ../scss/ringsted_styles.scss */
 .front .panel-3col-33-stacked {
   margin-top: -30px; }
-/* line 198, ../scss/ringsted_styles.scss */
+/* line 197, ../scss/ringsted_styles.scss */
 .front .sec-content .sec-inner, .front .sec-content .menu-serv-wrapper {
   padding-top: 0; }
 
-/* line 204, ../scss/ringsted_styles.scss */
+/* line 203, ../scss/ringsted_styles.scss */
 .sec-inner li {
   border: none !important; }
 
-/* line 211, ../scss/ringsted_styles.scss */
+/* line 210, ../scss/ringsted_styles.scss */
 .sec-inner li:active {
   border: none !important; }
 
-/* line 217, ../scss/ringsted_styles.scss */
+/* line 216, ../scss/ringsted_styles.scss */
 li:hover {
   border: none !important; }
 
 @media (max-width: 768px) {
-  /* line 223, ../scss/ringsted_styles.scss */
+  /* line 222, ../scss/ringsted_styles.scss */
   .banner-pane-search-form {
     bottom: 1% !important; } }
