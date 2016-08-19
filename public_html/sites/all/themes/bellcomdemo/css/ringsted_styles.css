@@ -42,7 +42,7 @@ a:hover {
 
 /* line 38, ../scss/partials/_typography.scss */
 .menu-main li:hover {
-  background-color: #EBEBEB !important;
+  background-color: #d5d5d5 !important;
   cursor: pointer !important; }
 
 /* line 46, ../scss/partials/_typography.scss */
@@ -134,7 +134,7 @@ a:hover {
     color: #777 !important; }
     /* line 54, ../scss/partials/_header.scss */
     .sec-menu a:hover {
-      background-color: #EBEBEB;
+      background-color: #d5d5d5;
       color: #333; }
   /* line 62, ../scss/partials/_header.scss */
   .sec-menu .active a,
@@ -586,7 +586,34 @@ div.panels-ipe-handlebar-wrapper li a {
   margin: 0 !important;
   padding: 0 !important; }
 
-/* line 139, ../scss/ringsted_styles.scss */
+/* line 140, ../scss/ringsted_styles.scss */
+.title-page {
+  text-transform: uppercase !important; }
+
+/* line 147, ../scss/ringsted_styles.scss */
+p a {
+  color: #000 !important;
+  text-decoration: underline; }
+
+/* line 154, ../scss/ringsted_styles.scss */
+.form-type-textfield input {
+  height: 20px !important; }
+
+/* line 161, ../scss/ringsted_styles.scss */
+.field-item even a {
+  color: #000 !important; }
+
+/* line 167, ../scss/ringsted_styles.scss */
+.field-name-field-teaser {
+  margin-bottom: 10px !important;
+  font-weight: bold !important; }
+
+/* line 176, ../scss/ringsted_styles.scss */
+input[type="text"] {
+  height: 40px !important;
+  border: 1px solid #ddd; }
+
+/* line 182, ../scss/ringsted_styles.scss */
 .active {
   background-color: none !important;
   border: none !important;
@@ -595,54 +622,60 @@ div.panels-ipe-handlebar-wrapper li a {
   color: #ff2e00 !important;
   font-weight: 700 !important; }
 
-/* line 149, ../scss/ringsted_styles.scss */
+/* line 192, ../scss/ringsted_styles.scss */
 .sec-msg {
   clear: both;
   background: #333;
   /* For browsers that do not support gradients */ }
 
-/* line 159, ../scss/ringsted_styles.scss */
+/* line 202, ../scss/ringsted_styles.scss */
 .logo-page img {
-  margin-left: -20px; }
+  margin-left: -10px;
+  width: 210px !important; }
 
-/* line 164, ../scss/ringsted_styles.scss */
+/* line 208, ../scss/ringsted_styles.scss */
 .footer-logo {
   margin-left: -8px; }
 
-/* line 171, ../scss/ringsted_styles.scss */
+/* line 215, ../scss/ringsted_styles.scss */
 .events-search-title {
   font-family: "Open Sans", sans-serif !important;
   margin-bottom: 10px !important; }
 
-/* line 178, ../scss/ringsted_styles.scss */
+/* line 222, ../scss/ringsted_styles.scss */
+.form-text required {
+  padding: 0 !important;
+  height: 20 !important; }
+
+/* line 228, ../scss/ringsted_styles.scss */
 .picture img {
   box-shadow: none !important;
   border-bottom: 2px solid #ff2e00 !important; }
 
-/* line 185, ../scss/ringsted_styles.scss */
+/* line 235, ../scss/ringsted_styles.scss */
 .banner-pane-search-form {
   font-family: "Open Sans", sans-serif !important; }
 
-/* line 194, ../scss/ringsted_styles.scss */
+/* line 244, ../scss/ringsted_styles.scss */
 .front .panel-3col-33-stacked {
   margin-top: -30px; }
-/* line 197, ../scss/ringsted_styles.scss */
+/* line 247, ../scss/ringsted_styles.scss */
 .front .sec-content .sec-inner, .front .sec-content .menu-serv-wrapper {
   padding-top: 0; }
 
-/* line 203, ../scss/ringsted_styles.scss */
+/* line 253, ../scss/ringsted_styles.scss */
 .sec-inner li {
   border: none !important; }
 
-/* line 210, ../scss/ringsted_styles.scss */
+/* line 260, ../scss/ringsted_styles.scss */
 .sec-inner li:active {
   border: none !important; }
 
-/* line 216, ../scss/ringsted_styles.scss */
+/* line 266, ../scss/ringsted_styles.scss */
 li:hover {
   border: none !important; }
 
 @media (max-width: 768px) {
-  /* line 222, ../scss/ringsted_styles.scss */
+  /* line 272, ../scss/ringsted_styles.scss */
   .banner-pane-search-form {
     bottom: 1% !important; } }
